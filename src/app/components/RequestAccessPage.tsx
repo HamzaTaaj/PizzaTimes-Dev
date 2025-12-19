@@ -28,10 +28,16 @@ export function RequestAccessPage() {
   return (
     <div className="min-h-screen pt-20 bg-white">
       {/* Header */}
-      <section className="relative py-24 overflow-hidden bg-gradient-to-br from-slate-50 via-white to-blue-50">
-        <div className="absolute inset-0 bg-gradient-to-br from-blue-50/30 via-transparent to-slate-50/30" />
+      <section className="relative py-24 overflow-hidden bg-blue-50 rounded-b-[3rem]">
         
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+        {/* Curved Bottom Wave Design */}
+        <div className="absolute bottom-0 left-0 right-0 z-0">
+          <svg className="w-full h-24" viewBox="0 0 1440 120" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+            <path d="M0 120L60 105C120 90 240 60 360 45C480 30 600 30 720 37.5C840 45 960 60 1080 67.5C1200 75 1320 75 1380 75L1440 75V120H1380C1320 120 1200 120 1080 120C960 120 840 120 720 120C600 120 480 120 360 120C240 120 120 120 60 120H0Z" fill="#ffffff"/>
+          </svg>
+        </div>
+        
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center z-10">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -52,8 +58,14 @@ export function RequestAccessPage() {
       </section>
 
       {/* Form Section */}
-      <section className="py-16 pb-24 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <section className="relative py-16 pb-24 bg-white">
+        {/* Curved Top Wave Design */}
+        <div className="absolute top-0 left-0 right-0 z-0">
+          <svg className="w-full h-24" viewBox="0 0 1440 120" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+            <path d="M0 0L60 15C120 30 240 60 360 75C480 90 600 90 720 82.5C840 75 960 60 1080 52.5C1200 45 1320 45 1380 45L1440 45V0H1380C1320 0 1200 0 1080 0C960 0 840 0 720 0C600 0 480 0 360 0C240 0 120 0 60 0H0Z" fill="#f8fafc"/>
+          </svg>
+        </div>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="grid lg:grid-cols-[1fr_1.75fr] gap-18">
             {/* Left Side - Benefits */}
             <motion.div
@@ -295,8 +307,14 @@ export function RequestAccessPage() {
       </section>
 
       {/* Security Note */}
-      <section className="py-16 bg-blue-50">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <section className="relative py-16 bg-blue-50">
+        {/* Curved Top Wave Design */}
+        <div className="absolute top-0 left-0 right-0 z-0">
+          <svg className="w-full h-24" viewBox="0 0 1440 120" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+            <path d="M0 0L60 15C120 30 240 60 360 75C480 90 600 90 720 82.5C840 75 960 60 1080 52.5C1200 45 1320 45 1380 45L1440 45V0H1380C1320 0 1200 0 1080 0C960 0 840 0 720 0C600 0 480 0 360 0C240 0 120 0 60 0H0Z" fill="#ffffff"/>
+          </svg>
+        </div>
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
