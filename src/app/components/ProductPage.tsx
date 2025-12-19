@@ -2,7 +2,7 @@ import { motion } from 'motion/react';
 import { Cpu, Thermometer, Gauge, Wifi, Shield, Wrench, Package, Zap } from 'lucide-react';
 import { ImageWithFallback } from './figma/ImageWithFallback';
 import vend1Video from '@/assets/vend.mp4';
-import vend1Image from '@/assets/draw2.png';
+import vend1Image from '@/assets/vend1.png';
 
 export function ProductPage() {
   const specs = [
