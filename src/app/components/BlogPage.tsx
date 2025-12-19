@@ -69,45 +69,32 @@ export function BlogPage() {
   const categories = ['All', 'Expansion', 'Awards', 'Partnership', 'Technology', 'Sustainability', 'Product Launch'];
 
   return (
-    <div className="min-h-screen pt-20">
+    <div className="min-h-screen pt-20 bg-white">
       {/* Header */}
-      <section className="relative py-24 overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-[#0a1929] via-[#132f4c] to-[#0a1929] overflow-hidden">
-          <motion.div
-            animate={{
-              scale: [1, 1.2, 1],
-              opacity: [0.2, 0.4, 0.2]
-            }}
-            transition={{
-              duration: 10,
-              repeat: Infinity,
-              ease: "easeInOut"
-            }}
-            className="absolute -top-1/2 right-0 w-96 h-96 bg-[#00c9db]/20 rounded-full blur-3xl"
-          />
-        </div>
-
+      <section className="relative py-24 overflow-hidden bg-gradient-to-br from-slate-50 via-white to-blue-50">
+        <div className="absolute inset-0 bg-gradient-to-br from-blue-50/30 via-transparent to-slate-50/30" />
+        
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
+            transition={{ duration: 0.6 }}
           >
-            <div className="inline-flex items-center gap-2 px-4 py-2 bg-[#00c9db]/20 border border-[#00c9db]/30 rounded-full mb-6">
-              <span className="text-[#00c9db]">Latest News</span>
+            <div className="inline-flex items-center gap-2 px-4 py-2 bg-blue-50 border border-blue-200 rounded-full mb-6">
+              <span className="text-blue-600 font-medium text-sm">Corporate Updates</span>
             </div>
-            <h1 className="text-5xl md:text-6xl mb-6 text-white">
-              Press <span className="text-[#00c9db]">Releases</span>
+            <h1 className="text-5xl md:text-6xl mb-6 text-slate-900 font-bold">
+              Press <span className="text-blue-600">Releases</span>
             </h1>
-            <p className="text-xl text-[#b2c9e0] max-w-2xl mx-auto">
-              Stay updated with the latest developments, innovations, and achievements from Pizza Anytime
+            <p className="text-xl text-slate-600 max-w-2xl mx-auto">
+              Stay informed about the latest developments, innovations, and corporate achievements
             </p>
           </motion.div>
         </div>
       </section>
 
       {/* Category Filter */}
-      <section className="py-8 border-b border-[#00c9db]/20">
+      <section className="py-8 border-b border-slate-200 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-wrap gap-3 justify-center">
             {categories.map((category, index) => (
@@ -117,10 +104,10 @@ export function BlogPage() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: index * 0.05 }}
                 whileHover={{ scale: 1.05 }}
-                className={`px-6 py-2 rounded-full transition-all ${
+                className={`px-6 py-2 rounded-full transition-all font-medium ${
                   category === 'All'
-                    ? 'bg-gradient-to-r from-[#00c9db] to-[#0088cc]'
-                    : 'bg-[#132f4c] border-2 border-[#00c9db]/30 hover:border-[#00c9db]/50'
+                    ? 'bg-blue-600 text-white'
+                    : 'bg-white border-2 border-slate-200 text-slate-700 hover:border-blue-600 hover:text-blue-600'
                 }`}
               >
                 {category}
@@ -131,7 +118,7 @@ export function BlogPage() {
       </section>
 
       {/* Press Releases Grid */}
-      <section className="py-16">
+      <section className="py-16 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="space-y-8">
             {pressReleases.map((release, index) => (
@@ -143,7 +130,7 @@ export function BlogPage() {
                 transition={{ delay: index * 0.1 }}
                 className="group"
               >
-                <div className="grid md:grid-cols-3 gap-6 p-6 bg-gradient-to-br from-[#082032] to-[#0a2a3f] border border-[#008B8B]/20 rounded-2xl hover:border-[#008B8B]/50 transition-all">
+                <div className="grid md:grid-cols-3 gap-6 p-6 bg-white border border-slate-200 rounded-2xl hover:border-blue-600 hover:shadow-lg transition-all">
                   {/* Image */}
                   <div className="relative rounded-xl overflow-hidden aspect-video md:aspect-square">
                     <ImageWithFallback
@@ -151,9 +138,8 @@ export function BlogPage() {
                       alt={release.title}
                       className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                     />
-                    <div className="absolute inset-0 bg-gradient-to-t from-[#082032]/80 to-transparent" />
                     <div className="absolute top-4 left-4">
-                      <div className="w-12 h-12 bg-gradient-to-br from-[#008B8B] to-[#00D1FF] rounded-lg flex items-center justify-center">
+                      <div className="w-12 h-12 bg-blue-600 rounded-lg flex items-center justify-center shadow-lg">
                         <release.icon className="w-6 h-6 text-white" />
                       </div>
                     </div>
@@ -163,27 +149,27 @@ export function BlogPage() {
                   <div className="md:col-span-2 flex flex-col justify-between">
                     <div>
                       <div className="flex flex-wrap items-center gap-4 mb-4">
-                        <div className="flex items-center gap-2 text-[#D9DEE2]">
+                        <div className="flex items-center gap-2 text-slate-600">
                           <Calendar className="w-4 h-4" />
-                          <span>{release.date}</span>
+                          <span className="text-sm">{release.date}</span>
                         </div>
                         <div className="flex items-center gap-2">
-                          <Tag className="w-4 h-4 text-[#00D1FF]" />
-                          <span className="px-3 py-1 bg-[#008B8B]/20 text-[#00D1FF] rounded-full">
+                          <Tag className="w-4 h-4 text-blue-600" />
+                          <span className="px-3 py-1 bg-blue-50 text-blue-600 rounded-full text-sm font-medium">
                             {release.category}
                           </span>
                         </div>
                       </div>
 
-                      <h2 className="text-2xl md:text-3xl mb-4 group-hover:text-[#008B8B] transition-colors">
+                      <h2 className="text-2xl md:text-3xl mb-4 text-slate-900 font-semibold group-hover:text-blue-600 transition-colors">
                         {release.title}
                       </h2>
 
-                      <p className="text-[#D9DEE2] mb-4 line-clamp-2">
+                      <p className="text-slate-600 mb-4 line-clamp-2 leading-relaxed">
                         {release.excerpt}
                       </p>
 
-                      <p className="text-[#D9DEE2]/80 line-clamp-3">
+                      <p className="text-slate-500 line-clamp-3 leading-relaxed">
                         {release.content}
                       </p>
                     </div>
@@ -191,7 +177,7 @@ export function BlogPage() {
                     <div className="mt-4">
                       <motion.button
                         whileHover={{ x: 5 }}
-                        className="flex items-center gap-2 text-[#008B8B] group-hover:text-[#00D1FF] transition-colors"
+                        className="flex items-center gap-2 text-blue-600 group-hover:text-blue-700 transition-colors font-medium"
                       >
                         Read Full Release
                         <ArrowRight className="w-4 h-4" />
@@ -213,7 +199,7 @@ export function BlogPage() {
             <motion.button
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              className="px-8 py-4 border border-[#008B8B] rounded-lg hover:bg-[#008B8B]/10 transition-colors"
+              className="px-8 py-4 border-2 border-slate-300 rounded-lg hover:bg-slate-50 hover:border-blue-600 transition-colors text-slate-700 font-medium"
             >
               Load More Articles
             </motion.button>
@@ -222,28 +208,33 @@ export function BlogPage() {
       </section>
 
       {/* Newsletter CTA */}
-      <section className="relative py-24 overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-r from-[#00c9db]/20 to-[#0088cc]/20" />
+      <section className="relative py-24 overflow-hidden bg-gradient-to-br from-blue-600 to-blue-700">
+        <div 
+          className="absolute inset-0 opacity-20"
+          style={{
+            backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`
+          }}
+        />
         <div className="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
           >
-            <h2 className="text-4xl md:text-5xl mb-6 text-white">Stay in the Loop</h2>
-            <p className="text-xl text-[#b2c9e0] mb-8">
-              Subscribe to receive the latest press releases and company updates
+            <h2 className="text-4xl md:text-5xl mb-6 text-white font-bold">Stay Informed</h2>
+            <p className="text-xl text-blue-50 mb-8">
+              Subscribe to receive the latest press releases and corporate updates
             </p>
             <div className="flex flex-col sm:flex-row gap-4 max-w-md mx-auto">
               <input
                 type="email"
                 placeholder="Enter your email"
-                className="flex-1 px-6 py-4 bg-[#082032] border border-[#00c9db]/30 rounded-lg focus:outline-none focus:border-[#00c9db] transition-colors text-white placeholder:text-[#b2c9e0]"
+                className="flex-1 px-6 py-4 bg-white border border-slate-200 rounded-lg focus:outline-none focus:border-blue-600 transition-colors text-slate-900 placeholder:text-slate-400"
               />
               <motion.button
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
-                className="px-8 py-4 bg-gradient-to-r from-[#00c9db] to-[#0088cc] rounded-lg whitespace-nowrap shadow-lg shadow-[#00c9db]/40"
+                className="px-8 py-4 bg-white text-blue-600 rounded-lg whitespace-nowrap shadow-lg font-semibold hover:bg-blue-50 transition-colors"
               >
                 Subscribe
               </motion.button>

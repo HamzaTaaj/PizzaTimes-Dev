@@ -97,38 +97,25 @@ export function ManualPage() {
   ];
 
   return (
-    <div className="min-h-screen pt-20">
+    <div className="min-h-screen pt-20 bg-white">
       {/* Header */}
-      <section className="relative py-24 overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-[#082032] via-[#0a2a3f] to-[#082032] overflow-hidden">
-          <motion.div
-            animate={{
-              scale: [1, 1.1, 1],
-              opacity: [0.2, 0.3, 0.2]
-            }}
-            transition={{
-              duration: 8,
-              repeat: Infinity,
-              ease: "easeInOut"
-            }}
-            className="absolute top-0 left-0 w-96 h-96 bg-[#008B8B]/20 rounded-full blur-3xl"
-          />
-        </div>
-
+      <section className="relative py-24 overflow-hidden bg-gradient-to-br from-slate-50 via-white to-blue-50">
+        <div className="absolute inset-0 bg-gradient-to-br from-blue-50/30 via-transparent to-slate-50/30" />
+        
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
+            transition={{ duration: 0.6 }}
           >
-            <div className="inline-flex items-center gap-2 px-4 py-2 bg-[#008B8B]/20 border border-[#008B8B]/30 rounded-full mb-6">
-              <BookOpen className="w-4 h-4 text-[#00D1FF]" />
-              <span className="text-[#00D1FF]">Documentation Center</span>
+            <div className="inline-flex items-center gap-2 px-4 py-2 bg-blue-50 border border-blue-200 rounded-full mb-6">
+              <BookOpen className="w-4 h-4 text-blue-600" />
+              <span className="text-blue-600 font-medium text-sm">Enterprise Documentation</span>
             </div>
-            <h1 className="text-5xl md:text-6xl mb-6">
-              User <span className="text-[#008B8B]">Manuals</span>
+            <h1 className="text-5xl md:text-6xl mb-6 text-slate-900 font-bold">
+              User <span className="text-blue-600">Manuals</span>
             </h1>
-            <p className="text-xl text-[#D9DEE2] max-w-2xl mx-auto">
+            <p className="text-xl text-slate-600 max-w-2xl mx-auto">
               Access comprehensive documentation, guides, and training materials for your PizzaMatic Pro X1
             </p>
           </motion.div>
@@ -136,7 +123,7 @@ export function ManualPage() {
       </section>
 
       {/* Download Manuals */}
-      <section className="py-16">
+      <section className="py-16 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -144,10 +131,10 @@ export function ManualPage() {
             viewport={{ once: true }}
             className="mb-12"
           >
-            <h2 className="text-4xl mb-4">
-              Download <span className="text-[#008B8B]">Documentation</span>
+            <h2 className="text-4xl mb-4 text-slate-900 font-bold">
+              Download <span className="text-blue-600">Documentation</span>
             </h2>
-            <p className="text-xl text-[#D9DEE2]">
+            <p className="text-xl text-slate-600">
               All manuals are current as of version 1.2 (December 2025)
             </p>
           </motion.div>
@@ -160,22 +147,22 @@ export function ManualPage() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: index * 0.1 }}
-                whileHover={{ y: -5 }}
-                className="p-6 bg-gradient-to-br from-[#082032] to-[#0a2a3f] border border-[#008B8B]/20 rounded-xl hover:border-[#008B8B]/50 transition-all group"
+                whileHover={{ y: -4, boxShadow: '0 20px 40px rgba(0, 0, 0, 0.1)' }}
+                className="p-6 bg-white border-2 border-slate-200 rounded-xl hover:border-blue-600 transition-all group"
               >
                 <div className="flex items-start justify-between mb-4">
-                  <div className="w-12 h-12 bg-gradient-to-br from-[#008B8B] to-[#00D1FF] rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform">
-                    <manual.icon className="w-6 h-6 text-white" />
+                  <div className="w-12 h-12 bg-blue-50 rounded-lg flex items-center justify-center group-hover:bg-blue-600 group-hover:scale-110 transition-all">
+                    <manual.icon className="w-6 h-6 text-blue-600 group-hover:text-white transition-colors" />
                   </div>
-                  <span className="px-3 py-1 bg-[#008B8B]/20 text-[#00D1FF] rounded-full text-sm">
+                  <span className="px-3 py-1 bg-blue-50 text-blue-600 rounded-full text-sm font-medium">
                     {manual.type}
                   </span>
                 </div>
 
-                <h3 className="text-xl mb-2">{manual.title}</h3>
-                <p className="text-[#D9DEE2] mb-4 text-sm">{manual.description}</p>
+                <h3 className="text-xl mb-2 text-slate-900 font-semibold">{manual.title}</h3>
+                <p className="text-slate-600 mb-4 text-sm leading-relaxed">{manual.description}</p>
 
-                <div className="flex items-center gap-4 mb-4 text-sm text-[#D9DEE2]">
+                <div className="flex items-center gap-4 mb-4 text-sm text-slate-500">
                   <span>{manual.size}</span>
                   <span>•</span>
                   <span>{manual.pages}</span>
@@ -186,7 +173,7 @@ export function ManualPage() {
                 <motion.button
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
-                  className="w-full px-4 py-3 bg-gradient-to-r from-[#008B8B] to-[#00D1FF] rounded-lg flex items-center justify-center gap-2"
+                  className="w-full px-4 py-3 bg-blue-600 text-white rounded-lg flex items-center justify-center gap-2 font-medium hover:bg-blue-700 transition-colors"
                 >
                   <Download className="w-4 h-4" />
                   Download PDF
@@ -200,17 +187,17 @@ export function ManualPage() {
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="mt-8 p-6 bg-gradient-to-r from-[#008B8B]/10 to-[#00D1FF]/10 border border-[#008B8B]/30 rounded-xl"
+            className="mt-8 p-6 bg-blue-50 border-2 border-blue-200 rounded-xl"
           >
             <div className="flex flex-col md:flex-row items-center justify-between gap-4">
               <div>
-                <h3 className="text-xl mb-2">Complete Documentation Package</h3>
-                <p className="text-[#D9DEE2]">Download all manuals in a single ZIP file (40.7 MB)</p>
+                <h3 className="text-xl mb-2 text-slate-900 font-semibold">Complete Documentation Package</h3>
+                <p className="text-slate-600">Download all manuals in a single ZIP file (40.7 MB)</p>
               </div>
               <motion.button
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
-                className="px-8 py-4 bg-gradient-to-r from-[#008B8B] to-[#00D1FF] rounded-lg flex items-center gap-2 whitespace-nowrap"
+                className="px-8 py-4 bg-blue-600 text-white rounded-lg flex items-center gap-2 whitespace-nowrap font-semibold hover:bg-blue-700 transition-colors"
               >
                 <Download className="w-5 h-5" />
                 Download All
@@ -221,7 +208,7 @@ export function ManualPage() {
       </section>
 
       {/* Video Tutorials */}
-      <section className="py-16 bg-gradient-to-b from-transparent to-[#0a2a3f]">
+      <section className="py-16 bg-slate-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -229,10 +216,10 @@ export function ManualPage() {
             viewport={{ once: true }}
             className="mb-12"
           >
-            <h2 className="text-4xl mb-4">
-              Video <span className="text-[#008B8B]">Tutorials</span>
+            <h2 className="text-4xl mb-4 text-slate-900 font-bold">
+              Video <span className="text-blue-600">Tutorials</span>
             </h2>
-            <p className="text-xl text-[#D9DEE2]">
+            <p className="text-xl text-slate-600">
               Step-by-step video guides for setup and maintenance
             </p>
           </motion.div>
@@ -245,25 +232,25 @@ export function ManualPage() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: index * 0.1 }}
-                whileHover={{ y: -5 }}
+                whileHover={{ y: -4, boxShadow: '0 20px 40px rgba(0, 0, 0, 0.1)' }}
                 className="group cursor-pointer"
               >
-                <div className="relative rounded-xl overflow-hidden mb-4 aspect-video">
+                <div className="relative rounded-xl overflow-hidden mb-4 aspect-video bg-white border border-slate-200">
                   <img
                     src={video.thumbnail}
                     alt={video.title}
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                   />
-                  <div className="absolute inset-0 bg-[#082032]/60 flex items-center justify-center">
-                    <div className="w-16 h-16 bg-gradient-to-br from-[#008B8B] to-[#00D1FF] rounded-full flex items-center justify-center group-hover:scale-110 transition-transform">
+                  <div className="absolute inset-0 bg-slate-900/40 flex items-center justify-center">
+                    <div className="w-16 h-16 bg-blue-600 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform shadow-lg">
                       <Video className="w-8 h-8 text-white" />
                     </div>
                   </div>
-                  <div className="absolute bottom-4 right-4 px-3 py-1 bg-black/80 rounded text-sm">
+                  <div className="absolute bottom-4 right-4 px-3 py-1 bg-black/80 rounded text-sm text-white">
                     {video.duration}
                   </div>
                 </div>
-                <h3 className="text-lg group-hover:text-[#008B8B] transition-colors">{video.title}</h3>
+                <h3 className="text-lg text-slate-900 font-semibold group-hover:text-blue-600 transition-colors">{video.title}</h3>
               </motion.div>
             ))}
           </div>
@@ -271,7 +258,7 @@ export function ManualPage() {
       </section>
 
       {/* FAQ */}
-      <section className="py-16">
+      <section className="py-16 bg-white">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -279,10 +266,10 @@ export function ManualPage() {
             viewport={{ once: true }}
             className="mb-12 text-center"
           >
-            <h2 className="text-4xl mb-4">
-              Frequently Asked <span className="text-[#008B8B]">Questions</span>
+            <h2 className="text-4xl mb-4 text-slate-900 font-bold">
+              Frequently Asked <span className="text-blue-600">Questions</span>
             </h2>
-            <p className="text-xl text-[#D9DEE2]">
+            <p className="text-xl text-slate-600">
               Common questions about our documentation
             </p>
           </motion.div>
@@ -295,15 +282,15 @@ export function ManualPage() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: index * 0.1 }}
-                className="p-6 bg-gradient-to-br from-[#082032] to-[#0a2a3f] border border-[#008B8B]/20 rounded-xl hover:border-[#008B8B]/50 transition-all"
+                className="p-6 bg-white border-2 border-slate-200 rounded-xl hover:border-blue-600 transition-all"
               >
                 <div className="flex items-start gap-4">
-                  <div className="w-10 h-10 bg-gradient-to-br from-[#008B8B] to-[#00D1FF] rounded-lg flex items-center justify-center flex-shrink-0">
-                    <HelpCircle className="w-5 h-5 text-white" />
+                  <div className="w-10 h-10 bg-blue-50 rounded-lg flex items-center justify-center flex-shrink-0">
+                    <HelpCircle className="w-5 h-5 text-blue-600" />
                   </div>
                   <div>
-                    <h3 className="text-lg mb-2">{faq.question}</h3>
-                    <p className="text-[#D9DEE2]">{faq.answer}</p>
+                    <h3 className="text-lg mb-2 text-slate-900 font-semibold">{faq.question}</h3>
+                    <p className="text-slate-600 leading-relaxed">{faq.answer}</p>
                   </div>
                 </div>
               </motion.div>
@@ -313,32 +300,38 @@ export function ManualPage() {
       </section>
 
       {/* Support CTA */}
-      <section className="py-24 bg-gradient-to-r from-[#008B8B]/10 to-[#00D1FF]/10">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <section className="relative py-24 bg-gradient-to-br from-blue-600 to-blue-700">
+        <div 
+          className="absolute inset-0 opacity-20"
+          style={{
+            backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`
+          }}
+        />
+        <div className="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
           >
-            <div className="w-16 h-16 bg-gradient-to-br from-[#008B8B] to-[#00D1FF] rounded-full flex items-center justify-center mx-auto mb-6">
-              <CheckCircle className="w-8 h-8 text-white" />
+            <div className="w-16 h-16 bg-white rounded-full flex items-center justify-center mx-auto mb-6">
+              <CheckCircle className="w-8 h-8 text-blue-600" />
             </div>
-            <h2 className="text-4xl mb-6">Need Additional Support?</h2>
-            <p className="text-xl text-[#D9DEE2] mb-8">
-              Our technical support team is available 24/7 to assist you
+            <h2 className="text-4xl mb-6 text-white font-bold">Need Additional Support?</h2>
+            <p className="text-xl text-blue-50 mb-8">
+              Our enterprise technical support team is available 24/7 to assist you
             </p>
             <div className="flex flex-wrap gap-4 justify-center">
               <motion.button
-                whileHover={{ scale: 1.05 }}
+                whileHover={{ scale: 1.05, boxShadow: '0 20px 40px rgba(0, 0, 0, 0.2)' }}
                 whileTap={{ scale: 0.95 }}
-                className="px-8 py-4 bg-gradient-to-r from-[#008B8B] to-[#00D1FF] rounded-lg"
+                className="px-8 py-4 bg-white text-blue-600 rounded-lg font-semibold hover:bg-blue-50 transition-colors"
               >
                 Contact Support
               </motion.button>
               <motion.button
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
-                className="px-8 py-4 border border-[#008B8B] rounded-lg hover:bg-[#008B8B]/10 transition-colors"
+                className="px-8 py-4 border-2 border-white/50 rounded-lg hover:bg-white/10 transition-colors text-white font-semibold"
               >
                 Schedule Training
               </motion.button>

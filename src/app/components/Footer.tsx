@@ -9,48 +9,48 @@ export function Footer({ onNavigate }: FooterProps) {
   const currentYear = new Date().getFullYear();
 
   return (
-    <footer className="relative border-t border-[#00c9db]/20 bg-[#0a1929] overflow-hidden">
+    <footer className="relative border-t border-slate-200 bg-slate-50 overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-12 mb-12">
           {/* Company Info */}
           <div>
             <div className="flex items-center gap-3 mb-6">
-              <div className="w-10 h-10 bg-gradient-to-br from-[#00c9db] to-[#0088cc] rounded-lg flex items-center justify-center shadow-lg shadow-[#00c9db]/30">
+              <div className="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center shadow-md">
                 <span className="text-white text-xl">🍕</span>
               </div>
-              <span className="text-xl">
-                Pizza <span className="text-[#00c9db]">Anytime</span>
+              <span className="text-xl font-bold text-slate-900">
+                Pizza <span className="text-blue-600">Anytime</span>
               </span>
             </div>
-            <p className="text-[#b2c9e0] mb-6">
-              Revolutionizing food service with cutting-edge automated vending technology.
+            <p className="text-slate-600 mb-6 leading-relaxed">
+              Enterprise-grade automated food service solutions delivering operational excellence and consistent quality.
             </p>
             <div className="flex items-center gap-4">
               <motion.a
                 whileHover={{ scale: 1.1 }}
                 href="#"
-                className="w-10 h-10 bg-[#00c9db]/20 hover:bg-[#00c9db]/30 rounded-lg flex items-center justify-center transition-colors"
+                className="w-10 h-10 bg-white border border-slate-200 hover:bg-blue-50 hover:border-blue-300 rounded-lg flex items-center justify-center transition-colors text-slate-600 hover:text-blue-600"
               >
                 <Facebook className="w-5 h-5" />
               </motion.a>
               <motion.a
                 whileHover={{ scale: 1.1 }}
                 href="#"
-                className="w-10 h-10 bg-[#00c9db]/20 hover:bg-[#00c9db]/30 rounded-lg flex items-center justify-center transition-colors"
+                className="w-10 h-10 bg-white border border-slate-200 hover:bg-blue-50 hover:border-blue-300 rounded-lg flex items-center justify-center transition-colors text-slate-600 hover:text-blue-600"
               >
                 <Twitter className="w-5 h-5" />
               </motion.a>
               <motion.a
                 whileHover={{ scale: 1.1 }}
                 href="#"
-                className="w-10 h-10 bg-[#00c9db]/20 hover:bg-[#00c9db]/30 rounded-lg flex items-center justify-center transition-colors"
+                className="w-10 h-10 bg-white border border-slate-200 hover:bg-blue-50 hover:border-blue-300 rounded-lg flex items-center justify-center transition-colors text-slate-600 hover:text-blue-600"
               >
                 <Linkedin className="w-5 h-5" />
               </motion.a>
               <motion.a
                 whileHover={{ scale: 1.1 }}
                 href="#"
-                className="w-10 h-10 bg-[#00c9db]/20 hover:bg-[#00c9db]/30 rounded-lg flex items-center justify-center transition-colors"
+                className="w-10 h-10 bg-white border border-slate-200 hover:bg-blue-50 hover:border-blue-300 rounded-lg flex items-center justify-center transition-colors text-slate-600 hover:text-blue-600"
               >
                 <Instagram className="w-5 h-5" />
               </motion.a>
@@ -59,12 +59,12 @@ export function Footer({ onNavigate }: FooterProps) {
 
           {/* Quick Links */}
           <div>
-            <h3 className="text-lg mb-6">Quick Links</h3>
+            <h3 className="text-lg mb-6 font-semibold text-slate-900">Quick Links</h3>
             <ul className="space-y-3">
               <li>
                 <button
                   onClick={() => onNavigate('home')}
-                  className="text-[#b2c9e0] hover:text-[#00c9db] transition-colors"
+                  className="text-slate-600 hover:text-blue-600 transition-colors"
                 >
                   Home
                 </button>
@@ -72,7 +72,7 @@ export function Footer({ onNavigate }: FooterProps) {
               <li>
                 <button
                   onClick={() => onNavigate('product')}
-                  className="text-[#b2c9e0] hover:text-[#00c9db] transition-colors"
+                  className="text-slate-600 hover:text-blue-600 transition-colors"
                 >
                   Our Machine
                 </button>
@@ -80,7 +80,7 @@ export function Footer({ onNavigate }: FooterProps) {
               <li>
                 <button
                   onClick={() => onNavigate('blog')}
-                  className="text-[#b2c9e0] hover:text-[#00c9db] transition-colors"
+                  className="text-slate-600 hover:text-blue-600 transition-colors"
                 >
                   Press Releases
                 </button>
@@ -88,7 +88,7 @@ export function Footer({ onNavigate }: FooterProps) {
               <li>
                 <button
                   onClick={() => onNavigate('manual')}
-                  className="text-[#b2c9e0] hover:text-[#00c9db] transition-colors"
+                  className="text-slate-600 hover:text-blue-600 transition-colors"
                 >
                   User Manual
                 </button>
@@ -98,25 +98,25 @@ export function Footer({ onNavigate }: FooterProps) {
 
           {/* Resources */}
           <div>
-            <h3 className="text-lg mb-6">Resources</h3>
+            <h3 className="text-lg mb-6 font-semibold text-slate-900">Resources</h3>
             <ul className="space-y-3">
               <li>
-                <a href="#" className="text-[#b2c9e0] hover:text-[#00c9db] transition-colors">
+                <a href="#" className="text-slate-600 hover:text-blue-600 transition-colors">
                   Documentation
                 </a>
               </li>
               <li>
-                <a href="#" className="text-[#b2c9e0] hover:text-[#00c9db] transition-colors">
+                <a href="#" className="text-slate-600 hover:text-blue-600 transition-colors">
                   API Reference
                 </a>
               </li>
               <li>
-                <a href="#" className="text-[#b2c9e0] hover:text-[#00c9db] transition-colors">
+                <a href="#" className="text-slate-600 hover:text-blue-600 transition-colors">
                   Support Center
                 </a>
               </li>
               <li>
-                <a href="#" className="text-[#b2c9e0] hover:text-[#00c9db] transition-colors">
+                <a href="#" className="text-slate-600 hover:text-blue-600 transition-colors">
                   Training
                 </a>
               </li>
@@ -125,23 +125,23 @@ export function Footer({ onNavigate }: FooterProps) {
 
           {/* Contact */}
           <div>
-            <h3 className="text-lg mb-6">Contact Us</h3>
+            <h3 className="text-lg mb-6 font-semibold text-slate-900">Contact Us</h3>
             <ul className="space-y-4">
               <li className="flex items-start gap-3">
-                <Mail className="w-5 h-5 text-[#00c9db] mt-0.5 flex-shrink-0" />
-                <a href="mailto:info@pizzaanytime.com" className="text-[#b2c9e0] hover:text-[#00c9db] transition-colors">
+                <Mail className="w-5 h-5 text-blue-600 mt-0.5 flex-shrink-0" />
+                <a href="mailto:info@pizzaanytime.com" className="text-slate-600 hover:text-blue-600 transition-colors">
                   info@pizzaanytime.com
                 </a>
               </li>
               <li className="flex items-start gap-3">
-                <Phone className="w-5 h-5 text-[#00c9db] mt-0.5 flex-shrink-0" />
-                <a href="tel:+1-800-PIZZA-24" className="text-[#b2c9e0] hover:text-[#00c9db] transition-colors">
+                <Phone className="w-5 h-5 text-blue-600 mt-0.5 flex-shrink-0" />
+                <a href="tel:+1-800-PIZZA-24" className="text-slate-600 hover:text-blue-600 transition-colors">
                   1-800-PIZZA-24
                 </a>
               </li>
               <li className="flex items-start gap-3">
-                <MapPin className="w-5 h-5 text-[#00c9db] mt-0.5 flex-shrink-0" />
-                <span className="text-[#b2c9e0]">
+                <MapPin className="w-5 h-5 text-blue-600 mt-0.5 flex-shrink-0" />
+                <span className="text-slate-600">
                   123 Innovation Drive<br />
                   Tech City, TC 12345
                 </span>
@@ -151,39 +151,25 @@ export function Footer({ onNavigate }: FooterProps) {
         </div>
 
         {/* Bottom Bar */}
-        <div className="pt-8 border-t border-[#00c9db]/20">
+        <div className="pt-8 border-t border-slate-200">
           <div className="flex flex-col md:flex-row items-center justify-between gap-4">
-            <p className="text-[#b2c9e0] text-sm">
+            <p className="text-slate-600 text-sm">
               © {currentYear} Pizza Anytime. All rights reserved.
             </p>
             <div className="flex items-center gap-6 text-sm">
-              <a href="#" className="text-[#b2c9e0] hover:text-[#00c9db] transition-colors">
+              <a href="#" className="text-slate-600 hover:text-blue-600 transition-colors">
                 Privacy Policy
               </a>
-              <a href="#" className="text-[#b2c9e0] hover:text-[#00c9db] transition-colors">
+              <a href="#" className="text-slate-600 hover:text-blue-600 transition-colors">
                 Terms of Service
               </a>
-              <a href="#" className="text-[#b2c9e0] hover:text-[#00c9db] transition-colors">
+              <a href="#" className="text-slate-600 hover:text-blue-600 transition-colors">
                 Cookie Policy
               </a>
             </div>
           </div>
         </div>
       </div>
-
-      {/* Animated Background Element */}
-      <motion.div
-        animate={{
-          scale: [1, 1.2, 1],
-          opacity: [0.05, 0.1, 0.05]
-        }}
-        transition={{
-          duration: 10,
-          repeat: Infinity,
-          ease: "easeInOut"
-        }}
-        className="absolute bottom-0 right-0 w-96 h-96 bg-[#00c9db] rounded-full blur-3xl pointer-events-none"
-      />
     </footer>
   );
 }

@@ -26,74 +26,61 @@ export function RequestAccessPage() {
   };
 
   return (
-    <div className="min-h-screen pt-20">
+    <div className="min-h-screen pt-20 bg-white">
       {/* Header */}
-      <section className="relative py-24 overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-[#0a1929] via-[#132f4c] to-[#0a1929] overflow-hidden">
-          <motion.div
-            animate={{
-              scale: [1, 1.2, 1],
-              opacity: [0.1, 0.2, 0.1]
-            }}
-            transition={{
-              duration: 10,
-              repeat: Infinity,
-              ease: "easeInOut"
-            }}
-            className="absolute -top-1/2 right-0 w-[600px] h-[600px] bg-[#00c9db]/20 rounded-full blur-3xl"
-          />
-        </div>
-
+      <section className="relative py-24 overflow-hidden bg-gradient-to-br from-slate-50 via-white to-blue-50">
+        <div className="absolute inset-0 bg-gradient-to-br from-blue-50/30 via-transparent to-slate-50/30" />
+        
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
+            transition={{ duration: 0.6 }}
           >
-            <div className="inline-flex items-center gap-2 px-4 py-2 bg-[#00c9db]/20 border border-[#00c9db]/30 rounded-full mb-6">
-              <Lock className="w-4 h-4 text-[#00c9db]" />
-              <span className="text-[#00c9db]">Secure Access Portal</span>
+            <div className="inline-flex items-center gap-2 px-4 py-2 bg-blue-50 border border-blue-200 rounded-full mb-6">
+              <Lock className="w-4 h-4 text-blue-600" />
+              <span className="text-blue-600 font-medium text-sm">Enterprise Access Portal</span>
             </div>
-            <h1 className="text-5xl md:text-6xl mb-6 text-white">
-              Request <span className="text-[#00c9db]">Access</span>
+            <h1 className="text-5xl md:text-6xl mb-6 text-slate-900 font-bold">
+              Request <span className="text-blue-600">Access</span>
             </h1>
-            <p className="text-xl text-[#b2c9e0] max-w-2xl mx-auto">
-              Join the Pizza Anytime network and revolutionize your food service operations
+            <p className="text-xl text-slate-600 max-w-2xl mx-auto">
+              Join the Pizza Anytime enterprise network and transform your food service operations
             </p>
           </motion.div>
         </div>
       </section>
 
       {/* Form Section */}
-      <section className="py-16 pb-24">
+      <section className="py-16 pb-24 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid lg:grid-cols-[1fr_1.75fr] gap-18">
             {/* Left Side - Benefits */}
             <motion.div
               initial={{ opacity: 0, x: -30 }}
               animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.8 }}
+              transition={{ duration: 0.6 }}
               className="space-y-10"
             >
               <div>
-                <h2 className="text-3xl mb-8 text-white">Why Join Us?</h2>
+                <h2 className="text-3xl mb-8 text-slate-900 font-bold">Enterprise Benefits</h2>
                 <div className="space-y-8">
                   {[
                     {
-                      title: 'Early Access',
-                      description: 'Be among the first to deploy our cutting-edge vending technology'
+                      title: 'Priority Deployment',
+                      description: 'Expedited access to our enterprise-grade vending technology solutions'
                     },
                     {
-                      title: 'Exclusive Benefits',
-                      description: 'Special pricing and priority support for early adopters'
+                      title: 'Enterprise Pricing',
+                      description: 'Competitive pricing and volume discounts for enterprise clients'
                     },
                     {
-                      title: 'Training & Support',
-                      description: 'Comprehensive onboarding and 24/7 technical assistance'
+                      title: 'Dedicated Support',
+                      description: 'Comprehensive onboarding and 24/7 enterprise technical assistance'
                     },
                     {
-                      title: 'Analytics Dashboard',
-                      description: 'Real-time insights and performance metrics for your machines'
+                      title: 'Business Intelligence',
+                      description: 'Advanced analytics dashboard with real-time performance metrics'
                     }
                   ].map((benefit, index) => (
                     <motion.div
@@ -103,24 +90,24 @@ export function RequestAccessPage() {
                       transition={{ delay: 0.2 + index * 0.1 }}
                       className="flex items-start gap-4"
                     >
-                      <div className="w-10 h-10 bg-gradient-to-br from-[#00c9db] to-[#0088cc] rounded-lg flex items-center justify-center flex-shrink-0 shadow-lg shadow-[#00c9db]/40">
-                        <CheckCircle2 className="w-5 h-5 text-white" />
+                      <div className="w-10 h-10 bg-blue-50 rounded-lg flex items-center justify-center flex-shrink-0">
+                        <CheckCircle2 className="w-5 h-5 text-blue-600" />
                       </div>
                       <div>
-                        <h3 className="text-lg mb-1 text-white">{benefit.title}</h3>
-                        <p className="text-[#b2c9e0]">{benefit.description}</p>
+                        <h3 className="text-lg mb-1 text-slate-900 font-semibold">{benefit.title}</h3>
+                        <p className="text-slate-600 leading-relaxed">{benefit.description}</p>
                       </div>
                     </motion.div>
                   ))}
                 </div>
               </div>
 
-              <div className="p-6 bg-[#00c9db]/10 border-2 border-[#00c9db]/30 rounded-xl">
-                <h3 className="text-lg mb-2 text-white">Need Help?</h3>
-                <p className="text-[#b2c9e0] mb-4">
-                  Our team is here to assist you with the application process
+              <div className="p-6 bg-blue-50 border-2 border-blue-200 rounded-xl">
+                <h3 className="text-lg mb-2 text-slate-900 font-semibold">Need Assistance?</h3>
+                <p className="text-slate-600 mb-4 leading-relaxed">
+                  Our enterprise team is available to assist with the application process
                 </p>
-                <div className="flex items-center gap-2 text-[#00c9db]">
+                <div className="flex items-center gap-2 text-blue-600 font-medium">
                   <Mail className="w-4 h-4" />
                   <a href="mailto:access@pizzaanytime.com" className="hover:underline">
                     access@pizzaanytime.com
@@ -133,20 +120,20 @@ export function RequestAccessPage() {
             <motion.div 
               initial={{ opacity: 0, x: 30 }}
               animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.8 }}
+              transition={{ duration: 0.6 }}
             >
-              <div className="p-8 bg-gradient-to-br from-[#132f4c] to-[#0a1929] border-2 border-[#00c9db]/30 rounded-2xl shadow-2xl">
-                <h2 className="text-2xl mb-8 text-white">Create Your Account</h2>
+              <div className="p-8 bg-white border-2 border-slate-200 rounded-2xl shadow-xl">
+                <h2 className="text-2xl mb-8 text-slate-900 font-semibold">Create Enterprise Account</h2>
                 
                 <form onSubmit={handleSubmit} className="space-y-6">
                   {/* First Name and Last Name */}
                   <div className="grid grid-cols-2 gap-4">
                     <div>
-                      <label htmlFor="firstName" className="block text-sm mb-2 text-[#b2c9e0]">
+                      <label htmlFor="firstName" className="block text-sm mb-2 text-slate-700 font-medium">
                         First Name *
                       </label>
                       <div className="relative">
-                        <User className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-[#00c9db]/50" />
+                        <User className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
                         <input
                           type="text"
                           id="firstName"
@@ -154,18 +141,18 @@ export function RequestAccessPage() {
                           value={formData.firstName}
                           onChange={handleChange}
                           required
-                          className="w-full pl-12 pr-4 py-3 bg-[#0a1929] border-2 border-[#00c9db]/30 rounded-lg focus:outline-none focus:border-[#00c9db] transition-colors text-white placeholder-[#b2c9e0]/50"
+                          className="w-full pl-12 pr-4 py-3 bg-white border-2 border-slate-200 rounded-lg focus:outline-none focus:border-blue-600 transition-colors text-slate-900 placeholder-slate-400"
                           placeholder="John"
                         />
                       </div>
                     </div>
 
                     <div>
-                      <label htmlFor="lastName" className="block text-sm mb-2 text-[#b2c9e0]">
+                      <label htmlFor="lastName" className="block text-sm mb-2 text-slate-700 font-medium">
                         Last Name *
                       </label>
                       <div className="relative">
-                        <User className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-[#00c9db]/50" />
+                        <User className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
                         <input
                           type="text"
                           id="lastName"
@@ -173,7 +160,7 @@ export function RequestAccessPage() {
                           value={formData.lastName}
                           onChange={handleChange}
                           required
-                          className="w-full pl-12 pr-4 py-3 bg-[#0a1929] border-2 border-[#00c9db]/30 rounded-lg focus:outline-none focus:border-[#00c9db] transition-colors text-white placeholder-[#b2c9e0]/50"
+                          className="w-full pl-12 pr-4 py-3 bg-white border-2 border-slate-200 rounded-lg focus:outline-none focus:border-blue-600 transition-colors text-slate-900 placeholder-slate-400"
                           placeholder="Doe"
                         />
                       </div>
@@ -182,11 +169,11 @@ export function RequestAccessPage() {
 
                   {/* Email */}
                   <div>
-                    <label htmlFor="email" className="block text-sm mb-2 text-[#b2c9e0]">
+                    <label htmlFor="email" className="block text-sm mb-2 text-slate-700 font-medium">
                       Email Address *
                     </label>
                     <div className="relative">
-                      <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-[#00c9db]/50" />
+                      <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
                       <input
                         type="email"
                         id="email"
@@ -194,7 +181,7 @@ export function RequestAccessPage() {
                         value={formData.email}
                         onChange={handleChange}
                         required
-                        className="w-full pl-12 pr-4 py-3 bg-[#0a1929] border-2 border-[#00c9db]/30 rounded-lg focus:outline-none focus:border-[#00c9db] transition-colors text-white placeholder-[#b2c9e0]/50"
+                        className="w-full pl-12 pr-4 py-3 bg-white border-2 border-slate-200 rounded-lg focus:outline-none focus:border-blue-600 transition-colors text-slate-900 placeholder-slate-400"
                         placeholder="john@example.com"
                       />
                     </div>
@@ -203,11 +190,11 @@ export function RequestAccessPage() {
                   {/* Password and Confirm Password */}
                   <div className="grid grid-cols-2 gap-4">
                     <div>
-                      <label htmlFor="password" className="block text-sm mb-2 text-[#b2c9e0]">
+                      <label htmlFor="password" className="block text-sm mb-2 text-slate-700 font-medium">
                         Password *
                       </label>
                       <div className="relative">
-                        <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-[#00c9db]/50" />
+                        <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
                         <input
                           type="password"
                           id="password"
@@ -215,18 +202,18 @@ export function RequestAccessPage() {
                           value={formData.password}
                           onChange={handleChange}
                           required
-                          className="w-full pl-12 pr-4 py-3 bg-[#0a1929] border-2 border-[#00c9db]/30 rounded-lg focus:outline-none focus:border-[#00c9db] transition-colors text-white placeholder-[#b2c9e0]/50"
+                          className="w-full pl-12 pr-4 py-3 bg-white border-2 border-slate-200 rounded-lg focus:outline-none focus:border-blue-600 transition-colors text-slate-900 placeholder-slate-400"
                           placeholder="••••••••"
                         />
                       </div>
                     </div>
 
                     <div>
-                      <label htmlFor="confirmPassword" className="block text-sm mb-2 text-[#b2c9e0]">
+                      <label htmlFor="confirmPassword" className="block text-sm mb-2 text-slate-700 font-medium">
                         Confirm Password *
                       </label>
                       <div className="relative">
-                        <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-[#00c9db]/50" />
+                        <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
                         <input
                           type="password"
                           id="confirmPassword"
@@ -234,7 +221,7 @@ export function RequestAccessPage() {
                           value={formData.confirmPassword}
                           onChange={handleChange}
                           required
-                          className="w-full pl-12 pr-4 py-3 bg-[#0a1929] border-2 border-[#00c9db]/30 rounded-lg focus:outline-none focus:border-[#00c9db] transition-colors text-white placeholder-[#b2c9e0]/50"
+                          className="w-full pl-12 pr-4 py-3 bg-white border-2 border-slate-200 rounded-lg focus:outline-none focus:border-blue-600 transition-colors text-slate-900 placeholder-slate-400"
                           placeholder="••••••••"
                         />
                       </div>
@@ -243,11 +230,11 @@ export function RequestAccessPage() {
 
                   {/* Address */}
                   <div>
-                    <label htmlFor="address" className="block text-sm mb-2 text-[#b2c9e0]">
+                    <label htmlFor="address" className="block text-sm mb-2 text-slate-700 font-medium">
                       Business Address *
                     </label>
                     <div className="relative">
-                      <MapPin className="absolute left-4 top-3 w-5 h-5 text-[#00c9db]/50" />
+                      <MapPin className="absolute left-4 top-3 w-5 h-5 text-slate-400" />
                       <textarea
                         id="address"
                         name="address"
@@ -255,7 +242,7 @@ export function RequestAccessPage() {
                         onChange={handleChange}
                         required
                         rows={1}
-                        className="w-full pl-12 pr-4 py-3 bg-[#0a1929] border-2 border-[#00c9db]/30 rounded-lg focus:outline-none focus:border-[#00c9db] transition-colors text-white placeholder-[#b2c9e0]/50 resize-none"
+                        className="w-full pl-12 pr-4 py-3 bg-white border-2 border-slate-200 rounded-lg focus:outline-none focus:border-blue-600 transition-colors text-slate-900 placeholder-slate-400 resize-none"
                         placeholder="123 Business Street, City, State, ZIP"
                       />
                     </div>
@@ -267,15 +254,15 @@ export function RequestAccessPage() {
                       type="checkbox"
                       id="terms"
                       required
-                      className="mt-1 w-4 h-4 rounded border-2 border-[#00c9db]/30 bg-[#0a1929] checked:bg-[#00c9db] focus:ring-2 focus:ring-[#00c9db]/50"
+                      className="mt-1 w-4 h-4 rounded border-2 border-slate-300 bg-white checked:bg-blue-600 checked:border-blue-600 focus:ring-2 focus:ring-blue-600/50"
                     />
-                    <label htmlFor="terms" className="text-sm text-[#b2c9e0]">
+                    <label htmlFor="terms" className="text-sm text-slate-600">
                       I agree to the{' '}
-                      <a href="#" className="text-[#00c9db] hover:underline">
+                      <a href="#" className="text-blue-600 hover:underline font-medium">
                         Terms of Service
                       </a>{' '}
                       and{' '}
-                      <a href="#" className="text-[#00c9db] hover:underline">
+                      <a href="#" className="text-blue-600 hover:underline font-medium">
                         Privacy Policy
                       </a>
                     </label>
@@ -286,17 +273,17 @@ export function RequestAccessPage() {
                     type="submit"
                     whileHover={{ 
                       scale: 1.02,
-                      boxShadow: '0 0 40px rgba(0, 201, 219, 0.6)'
+                      boxShadow: '0 10px 30px rgba(37, 99, 235, 0.3)'
                     }}
                     whileTap={{ scale: 0.98 }}
-                    className="w-full py-4 bg-gradient-to-r from-[#00c9db] to-[#0088cc] rounded-lg shadow-lg shadow-[#00c9db]/40 transition-all"
+                    className="w-full py-4 bg-blue-600 text-white rounded-lg shadow-lg shadow-blue-600/20 transition-all font-semibold hover:bg-blue-700"
                   >
                     Request Access
                   </motion.button>
 
-                  <p className="text-center text-sm text-[#b2c9e0]">
+                  <p className="text-center text-sm text-slate-600">
                     Already have an account?{' '}
-                    <a href="#" className="text-[#00c9db] hover:underline">
+                    <a href="#" className="text-blue-600 hover:underline font-medium">
                       Sign in here
                     </a>
                   </p>
@@ -308,17 +295,17 @@ export function RequestAccessPage() {
       </section>
 
       {/* Security Note */}
-      <section className="py-16 bg-gradient-to-r from-[#00c9db]/10 to-[#0088cc]/10">
+      <section className="py-16 bg-blue-50">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
           >
-            <Lock className="w-12 h-12 text-[#00c9db] mx-auto mb-4" />
-            <h3 className="text-2xl mb-4 text-white">Your Data is Secure</h3>
-            <p className="text-[#b2c9e0] max-w-2xl mx-auto">
-              We use industry-standard encryption to protect your information. Your data will never be shared with third parties without your explicit consent.
+            <Lock className="w-12 h-12 text-blue-600 mx-auto mb-4" />
+            <h3 className="text-2xl mb-4 text-slate-900 font-semibold">Enterprise-Grade Security</h3>
+            <p className="text-slate-600 max-w-2xl mx-auto leading-relaxed">
+              We employ industry-standard encryption and security protocols to protect your information. Your data will never be shared with third parties without your explicit consent.
             </p>
           </motion.div>
         </div>

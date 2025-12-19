@@ -32,7 +32,7 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen bg-[#0a1929] text-white overflow-x-hidden overflow-y-visible">
+    <div className="min-h-screen bg-white text-slate-900 overflow-x-hidden overflow-y-visible">
       <Header currentPage={currentPage} onNavigate={handleNavigate} />
       
       <AnimatePresence mode="wait">
@@ -62,31 +62,14 @@ export default function App() {
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.8 }}
             onClick={scrollToTop}
-            className="fixed bottom-8 right-8 w-12 h-12 bg-gradient-to-br from-[#00c9db] to-[#0088cc] rounded-full flex items-center justify-center shadow-lg shadow-[#00c9db]/50 hover:shadow-xl hover:shadow-[#00c9db]/70 transition-shadow z-50"
+            className="fixed bottom-8 right-8 w-12 h-12 bg-blue-600 rounded-full flex items-center justify-center shadow-lg shadow-blue-600/30 hover:shadow-xl hover:shadow-blue-600/50 transition-shadow z-50"
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.9 }}
           >
-            <ArrowUp className="w-6 h-6" />
+            <ArrowUp className="w-6 h-6 text-white" />
           </motion.button>
         )}
       </AnimatePresence>
-
-      {/* Cursor Follow Effect */}
-      <motion.div
-        className="fixed top-0 left-0 w-96 h-96 bg-[#00c9db]/5 rounded-full blur-3xl pointer-events-none z-0"
-        style={{
-          transform: 'translate(-50%, -50%)',
-        }}
-        animate={{
-          x: typeof window !== 'undefined' ? window.innerWidth / 2 : 0,
-          y: typeof window !== 'undefined' ? window.innerHeight / 2 : 0,
-        }}
-        transition={{
-          type: "spring",
-          damping: 30,
-          stiffness: 50
-        }}
-      />
     </div>
   );
 }
