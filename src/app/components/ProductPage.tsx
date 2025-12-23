@@ -1,6 +1,7 @@
 import { motion } from 'motion/react';
 import { Cpu, Thermometer, Gauge, Wifi, Shield, Wrench, Package, Zap } from 'lucide-react';
 import { ImageWithFallback } from './figma/ImageWithFallback';
+import { fadeInUp, staggerContainer, viewportConfig, slideInLeft, slideInRight, scaleUp } from '../utils/animations';
 import vend1Video from '@/assets/vend.mp4';
 import vend1Image from '@/assets/vend1.png';
 
@@ -61,24 +62,24 @@ export function ProductPage() {
   ];
 
   return (
-    <div className="min-h-screen pt-20 bg-white">
+    <div className="min-h-screen pt-20 bg-white overflow-hidden">
       {/* Hero Section */}
-      <section className="relative py-24 overflow-hidden bg-blue-50 rounded-b-[3rem]">
-        
+      <section className="relative py-24 bg-blue-50 rounded-b-[3rem]">
+
         {/* Curved Bottom Wave Design */}
         <div className="absolute bottom-0 left-0 right-0 z-0">
           <svg className="w-full h-24" viewBox="0 0 1440 120" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
-            <path d="M0 120L60 105C120 90 240 60 360 45C480 30 600 30 720 37.5C840 45 960 60 1080 67.5C1200 75 1320 75 1380 75L1440 75V120H1380C1320 120 1200 120 1080 120C960 120 840 120 720 120C600 120 480 120 360 120C240 120 120 120 60 120H0Z" fill="#ffffff"/>
+            <path d="M0 120L60 105C120 90 240 60 360 45C480 30 600 30 720 37.5C840 45 960 60 1080 67.5C1200 75 1320 75 1380 75L1440 75V120H1380C1320 120 1200 120 1080 120C960 120 840 120 720 120C600 120 480 120 360 120C240 120 120 120 60 120H0Z" fill="#ffffff" />
           </svg>
         </div>
-        
+
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 z-10">
           <div className="grid lg:grid-cols-2 gap-16 items-center">
             {/* Product Image */}
             <motion.div
-              initial={{ opacity: 0, x: -30 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.6 }}
+              initial="hidden"
+              animate="visible"
+              variants={slideInLeft}
               className="relative order-2 lg:order-1"
             >
               <div className="relative rounded-2xl overflow-hidden border border-slate-200 shadow-2xl shadow-slate-900/10 bg-white">
@@ -106,46 +107,41 @@ export function ProductPage() {
 
             {/* Product Info */}
             <motion.div
-              initial={{ opacity: 0, x: 30 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.6 }}
+              initial="hidden"
+              animate="visible"
+              variants={staggerContainer}
               className="order-1 lg:order-2"
             >
-              <div className="inline-flex items-center gap-2 px-4 py-2 bg-blue-50 border border-blue-200 rounded-full mb-6">
+              <motion.div variants={fadeInUp} className="inline-flex items-center gap-2 px-4 py-2 bg-blue-50 border border-blue-200 rounded-full mb-6">
                 <span className="text-blue-600 font-medium text-sm">Enterprise Solution</span>
-              </div>
+              </motion.div>
 
-              <h1 className="text-5xl md:text-6xl mb-6 text-slate-900 font-bold">
+              <motion.h1 variants={fadeInUp} className="text-5xl md:text-6xl mb-6 text-slate-900 font-bold">
                 PizzaMatic <span className="text-blue-600">Pro X1</span>
-              </h1>
+              </motion.h1>
 
-              <p className="text-xl text-slate-600 mb-8 leading-relaxed">
+              <motion.p variants={fadeInUp} className="text-xl text-slate-600 mb-8 leading-relaxed">
                 Enterprise-grade automated vending solution engineered for high-traffic environments. Advanced robotics, AI-driven operations, and precision food preparation systems.
-              </p>
+              </motion.p>
 
               {/* Key Stats */}
-              <div className="grid grid-cols-2 gap-4 mb-8">
-                <div className="p-4 bg-white border border-slate-200 rounded-lg shadow-sm">
-                  <div className="text-3xl font-bold text-blue-600 mb-1">70</div>
-                  <div className="text-sm text-slate-600">Pizza Capacity</div>
-                </div>
-                <div className="p-4 bg-white border border-slate-200 rounded-lg shadow-sm">
-                  <div className="text-3xl font-bold text-blue-600 mb-1">24/7</div>
-                  <div className="text-sm text-slate-600">Operation</div>
-                </div>
-                <div className="p-4 bg-white border border-slate-200 rounded-lg shadow-sm">
-                  <div className="text-3xl font-bold text-blue-600 mb-1">2-3min</div>
-                  <div className="text-sm text-slate-600">Service Time</div>
-                </div>
-                <div className="p-4 bg-white border border-slate-200 rounded-lg shadow-sm">
-                  <div className="text-3xl font-bold text-blue-600 mb-1">IoT</div>
-                  <div className="text-sm text-slate-600">Connected</div>
-                </div>
-              </div>
+              <motion.div variants={staggerContainer} className="grid grid-cols-2 gap-4 mb-8">
+                {[
+                  { value: '70', label: 'Pizza Capacity' },
+                  { value: '24/7', label: 'Operation' },
+                  { value: '2-3min', label: 'Service Time' },
+                  { value: 'IoT', label: 'Connected' }
+                ].map((stat, i) => (
+                  <motion.div key={i} variants={fadeInUp} className="p-4 bg-white border border-slate-200 rounded-lg shadow-sm">
+                    <div className="text-3xl font-bold text-blue-600 mb-1">{stat.value}</div>
+                    <div className="text-sm text-slate-600">{stat.label}</div>
+                  </motion.div>
+                ))}
+              </motion.div>
 
-              <div className="flex flex-wrap gap-4">
+              <motion.div variants={fadeInUp} className="flex flex-wrap gap-4">
                 <motion.button
-                  whileHover={{ 
+                  whileHover={{
                     scale: 1.02,
                     boxShadow: '0 10px 30px rgba(37, 99, 235, 0.3)'
                   }}
@@ -155,7 +151,7 @@ export function ProductPage() {
                   Request Quote
                 </motion.button>
                 <motion.button
-                  whileHover={{ 
+                  whileHover={{
                     scale: 1.02,
                     borderColor: '#2563eb',
                     backgroundColor: '#f1f5f9'
@@ -165,7 +161,7 @@ export function ProductPage() {
                 >
                   Schedule Demo
                 </motion.button>
-              </div>
+              </motion.div>
             </motion.div>
           </div>
         </div>
@@ -176,20 +172,21 @@ export function ProductPage() {
         {/* Curved Top Wave Design */}
         <div className="absolute top-0 left-0 right-0 z-0">
           <svg className="w-full h-24" viewBox="0 0 1440 120" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
-            <path d="M0 0L60 15C120 30 240 60 360 75C480 90 600 90 720 82.5C840 75 960 60 1080 52.5C1200 45 1320 45 1380 45L1440 45V0H1380C1320 0 1200 0 1080 0C960 0 840 0 720 0C600 0 480 0 360 0C240 0 120 0 60 0H0Z" fill="#f8fafc"/>
+            <path d="M0 0L60 15C120 30 240 60 360 75C480 90 600 90 720 82.5C840 75 960 60 1080 52.5C1200 45 1320 45 1380 45L1440 45V0H1380C1320 0 1200 0 1080 0C960 0 840 0 720 0C600 0 480 0 360 0C240 0 120 0 60 0H0Z" fill="#f8fafc" />
           </svg>
         </div>
         {/* Curved Bottom Wave Design */}
         <div className="absolute bottom-0 left-0 right-0 z-0">
           <svg className="w-full h-24" viewBox="0 0 1440 120" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
-            <path d="M0 120L60 105C120 90 240 60 360 45C480 30 600 30 720 37.5C840 45 960 60 1080 67.5C1200 75 1320 75 1380 75L1440 75V120H1380C1320 120 1200 120 1080 120C960 120 840 120 720 120C600 120 480 120 360 120C240 120 120 120 60 120H0Z" fill="#f1f5f9"/>
+            <path d="M0 120L60 105C120 90 240 60 360 45C480 30 600 30 720 37.5C840 45 960 60 1080 67.5C1200 75 1320 75 1380 75L1440 75V120H1380C1320 120 1200 120 1080 120C960 120 840 120 720 120C600 120 480 120 360 120C240 120 120 120 60 120H0Z" fill="#f1f5f9" />
           </svg>
         </div>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
+            initial="hidden"
+            whileInView="visible"
+            viewport={viewportConfig}
+            variants={fadeInUp}
             className="text-center mb-20"
           >
             <h2 className="text-4xl md:text-5xl mb-4 text-slate-900 font-bold">
@@ -201,17 +198,18 @@ export function ProductPage() {
           <div className="relative max-w-6xl mx-auto">
             {/* Machine in Center - BIGGER AND MORE PLAYFUL */}
             <motion.div
-              initial={{ opacity: 0, scale: 0.8 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              viewport={{ once: true }}
+              initial="hidden"
+              whileInView="visible"
+              viewport={viewportConfig}
+              variants={scaleUp}
               className="relative mx-auto w-full max-w-2xl"
             >
               <motion.div
-                animate={{ 
+                animate={{
                   y: [0, -10, 0]
                 }}
-                transition={{ 
-                  duration: 4, 
+                transition={{
+                  duration: 4,
                   repeat: Infinity,
                   ease: "easeInOut"
                 }}
@@ -219,12 +217,12 @@ export function ProductPage() {
               >
                 {/* Professional Background with Depth */}
                 <div className="absolute inset-0 bg-slate-100 rounded-2xl"></div>
-                
+
                 {/* Container with professional styling */}
                 <div className="relative bg-white rounded-xl mx-6 my-6 p-8 border-2 border-slate-200">
                   {/* Inner shadow effect for depth */}
                   <div className="absolute inset-0 rounded-xl border border-slate-100 pointer-events-none"></div>
-                  
+
                   {/* Image container with professional styling */}
                   <div className="relative bg-slate-50 rounded-lg p-0 border border-slate-200">
                     <div className="relative">
@@ -245,7 +243,7 @@ export function ProductPage() {
                     key={index}
                     initial={{ opacity: 0, x: 50 }}
                     whileInView={{ opacity: 1, x: 0 }}
-                    viewport={{ once: true }}
+                    viewport={viewportConfig}
                     transition={{ delay: index * 0.1 }}
                     className="mb-16 relative"
                   >
@@ -269,7 +267,7 @@ export function ProductPage() {
                     key={index}
                     initial={{ opacity: 0, x: -50 }}
                     whileInView={{ opacity: 1, x: 0 }}
-                    viewport={{ once: true }}
+                    viewport={viewportConfig}
                     transition={{ delay: index * 0.1 }}
                     className="mb-16 relative"
                   >
@@ -292,10 +290,10 @@ export function ProductPage() {
               {specs.map((spec, index) => (
                 <motion.div
                   key={index}
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: index * 0.05 }}
+                  initial="hidden"
+                  whileInView="visible"
+                  viewport={viewportConfig}
+                  variants={fadeInUp}
                   className="px-6 py-4 bg-white border-2 border-slate-200 rounded-xl shadow-sm"
                 >
                   <div className="text-sm text-slate-500 mb-1 font-medium">{spec.label}</div>
@@ -307,9 +305,10 @@ export function ProductPage() {
 
           {/* White Label Info */}
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
+            initial="hidden"
+            whileInView="visible"
+            viewport={viewportConfig}
+            variants={fadeInUp}
             className="mt-20 max-w-4xl mx-auto p-8 bg-blue-50 border-2 border-blue-200 rounded-2xl"
           >
             <h3 className="text-2xl mb-4 text-slate-900 font-semibold">Enterprise Branding Solutions</h3>
@@ -343,20 +342,21 @@ export function ProductPage() {
         {/* Curved Top Wave Design */}
         <div className="absolute top-0 left-0 right-0 z-0">
           <svg className="w-full h-24" viewBox="0 0 1440 120" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
-            <path d="M0 0L60 15C120 30 240 60 360 75C480 90 600 90 720 82.5C840 75 960 60 1080 52.5C1200 45 1320 45 1380 45L1440 45V0H1380C1320 0 1200 0 1080 0C960 0 840 0 720 0C600 0 480 0 360 0C240 0 120 0 60 0H0Z" fill="#ffffff"/>
+            <path d="M0 0L60 15C120 30 240 60 360 75C480 90 600 90 720 82.5C840 75 960 60 1080 52.5C1200 45 1320 45 1380 45L1440 45V0H1380C1320 0 1200 0 1080 0C960 0 840 0 720 0C600 0 480 0 360 0C240 0 120 0 60 0H0Z" fill="#ffffff" />
           </svg>
         </div>
         {/* Curved Bottom Wave Design */}
         <div className="absolute bottom-0 left-0 right-0 z-0">
           <svg className="w-full h-24" viewBox="0 0 1440 120" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
-            <path d="M0 120L60 105C120 90 240 60 360 45C480 30 600 30 720 37.5C840 45 960 60 1080 67.5C1200 75 1320 75 1380 75L1440 75V120H1380C1320 120 1200 120 1080 120C960 120 840 120 720 120C600 120 480 120 360 120C240 120 120 120 60 120H0Z" fill="#ffffff"/>
+            <path d="M0 120L60 105C120 90 240 60 360 45C480 30 600 30 720 37.5C840 45 960 60 1080 67.5C1200 75 1320 75 1380 75L1440 75V120H1380C1320 120 1200 120 1080 120C960 120 840 120 720 120C600 120 480 120 360 120C240 120 120 120 60 120H0Z" fill="#ffffff" />
           </svg>
         </div>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
+            initial="hidden"
+            whileInView="visible"
+            viewport={viewportConfig}
+            variants={fadeInUp}
             className="text-center mb-16"
           >
             <h2 className="text-4xl md:text-5xl mb-4 text-slate-900 font-bold">
@@ -367,15 +367,18 @@ export function ProductPage() {
             </p>
           </motion.div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
+          <motion.div
+            initial="hidden"
+            whileInView="visible"
+            viewport={viewportConfig}
+            variants={staggerContainer}
+            className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12"
+          >
             {features.map((feature, index) => (
               <motion.div
                 key={index}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: index * 0.1 }}
-                whileHover={{ 
+                variants={fadeInUp}
+                whileHover={{
                   y: -4,
                   boxShadow: '0 20px 40px rgba(0, 0, 0, 0.1)',
                   borderColor: '#2563eb'
@@ -389,17 +392,20 @@ export function ProductPage() {
                 <p className="text-slate-600 leading-relaxed">{feature.description}</p>
               </motion.div>
             ))}
-          </div>
+          </motion.div>
 
           {/* Additional Tech Highlights */}
-          <div className="grid md:grid-cols-2 gap-6">
+          <motion.div
+            initial="hidden"
+            whileInView="visible"
+            viewport={viewportConfig}
+            variants={staggerContainer}
+            className="grid md:grid-cols-2 gap-6"
+          >
             {techHighlights.map((highlight, index) => (
               <motion.div
                 key={index}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: 0.6 + index * 0.1 }}
+                variants={fadeInUp}
                 className="p-8 bg-white border-2 border-blue-200 rounded-xl"
               >
                 <div className="flex items-start gap-4">
@@ -413,7 +419,7 @@ export function ProductPage() {
                 </div>
               </motion.div>
             ))}
-          </div>
+          </motion.div>
         </div>
       </section>
 
@@ -422,14 +428,15 @@ export function ProductPage() {
         {/* Curved Top Wave Design */}
         <div className="absolute top-0 left-0 right-0 z-0">
           <svg className="w-full h-24" viewBox="0 0 1440 120" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
-            <path d="M0 0L60 15C120 30 240 60 360 75C480 90 600 90 720 82.5C840 75 960 60 1080 52.5C1200 45 1320 45 1380 45L1440 45V0H1380C1320 0 1200 0 1080 0C960 0 840 0 720 0C600 0 480 0 360 0C240 0 120 0 60 0H0Z" fill="#ffffff"/>
+            <path d="M0 0L60 15C120 30 240 60 360 75C480 90 600 90 720 82.5C840 75 960 60 1080 52.5C1200 45 1320 45 1380 45L1440 45V0H1380C1320 0 1200 0 1080 0C960 0 840 0 720 0C600 0 480 0 360 0C240 0 120 0 60 0H0Z" fill="#ffffff" />
           </svg>
         </div>
         <div className="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center z-10">
           <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            whileInView={{ opacity: 1, scale: 1 }}
-            viewport={{ once: true }}
+            initial="hidden"
+            whileInView="visible"
+            viewport={viewportConfig}
+            variants={scaleUp}
           >
             <h2 className="text-4xl md:text-5xl mb-6 text-white font-bold">Ready to Deploy?</h2>
             <p className="text-xl text-blue-50 mb-8">
@@ -437,7 +444,7 @@ export function ProductPage() {
             </p>
             <div className="flex flex-wrap gap-4 justify-center">
               <motion.button
-                whileHover={{ 
+                whileHover={{
                   scale: 1.05,
                   boxShadow: '0 20px 40px rgba(0, 0, 0, 0.2)'
                 }}
@@ -447,7 +454,7 @@ export function ProductPage() {
                 Contact Sales
               </motion.button>
               <motion.button
-                whileHover={{ 
+                whileHover={{
                   scale: 1.05,
                   borderColor: '#ffffff',
                   backgroundColor: 'rgba(255, 255, 255, 0.1)'

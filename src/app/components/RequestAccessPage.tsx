@@ -1,15 +1,18 @@
 import { motion } from 'motion/react';
 import { Lock, Mail, User, MapPin, CheckCircle2 } from 'lucide-react';
 import { useState } from 'react';
+import { fadeInUp, staggerContainer, viewportConfig, slideInLeft, slideInRight } from '../utils/animations';
 
 export function RequestAccessPage() {
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
     email: '',
-    password: '',
-    confirmPassword: '',
-    address: ''
+    company: '',
+    location: '',
+    machineCount: '',
+    role: '',
+    message: ''
   });
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -18,7 +21,7 @@ export function RequestAccessPage() {
     console.log('Form submitted:', formData);
   };
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     setFormData({
       ...formData,
       [e.target.name]: e.target.value
@@ -29,19 +32,19 @@ export function RequestAccessPage() {
     <div className="min-h-screen pt-20 bg-white">
       {/* Header */}
       <section className="relative py-24 overflow-hidden bg-blue-50 rounded-b-[3rem]">
-        
+
         {/* Curved Bottom Wave Design */}
         <div className="absolute bottom-0 left-0 right-0 z-0">
           <svg className="w-full h-24" viewBox="0 0 1440 120" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
-            <path d="M0 120L60 105C120 90 240 60 360 45C480 30 600 30 720 37.5C840 45 960 60 1080 67.5C1200 75 1320 75 1380 75L1440 75V120H1380C1320 120 1200 120 1080 120C960 120 840 120 720 120C600 120 480 120 360 120C240 120 120 120 60 120H0Z" fill="#ffffff"/>
+            <path d="M0 120L60 105C120 90 240 60 360 45C480 30 600 30 720 37.5C840 45 960 60 1080 67.5C1200 75 1320 75 1380 75L1440 75V120H1380C1320 120 1200 120 1080 120C960 120 840 120 720 120C600 120 480 120 360 120C240 120 120 120 60 120H0Z" fill="#ffffff" />
           </svg>
         </div>
-        
+
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center z-10">
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
+            initial="hidden"
+            animate="visible"
+            variants={fadeInUp}
           >
             <div className="inline-flex items-center gap-2 px-4 py-2 bg-blue-50 border border-blue-200 rounded-full mb-6">
               <Lock className="w-4 h-4 text-blue-600" />
@@ -62,21 +65,25 @@ export function RequestAccessPage() {
         {/* Curved Top Wave Design */}
         <div className="absolute top-0 left-0 right-0 z-0">
           <svg className="w-full h-24" viewBox="0 0 1440 120" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
-            <path d="M0 0L60 15C120 30 240 60 360 75C480 90 600 90 720 82.5C840 75 960 60 1080 52.5C1200 45 1320 45 1380 45L1440 45V0H1380C1320 0 1200 0 1080 0C960 0 840 0 720 0C600 0 480 0 360 0C240 0 120 0 60 0H0Z" fill="#f8fafc"/>
+            <path d="M0 0L60 15C120 30 240 60 360 75C480 90 600 90 720 82.5C840 75 960 60 1080 52.5C1200 45 1320 45 1380 45L1440 45V0H1380C1320 0 1200 0 1080 0C960 0 840 0 720 0C600 0 480 0 360 0C240 0 120 0 60 0H0Z" fill="#f8fafc" />
           </svg>
         </div>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="grid lg:grid-cols-[1fr_1.75fr] gap-18">
             {/* Left Side - Benefits */}
             <motion.div
-              initial={{ opacity: 0, x: -30 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.6 }}
+              initial="hidden"
+              whileInView="visible"
+              viewport={viewportConfig}
+              variants={slideInLeft}
               className="space-y-10"
             >
               <div>
                 <h2 className="text-3xl mb-8 text-slate-900 font-bold">Enterprise Benefits</h2>
-                <div className="space-y-8">
+                <motion.div
+                  variants={staggerContainer}
+                  className="space-y-8"
+                >
                   {[
                     {
                       title: 'Priority Deployment',
@@ -97,9 +104,7 @@ export function RequestAccessPage() {
                   ].map((benefit, index) => (
                     <motion.div
                       key={index}
-                      initial={{ opacity: 0, y: 20 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: 0.2 + index * 0.1 }}
+                      variants={fadeInUp}
                       className="flex items-start gap-4"
                     >
                       <div className="w-10 h-10 bg-blue-50 rounded-lg flex items-center justify-center flex-shrink-0">
@@ -111,7 +116,7 @@ export function RequestAccessPage() {
                       </div>
                     </motion.div>
                   ))}
-                </div>
+                </motion.div>
               </div>
 
               <div className="p-6 bg-blue-50 border-2 border-blue-200 rounded-xl">
@@ -129,14 +134,15 @@ export function RequestAccessPage() {
             </motion.div>
 
             {/* Right Side - Form */}
-            <motion.div 
-              initial={{ opacity: 0, x: 30 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.6 }}
+            <motion.div
+              initial="hidden"
+              whileInView="visible"
+              viewport={viewportConfig}
+              variants={slideInRight}
             >
               <div className="p-8 bg-white border-2 border-slate-200 rounded-2xl shadow-xl">
-                <h2 className="text-2xl mb-8 text-slate-900 font-semibold">Create Enterprise Account</h2>
-                
+                <h2 className="text-2xl mb-8 text-slate-900 font-semibold">Request Access</h2>
+
                 <form onSubmit={handleSubmit} className="space-y-6">
                   {/* First Name and Last Name */}
                   <div className="grid grid-cols-2 gap-4">
@@ -179,126 +185,133 @@ export function RequestAccessPage() {
                     </div>
                   </div>
 
-                  {/* Email */}
-                  <div>
-                    <label htmlFor="email" className="block text-sm mb-2 text-slate-700 font-medium">
-                      Email Address *
-                    </label>
-                    <div className="relative">
-                      <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
-                      <input
-                        type="email"
-                        id="email"
-                        name="email"
-                        value={formData.email}
-                        onChange={handleChange}
-                        required
-                        className="w-full pl-12 pr-4 py-3 bg-white border-2 border-slate-200 rounded-lg focus:outline-none focus:border-blue-600 transition-colors text-slate-900 placeholder-slate-400"
-                        placeholder="john@example.com"
-                      />
-                    </div>
-                  </div>
-
-                  {/* Password and Confirm Password */}
+                  {/* Email and Company */}
                   <div className="grid grid-cols-2 gap-4">
                     <div>
-                      <label htmlFor="password" className="block text-sm mb-2 text-slate-700 font-medium">
-                        Password *
+                      <label htmlFor="email" className="block text-sm mb-2 text-slate-700 font-medium">
+                        Email Address *
                       </label>
                       <div className="relative">
-                        <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
+                        <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
                         <input
-                          type="password"
-                          id="password"
-                          name="password"
-                          value={formData.password}
+                          type="email"
+                          id="email"
+                          name="email"
+                          value={formData.email}
                           onChange={handleChange}
                           required
                           className="w-full pl-12 pr-4 py-3 bg-white border-2 border-slate-200 rounded-lg focus:outline-none focus:border-blue-600 transition-colors text-slate-900 placeholder-slate-400"
-                          placeholder="••••••••"
+                          placeholder="john@example.com"
                         />
                       </div>
                     </div>
 
                     <div>
-                      <label htmlFor="confirmPassword" className="block text-sm mb-2 text-slate-700 font-medium">
-                        Confirm Password *
+                      <label htmlFor="company" className="block text-sm mb-2 text-slate-700 font-medium">
+                        Company *
                       </label>
                       <div className="relative">
-                        <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
+                        <User className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
                         <input
-                          type="password"
-                          id="confirmPassword"
-                          name="confirmPassword"
-                          value={formData.confirmPassword}
+                          type="text"
+                          id="company"
+                          name="company"
+                          value={formData.company}
                           onChange={handleChange}
                           required
                           className="w-full pl-12 pr-4 py-3 bg-white border-2 border-slate-200 rounded-lg focus:outline-none focus:border-blue-600 transition-colors text-slate-900 placeholder-slate-400"
-                          placeholder="••••••••"
+                          placeholder="Company Name"
                         />
                       </div>
                     </div>
                   </div>
 
-                  {/* Address */}
+                  {/* Location */}
                   <div>
-                    <label htmlFor="address" className="block text-sm mb-2 text-slate-700 font-medium">
-                      Business Address *
+                    <label htmlFor="location" className="block text-sm mb-2 text-slate-700 font-medium">
+                      Location
                     </label>
                     <div className="relative">
-                      <MapPin className="absolute left-4 top-3 w-5 h-5 text-slate-400" />
-                      <textarea
-                        id="address"
-                        name="address"
-                        value={formData.address}
+                      <MapPin className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
+                      <input
+                        type="text"
+                        id="location"
+                        name="location"
+                        value={formData.location}
                         onChange={handleChange}
-                        required
-                        rows={1}
-                        className="w-full pl-12 pr-4 py-3 bg-white border-2 border-slate-200 rounded-lg focus:outline-none focus:border-blue-600 transition-colors text-slate-900 placeholder-slate-400 resize-none"
-                        placeholder="123 Business Street, City, State, ZIP"
+                        className="w-full pl-12 pr-4 py-3 bg-white border-2 border-slate-200 rounded-lg focus:outline-none focus:border-blue-600 transition-colors text-slate-900 placeholder-slate-400"
+                        placeholder="City, Country"
                       />
                     </div>
                   </div>
 
-                  {/* Terms */}
-                  <div className="flex items-start gap-3">
-                    <input
-                      type="checkbox"
-                      id="terms"
-                      required
-                      className="mt-1 w-4 h-4 rounded border-2 border-slate-300 bg-white checked:bg-blue-600 checked:border-blue-600 focus:ring-2 focus:ring-blue-600/50"
-                    />
-                    <label htmlFor="terms" className="text-sm text-slate-600">
-                      I agree to the{' '}
-                      <a href="#" className="text-blue-600 hover:underline font-medium">
-                        Terms of Service
-                      </a>{' '}
-                      and{' '}
-                      <a href="#" className="text-blue-600 hover:underline font-medium">
-                        Privacy Policy
-                      </a>
+                  {/* Machine Count and Role */}
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <label htmlFor="machineCount" className="block text-sm mb-2 text-slate-700 font-medium">
+                        How many machines are you interested in?
+                      </label>
+                      <input
+                        type="number"
+                        id="machineCount"
+                        name="machineCount"
+                        value={formData.machineCount}
+                        onChange={handleChange}
+                        min="1"
+                        className="w-full px-4 py-3 bg-white border-2 border-slate-200 rounded-lg focus:outline-none focus:border-blue-600 transition-colors text-slate-900 placeholder-slate-400"
+                      />
+                    </div>
+
+                    <div>
+                      <label htmlFor="role" className="block text-sm mb-2 text-slate-700 font-medium">
+                        I am a...
+                      </label>
+                      <select
+                        id="role"
+                        name="role"
+                        value={formData.role}
+                        onChange={handleChange}
+                        className="w-full px-4 py-3 bg-white border-2 border-slate-200 rounded-lg focus:outline-none focus:border-blue-600 transition-colors text-slate-900"
+                      >
+                        <option value="">Select an option</option>
+                        <option value="Operator">Operator</option>
+                        <option value="Restaurant Owner">Restaurant Owner</option>
+                        <option value="Site/Operations Manager">Site/Operations Manager</option>
+                        <option value="Cafeteria Manager">Cafeteria Manager</option>
+                        <option value="Interested in Providing Info to a Location">Interested in Providing Info to a Location</option>
+                        <option value="New Business">New Business</option>
+                        <option value="Other">Other</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  {/* Message */}
+                  <div>
+                    <label htmlFor="message" className="block text-sm mb-2 text-slate-700 font-medium">
+                      Anything else you'd like us to know about your request?
                     </label>
+                    <textarea
+                      id="message"
+                      name="message"
+                      value={formData.message}
+                      onChange={handleChange}
+                      rows={4}
+                      className="w-full px-4 py-3 bg-white border-2 border-slate-200 rounded-lg focus:outline-none focus:border-blue-600 transition-colors text-slate-900 placeholder-slate-400 resize-none"
+                    />
                   </div>
 
                   {/* Submit Button */}
                   <motion.button
                     type="submit"
-                    whileHover={{ 
+                    whileHover={{
                       scale: 1.02,
                       boxShadow: '0 10px 30px rgba(37, 99, 235, 0.3)'
                     }}
                     whileTap={{ scale: 0.98 }}
                     className="w-full py-4 bg-blue-600 text-white rounded-lg shadow-lg shadow-blue-600/20 transition-all font-semibold hover:bg-blue-700"
                   >
-                    Request Access
+                    Send Request
                   </motion.button>
-
-                  <p className="text-center text-sm text-slate-600">
-                    Already have an account?{' '}
-                    <a href="#" className="text-blue-600 hover:underline font-medium">
-                      Sign in here
-                    </a>
-                  </p>
                 </form>
               </div>
             </motion.div>
@@ -311,14 +324,15 @@ export function RequestAccessPage() {
         {/* Curved Top Wave Design */}
         <div className="absolute top-0 left-0 right-0 z-0">
           <svg className="w-full h-24" viewBox="0 0 1440 120" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
-            <path d="M0 0L60 15C120 30 240 60 360 75C480 90 600 90 720 82.5C840 75 960 60 1080 52.5C1200 45 1320 45 1380 45L1440 45V0H1380C1320 0 1200 0 1080 0C960 0 840 0 720 0C600 0 480 0 360 0C240 0 120 0 60 0H0Z" fill="#ffffff"/>
+            <path d="M0 0L60 15C120 30 240 60 360 75C480 90 600 90 720 82.5C840 75 960 60 1080 52.5C1200 45 1320 45 1380 45L1440 45V0H1380C1320 0 1200 0 1080 0C960 0 840 0 720 0C600 0 480 0 360 0C240 0 120 0 60 0H0Z" fill="#ffffff" />
           </svg>
         </div>
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
+            initial="hidden"
+            whileInView="visible"
+            viewport={viewportConfig}
+            variants={fadeInUp}
           >
             <Lock className="w-12 h-12 text-blue-600 mx-auto mb-4" />
             <h3 className="text-2xl mb-4 text-slate-900 font-semibold">Enterprise-Grade Security</h3>

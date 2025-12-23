@@ -13,10 +13,11 @@ export function Header({
 }: HeaderProps) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [resourcesOpen, setResourcesOpen] = useState(false);
+  const [companyOpen, setCompanyOpen] = useState(false);
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 border-b border-slate-200 backdrop-blur-xl bg-white/95 shadow-sm">
-      <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <nav className="w-full mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-20">
           {/* Logo */}
           <motion.div
@@ -35,9 +36,10 @@ export function Header({
 
           {/* Desktop Navigation */}
           <div className="hidden lg:flex items-center gap-6">
+            {/* 1. Home */}
             <motion.button
               onClick={() => onNavigate("home")}
-              whileHover={{ 
+              whileHover={{
                 scale: 1.02,
                 color: "#2563eb"
               }}
@@ -58,11 +60,35 @@ export function Header({
               )}
             </motion.button>
 
-            {/* Resources Dropdown */}
+            {/* 2. Machine */}
+            <motion.button
+              onClick={() => onNavigate("product")}
+              whileHover={{
+                scale: 1.02,
+                color: "#2563eb"
+              }}
+              whileTap={{ scale: 0.98 }}
+              className={`relative px-3 py-2 rounded-lg transition-all font-medium ${currentPage === "product" ? "text-blue-600" : "text-slate-700 hover:text-blue-600"}`}
+            >
+              <motion.div
+                className="absolute inset-0 bg-blue-50 rounded-lg z-0"
+                initial={{ opacity: 0 }}
+                whileHover={{ opacity: 1 }}
+              />
+              <span className="relative z-10">Machine</span>
+              {currentPage === "product" && (
+                <motion.div
+                  className="absolute -bottom-0.5 left-0 right-0 h-0.5 bg-blue-600 z-20 rounded-full"
+                  layoutId="activeTab"
+                />
+              )}
+            </motion.button>
+
+            {/* 3. Resources Dropdown */}
             <div className="relative">
               <motion.button
                 onMouseEnter={() => setResourcesOpen(true)}
-                whileHover={{ 
+                whileHover={{
                   scale: 1.02,
                   color: "#2563eb"
                 }}
@@ -93,7 +119,7 @@ export function Header({
                         onNavigate("blog");
                         setResourcesOpen(false);
                       }}
-                      whileHover={{ 
+                      whileHover={{
                         x: 4,
                         backgroundColor: "#f1f5f9"
                       }}
@@ -107,7 +133,7 @@ export function Header({
                         onNavigate("manual");
                         setResourcesOpen(false);
                       }}
-                      whileHover={{ 
+                      whileHover={{
                         x: 4,
                         backgroundColor: "#f1f5f9"
                       }}
@@ -121,54 +147,10 @@ export function Header({
               </AnimatePresence>
             </div>
 
-            <motion.button
-              onClick={() => onNavigate("product")}
-              whileHover={{ 
-                scale: 1.02,
-                color: "#2563eb"
-              }}
-              whileTap={{ scale: 0.98 }}
-              className={`relative px-3 py-2 rounded-lg transition-all font-medium ${currentPage === "product" ? "text-blue-600" : "text-slate-700 hover:text-blue-600"}`}
-            >
-              <motion.div
-                className="absolute inset-0 bg-blue-50 rounded-lg z-0"
-                initial={{ opacity: 0 }}
-                whileHover={{ opacity: 1 }}
-              />
-              <span className="relative z-10">Our Machine</span>
-              {currentPage === "product" && (
-                <motion.div
-                  className="absolute -bottom-0.5 left-0 right-0 h-0.5 bg-blue-600 z-20 rounded-full"
-                  layoutId="activeTab"
-                />
-              )}
-            </motion.button>
-
-            {/* <button 
-              className="text-[#b2c9e0] hover:text-white transition-colors"
-            >
-              Why Pizza Anytime?
-            </button> */}
-
-            <motion.button
-              whileHover={{ 
-                scale: 1.02,
-                color: "#2563eb"
-              }}
-              whileTap={{ scale: 0.98 }}
-              className="relative px-3 py-2 rounded-lg text-slate-700 hover:text-blue-600 transition-all font-medium"
-            >
-              <motion.div
-                className="absolute inset-0 bg-blue-50 rounded-lg z-0"
-                initial={{ opacity: 0 }}
-                whileHover={{ opacity: 1 }}
-              />
-              <span className="relative z-10">ROI Calculator</span>
-            </motion.button>
-
+            {/* 4. Request Access */}
             <motion.button
               onClick={() => onNavigate("request-access")}
-              whileHover={{ 
+              whileHover={{
                 scale: 1.02,
                 color: "#2563eb"
               }}
@@ -189,24 +171,185 @@ export function Header({
               )}
             </motion.button>
 
+            {/* 5. Company Dropdown */}
+            <div className="relative">
+              <motion.button
+                onMouseEnter={() => setCompanyOpen(true)}
+                whileHover={{
+                  scale: 1.02,
+                  color: "#2563eb"
+                }}
+                whileTap={{ scale: 0.98 }}
+                className={`relative flex items-center gap-1 px-3 py-2 rounded-lg transition-all font-medium ${companyOpen ? "text-blue-600" : "text-slate-700 hover:text-blue-600"}`}
+              >
+                <motion.div
+                  className="absolute inset-0 bg-blue-50 rounded-lg z-0"
+                  initial={{ opacity: 0 }}
+                  whileHover={{ opacity: 1 }}
+                />
+                <span className="relative z-10">Company</span>
+                <ChevronDown className="w-4 h-4 relative z-10" />
+              </motion.button>
+
+              <AnimatePresence>
+                {companyOpen && (
+                  <motion.div
+                    initial={{ opacity: 0, y: -10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -10 }}
+                    transition={{ duration: 0.2 }}
+                    onMouseLeave={() => setCompanyOpen(false)}
+                    className="absolute top-full left-0 mt-2 w-56 bg-white border border-slate-200 rounded-lg shadow-xl overflow-hidden"
+                  >
+                    <motion.button
+                      onClick={() => {
+                        onNavigate("company");
+                        setCompanyOpen(false);
+                      }}
+                      whileHover={{
+                        x: 4,
+                        backgroundColor: "#f1f5f9"
+                      }}
+                      whileTap={{ scale: 0.98 }}
+                      className="block w-full text-left px-4 py-3 text-slate-700 transition-all hover:text-blue-600"
+                    >
+                      Contact Us
+                    </motion.button>
+                    <motion.button
+                      onClick={() => {
+                        onNavigate("company");
+                        setCompanyOpen(false);
+                      }}
+                      whileHover={{
+                        x: 4,
+                        backgroundColor: "#f1f5f9"
+                      }}
+                      whileTap={{ scale: 0.98 }}
+                      className="block w-full text-left px-4 py-3 text-slate-700 transition-all hover:text-blue-600"
+                    >
+                      About Us
+                    </motion.button>
+                    <motion.button
+                      onClick={() => {
+                        onNavigate("privacy-terms");
+                        setCompanyOpen(false);
+                      }}
+                      whileHover={{
+                        x: 4,
+                        backgroundColor: "#f1f5f9"
+                      }}
+                      whileTap={{ scale: 0.98 }}
+                      className="block w-full text-left px-4 py-3 text-slate-700 transition-all hover:text-blue-600"
+                    >
+                      Privacy & Terms
+                    </motion.button>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+
+            {/* 6. Landing Page */}
             <motion.button
-              whileHover={{ 
+              onClick={() => onNavigate("landing")}
+              whileHover={{
                 scale: 1.02,
                 color: "#2563eb"
               }}
               whileTap={{ scale: 0.98 }}
-              className="relative px-3 py-2 rounded-lg text-slate-700 hover:text-blue-600 transition-all font-medium"
+              className={`relative px-3 py-2 rounded-lg transition-all font-medium ${currentPage === "landing" ? "text-blue-600" : "text-slate-700 hover:text-blue-600"}`}
             >
               <motion.div
                 className="absolute inset-0 bg-blue-50 rounded-lg z-0"
                 initial={{ opacity: 0 }}
                 whileHover={{ opacity: 1 }}
               />
-              <span className="relative z-10">Contact</span>
+              <span className="relative z-10">Landing Page</span>
+              {currentPage === "landing" && (
+                <motion.div
+                  className="absolute -bottom-0.5 left-0 right-0 h-0.5 bg-blue-600 z-20 rounded-full"
+                  layoutId="activeTab"
+                />
+              )}
             </motion.button>
 
+            {/* 7. Why Pizza Anytime */}
             <motion.button
-              whileHover={{ 
+              onClick={() => onNavigate("why-pizza-anytime")}
+              whileHover={{
+                scale: 1.02,
+                color: "#2563eb"
+              }}
+              whileTap={{ scale: 0.98 }}
+              className={`relative px-3 py-2 rounded-lg transition-all font-medium ${currentPage === "why-pizza-anytime" ? "text-blue-600" : "text-slate-700 hover:text-blue-600"}`}
+            >
+              <motion.div
+                className="absolute inset-0 bg-blue-50 rounded-lg z-0"
+                initial={{ opacity: 0 }}
+                whileHover={{ opacity: 1 }}
+              />
+              <span className="relative z-10">Why Pizza Anytime</span>
+              {currentPage === "why-pizza-anytime" && (
+                <motion.div
+                  className="absolute -bottom-0.5 left-0 right-0 h-0.5 bg-blue-600 z-20 rounded-full"
+                  layoutId="activeTab"
+                />
+              )}
+            </motion.button>
+
+            {/* 8. Onsite Support */}
+            <motion.button
+              onClick={() => onNavigate("onsite-support")}
+              whileHover={{
+                scale: 1.02,
+                color: "#2563eb"
+              }}
+              whileTap={{ scale: 0.98 }}
+              className={`relative px-3 py-2 rounded-lg transition-all font-medium ${currentPage === "onsite-support" ? "text-blue-600" : "text-slate-700 hover:text-blue-600"}`}
+            >
+              <motion.div
+                className="absolute inset-0 bg-blue-50 rounded-lg z-0"
+                initial={{ opacity: 0 }}
+                whileHover={{ opacity: 1 }}
+              />
+              <span className="relative z-10">Onsite Support</span>
+              {currentPage === "onsite-support" && (
+                <motion.div
+                  className="absolute -bottom-0.5 left-0 right-0 h-0.5 bg-blue-600 z-20 rounded-full"
+                  layoutId="activeTab"
+                />
+              )}
+            </motion.button>
+
+            {/* 9. ROI Calculator */}
+            <motion.button
+              onClick={() => onNavigate("roi-calculator")}
+              whileHover={{
+                scale: 1.02,
+                color: "#2563eb"
+              }}
+              whileTap={{ scale: 0.98 }}
+              className={`relative px-3 py-2 rounded-lg transition-all font-medium ${currentPage === "roi-calculator" ? "text-blue-600" : "text-slate-700 hover:text-blue-600"}`}
+            >
+              <motion.div
+                className="absolute inset-0 bg-blue-50 rounded-lg z-0"
+                initial={{ opacity: 0 }}
+                whileHover={{ opacity: 1 }}
+              />
+              <span className="relative z-10">ROI Calculator</span>
+              {currentPage === "roi-calculator" && (
+                <motion.div
+                  className="absolute -bottom-0.5 left-0 right-0 h-0.5 bg-blue-600 z-20 rounded-full"
+                  layoutId="activeTab"
+                />
+              )}
+            </motion.button>
+
+            {/* 10. Financing */}
+            <motion.a
+              href="https://www.lebreadxpress.com/rfq"
+              target="_blank"
+              rel="noopener noreferrer"
+              whileHover={{
                 scale: 1.02,
                 color: "#2563eb"
               }}
@@ -218,8 +361,8 @@ export function Header({
                 initial={{ opacity: 0 }}
                 whileHover={{ opacity: 1 }}
               />
-              {/* <span className="relative z-10">Privacy</span> */}
-            </motion.button>
+              <span className="relative z-10">Financing</span>
+            </motion.a>
 
             <motion.button
               whileHover={{
@@ -256,12 +399,13 @@ export function Header({
               className="lg:hidden overflow-hidden border-t border-slate-200 bg-white"
             >
               <div className="py-4 space-y-3">
+                {/* 1. Home */}
                 <motion.button
                   onClick={() => {
                     onNavigate("home");
                     setMobileMenuOpen(false);
                   }}
-                  whileHover={{ 
+                  whileHover={{
                     x: 8,
                     backgroundColor: "#f1f5f9",
                     color: "#2563eb"
@@ -271,12 +415,29 @@ export function Header({
                 >
                   Home
                 </motion.button>
+                {/* 2. Machine */}
+                <motion.button
+                  onClick={() => {
+                    onNavigate("product");
+                    setMobileMenuOpen(false);
+                  }}
+                  whileHover={{
+                    x: 8,
+                    backgroundColor: "#f1f5f9",
+                    color: "#2563eb"
+                  }}
+                  whileTap={{ scale: 0.98 }}
+                  className="block w-full text-left px-4 py-2 text-slate-700 rounded-lg transition-all font-medium"
+                >
+                  Machine
+                </motion.button>
+                {/* 3. Resources */}
                 <motion.button
                   onClick={() => {
                     onNavigate("blog");
                     setMobileMenuOpen(false);
                   }}
-                  whileHover={{ 
+                  whileHover={{
                     x: 8,
                     backgroundColor: "#f1f5f9",
                     color: "#2563eb"
@@ -286,49 +447,13 @@ export function Header({
                 >
                   Resources
                 </motion.button>
-                <motion.button
-                  onClick={() => {
-                    onNavigate("product");
-                    setMobileMenuOpen(false);
-                  }}
-                  whileHover={{ 
-                    x: 8,
-                    backgroundColor: "#f1f5f9",
-                    color: "#2563eb"
-                  }}
-                  whileTap={{ scale: 0.98 }}
-                  className="block w-full text-left px-4 py-2 text-slate-700 rounded-lg transition-all font-medium"
-                >
-                  Our Machine
-                </motion.button>
-                <motion.button
-                  whileHover={{ 
-                    x: 8,
-                    backgroundColor: "#f1f5f9",
-                    color: "#2563eb"
-                  }}
-                  whileTap={{ scale: 0.98 }}
-                  className="block w-full text-left px-4 py-2 text-slate-700 rounded-lg transition-all font-medium"
-                >
-                  Why Pizza Anytime?
-                </motion.button>
-                <motion.button
-                  whileHover={{ 
-                    x: 8,
-                    backgroundColor: "#f1f5f9",
-                    color: "#2563eb"
-                  }}
-                  whileTap={{ scale: 0.98 }}
-                  className="block w-full text-left px-4 py-2 text-slate-700 rounded-lg transition-all font-medium"
-                >
-                  ROI Calculator
-                </motion.button>
+                {/* 4. Request Access */}
                 <motion.button
                   onClick={() => {
                     onNavigate("request-access");
                     setMobileMenuOpen(false);
                   }}
-                  whileHover={{ 
+                  whileHover={{
                     x: 8,
                     backgroundColor: "#f1f5f9",
                     color: "#2563eb"
@@ -338,8 +463,13 @@ export function Header({
                 >
                   Request Access
                 </motion.button>
+                {/* 5. Company */}
                 <motion.button
-                  whileHover={{ 
+                  onClick={() => {
+                    onNavigate("company");
+                    setMobileMenuOpen(false);
+                  }}
+                  whileHover={{
                     x: 8,
                     backgroundColor: "#f1f5f9",
                     color: "#2563eb"
@@ -347,10 +477,15 @@ export function Header({
                   whileTap={{ scale: 0.98 }}
                   className="block w-full text-left px-4 py-2 text-slate-700 rounded-lg transition-all font-medium"
                 >
-                  Contact
+                  Company
                 </motion.button>
+                {/* 6. Landing Page */}
                 <motion.button
-                  whileHover={{ 
+                  onClick={() => {
+                    onNavigate("landing");
+                    setMobileMenuOpen(false);
+                  }}
+                  whileHover={{
                     x: 8,
                     backgroundColor: "#f1f5f9",
                     color: "#2563eb"
@@ -358,7 +493,81 @@ export function Header({
                   whileTap={{ scale: 0.98 }}
                   className="block w-full text-left px-4 py-2 text-slate-700 rounded-lg transition-all font-medium"
                 >
-                  Privacy
+                  Landing Page
+                </motion.button>
+                {/* 7. Why Pizza Anytime */}
+                <motion.button
+                  onClick={() => {
+                    onNavigate("why-pizza-anytime");
+                    setMobileMenuOpen(false);
+                  }}
+                  whileHover={{
+                    x: 8,
+                    backgroundColor: "#f1f5f9",
+                    color: "#2563eb"
+                  }}
+                  whileTap={{ scale: 0.98 }}
+                  className="block w-full text-left px-4 py-2 text-slate-700 rounded-lg transition-all font-medium"
+                >
+                  Why Pizza Anytime
+                </motion.button>
+                {/* 8. Onsite Support */}
+                <motion.button
+                  onClick={() => {
+                    onNavigate("onsite-support");
+                    setMobileMenuOpen(false);
+                  }}
+                  whileHover={{
+                    x: 8,
+                    backgroundColor: "#f1f5f9",
+                    color: "#2563eb"
+                  }}
+                  whileTap={{ scale: 0.98 }}
+                  className="block w-full text-left px-4 py-2 text-slate-700 rounded-lg transition-all font-medium"
+                >
+                  Onsite Support
+                </motion.button>
+                {/* 9. ROI Calculator */}
+                <motion.button
+                  onClick={() => {
+                    onNavigate("roi-calculator");
+                    setMobileMenuOpen(false);
+                  }}
+                  whileHover={{
+                    x: 8,
+                    backgroundColor: "#f1f5f9",
+                    color: "#2563eb"
+                  }}
+                  whileTap={{ scale: 0.98 }}
+                  className="block w-full text-left px-4 py-2 text-slate-700 rounded-lg transition-all font-medium"
+                >
+                  ROI Calculator
+                </motion.button>
+                {/* 10. Financing */}
+                <motion.a
+                  href="https://www.lebreadxpress.com/rfq"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="block w-full text-left px-4 py-2 text-slate-700 rounded-lg transition-all font-medium hover:bg-blue-50 hover:text-blue-600"
+                >
+                  Financing
+                </motion.a>
+                {/* 11. Privacy/Terms */}
+                <motion.button
+                  onClick={() => {
+                    onNavigate("privacy-terms");
+                    setMobileMenuOpen(false);
+                  }}
+                  whileHover={{
+                    x: 8,
+                    backgroundColor: "#f1f5f9",
+                    color: "#2563eb"
+                  }}
+                  whileTap={{ scale: 0.98 }}
+                  className="block w-full text-left px-4 py-2 text-slate-700 rounded-lg transition-all font-medium"
+                >
+                  Privacy & Terms
                 </motion.button>
                 <motion.button
                   whileHover={{

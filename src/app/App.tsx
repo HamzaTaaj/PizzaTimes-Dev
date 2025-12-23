@@ -6,6 +6,12 @@ import { ProductPage } from './components/ProductPage';
 import { BlogPage } from './components/BlogPage';
 import { ManualPage } from './components/ManualPage';
 import { RequestAccessPage } from './components/RequestAccessPage';
+import { LandingPage } from './components/LandingPage';
+import { CompanyPage } from './components/CompanyPage';
+import { WhyPizzaAnytimePage } from './components/WhyPizzaAnytimePage';
+import { OnsiteSupportPage } from './components/OnsiteSupportPage';
+import { ROICalculatorPage } from './components/ROICalculatorPage';
+import { PrivacyTermsPage } from './components/PrivacyTermsPage';
 import { Footer } from './components/Footer';
 import { ArrowUp } from 'lucide-react';
 
@@ -49,6 +55,12 @@ export default function App() {
           {currentPage === 'blog' && <BlogPage />}
           {currentPage === 'manual' && <ManualPage />}
           {currentPage === 'request-access' && <RequestAccessPage />}
+          {currentPage === 'landing' && <LandingPage onNavigate={handleNavigate} />}
+          {currentPage === 'company' && <CompanyPage onNavigate={handleNavigate} />}
+          {currentPage === 'why-pizza-anytime' && <WhyPizzaAnytimePage onNavigate={handleNavigate} />}
+          {currentPage === 'onsite-support' && <OnsiteSupportPage onNavigate={handleNavigate} />}
+          {currentPage === 'roi-calculator' && <ROICalculatorPage onNavigate={handleNavigate} />}
+          {currentPage === 'privacy-terms' && <PrivacyTermsPage />}
         </motion.main>
       </AnimatePresence>
 
