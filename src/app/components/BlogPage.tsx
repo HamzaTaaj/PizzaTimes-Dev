@@ -3,7 +3,11 @@ import { Calendar, Tag, ArrowRight, TrendingUp, Award, Users, Globe } from 'luci
 import { ImageWithFallback } from './figma/ImageWithFallback';
 import { fadeInUp, staggerContainer, viewportConfig } from '../utils/animations';
 
-export function BlogPage() {
+interface BlogPageProps {
+  onNavigate: (page: string) => void;
+}
+
+export function BlogPage({ onNavigate }: BlogPageProps) {
   const pressReleases = [
     {
       id: 1,
@@ -62,7 +66,7 @@ export function BlogPage() {
       title: 'PizzaMatic Pro X1 - Next Generation Machine Unveiled',
       excerpt: 'New model features enhanced capacity, faster cooking, and advanced customization options.',
       image: 'https://images.unsplash.com/photo-1652212976547-16d7e2841b8c?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxhYnN0cmFjdCUyMHRlY2hub2xvZ3klMjBibHVlfGVufDF8fHx8MTc2NjAxMzUyMnww&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral',
-      content: 'Introducing the PizzaMatic Pro X1, our most advanced vending machine yet. With 70-pizza capacity, IoT connectivity, and AI-powered cooking, this machine sets a new standard for automated food service.',
+      content: 'Introducing the PizzaMatic Pro X1, our most advanced vending machine yet. With 69-pizza capacity, IoT connectivity, and AI-powered cooking, this machine sets a new standard for automated food service.',
       icon: TrendingUp
     }
   ];
@@ -91,7 +95,7 @@ export function BlogPage() {
               <span className="text-blue-600 font-medium text-sm">Corporate Updates</span>
             </div>
             <h1 className="text-5xl md:text-6xl mb-6 text-slate-900 font-bold">
-              Press <span className="text-blue-600">Releases</span>
+              Latest <span className="text-blue-600">Updates</span>
             </h1>
             <p className="text-xl text-slate-600 max-w-2xl mx-auto">
               Stay informed about the latest developments, innovations, and corporate achievements
@@ -126,7 +130,7 @@ export function BlogPage() {
         </div>
       </section>
 
-      {/* Press Releases Grid */}
+      {/* Latest Updates Grid */}
       <section className="relative py-16 bg-white">
         {/* Curved Top Wave Design */}
         <div className="absolute top-0 left-0 right-0 z-0">
@@ -194,6 +198,7 @@ export function BlogPage() {
 
                     <div className="mt-4">
                       <motion.button
+                        onClick={() => onNavigate('blog')}
                         whileHover={{ x: 5 }}
                         className="flex items-center gap-2 text-blue-600 group-hover:text-blue-700 transition-colors font-medium"
                       >
@@ -216,6 +221,7 @@ export function BlogPage() {
             className="text-center mt-12"
           >
             <motion.button
+              onClick={() => onNavigate('blog')}
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               className="px-8 py-4 border-2 border-slate-300 rounded-lg hover:bg-slate-50 hover:border-blue-600 transition-colors text-slate-700 font-medium"
@@ -243,7 +249,7 @@ export function BlogPage() {
           >
             <h2 className="text-4xl md:text-5xl mb-6 text-white font-bold">Stay Informed</h2>
             <p className="text-xl text-blue-50 mb-8">
-              Subscribe to receive the latest press releases and corporate updates
+              Subscribe to receive the latest updates and corporate news
             </p>
             <div className="flex flex-col sm:flex-row gap-4 max-w-md mx-auto">
               <input

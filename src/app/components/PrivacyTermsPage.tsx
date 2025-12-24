@@ -1,5 +1,5 @@
 import { motion } from 'motion/react';
-import { Shield, FileText, CreditCard, Lock } from 'lucide-react';
+import { Shield, FileText } from 'lucide-react';
 
 export function PrivacyTermsPage() {
   return (
@@ -50,122 +50,96 @@ export function PrivacyTermsPage() {
             className="mb-16"
           >
             <div className="flex items-center gap-3 mb-6">
-              <Lock className="w-8 h-8 text-blue-600" />
+              <Shield className="w-8 h-8 text-blue-600" />
               <h2 className="text-3xl text-slate-900 font-bold">Privacy Policy</h2>
             </div>
             <div className="prose prose-slate max-w-none">
               <p className="text-slate-600 mb-4">
-                <strong>Last Updated:</strong> December 2025
+                Welcome to High Sierra Vending LLC
               </p>
               <p className="text-slate-600 mb-4">
-                Pizza Anytime ("we," "our," or "us") is committed to protecting your privacy. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you use our services.
+                By accessing or using our website, you agree to be bound by these terms and conditions (Terms). If you do not agree with any part of these Terms, please do not use our website.
               </p>
               
-              <h3 className="text-xl text-slate-900 font-semibold mt-8 mb-4">Information We Collect</h3>
-              <ul className="list-disc pl-6 text-slate-600 space-y-2 mb-4">
-                <li>Personal information (name, email, phone number, business address)</li>
-                <li>Business information (company name, industry, location details)</li>
-                <li>Usage data (how you interact with our services)</li>
-                <li>Technical data (IP address, browser type, device information)</li>
-              </ul>
-
-              <h3 className="text-xl text-slate-900 font-semibold mt-8 mb-4">How We Use Your Information</h3>
-              <ul className="list-disc pl-6 text-slate-600 space-y-2 mb-4">
-                <li>To provide and maintain our services</li>
-                <li>To process your requests and transactions</li>
-                <li>To communicate with you about our services</li>
-                <li>To improve and optimize our services</li>
-                <li>To comply with legal obligations</li>
-              </ul>
-
-              <h3 className="text-xl text-slate-900 font-semibold mt-8 mb-4">Data Security</h3>
-              <p className="text-slate-600 mb-4">
-                We implement industry-standard security measures to protect your personal information. However, no method of transmission over the internet is 100% secure, and we cannot guarantee absolute security.
-              </p>
-
-              <h3 className="text-xl text-slate-900 font-semibold mt-8 mb-4">Your Rights</h3>
-              <p className="text-slate-600 mb-4">
-                You have the right to access, update, or delete your personal information. You may also opt-out of certain communications from us. To exercise these rights, please contact us at privacy@pizzaanytime.com.
-              </p>
-            </div>
-          </motion.div>
-
-          {/* Terms of Service */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="mb-16"
-          >
-            <div className="flex items-center gap-3 mb-6">
-              <FileText className="w-8 h-8 text-blue-600" />
-              <h2 className="text-3xl text-slate-900 font-bold">Terms of Service</h2>
-            </div>
-            <div className="prose prose-slate max-w-none">
-              <p className="text-slate-600 mb-4">
-                <strong>Last Updated:</strong> December 2025
+              <h3 className="text-xl text-slate-900 font-semibold mt-8 mb-4">1. Use of Website</h3>
+              <p className="text-slate-600 mb-2">
+                <strong>1.1</strong> This website is intended to provide information about Vending Technology services and related products or services.
               </p>
               <p className="text-slate-600 mb-4">
-                By accessing or using Pizza Anytime services, you agree to be bound by these Terms of Service. If you disagree with any part of these terms, you may not access our services.
+                <strong>1.2</strong> You agree to use this site only for lawful purposes and in a manner that does not infringe the rights of, or restrict or inhibit the use and enjoyment of this site by any third party.
               </p>
 
-              <h3 className="text-xl text-slate-900 font-semibold mt-8 mb-4">Use License</h3>
+              <h3 className="text-xl text-slate-900 font-semibold mt-8 mb-4">2. Intellectual Property</h3>
+              <p className="text-slate-600 mb-2">
+                <strong>2.1</strong> The content, layout, design, data, databases, and graphics on this website are protected by intellectual property laws and are owned by High Sierra Vending LLC or its licensors, unless otherwise stated.
+              </p>
               <p className="text-slate-600 mb-4">
-                Permission is granted to temporarily access Pizza Anytime services for personal or commercial use. This is the grant of a license, not a transfer of title.
+                <strong>2.2</strong> You may not reproduce, download, transmit or retransmit, manipulate or store on any other website or electronic retrieval system, any material from this site without prior written consent.
               </p>
 
-              <h3 className="text-xl text-slate-900 font-semibold mt-8 mb-4">Service Availability</h3>
+              <h3 className="text-xl text-slate-900 font-semibold mt-8 mb-4">3. Liability</h3>
+              <p className="text-slate-600 mb-2">
+                <strong>3.1</strong> High Sierra Vending LLC does not guarantee the accuracy, timeliness, performance, completeness, or suitability of the information and materials found or offered on this website for any particular purpose.
+              </p>
               <p className="text-slate-600 mb-4">
-                We strive to maintain service availability but do not guarantee uninterrupted access. We reserve the right to modify or discontinue services at any time.
+                <strong>3.2</strong> You acknowledge that such information and materials may contain inaccuracies or errors, and we expressly exclude liability for any such inaccuracies or errors to the fullest extent permitted by law.
               </p>
 
-              <h3 className="text-xl text-slate-900 font-semibold mt-8 mb-4">Limitation of Liability</h3>
+              <h3 className="text-xl text-slate-900 font-semibold mt-8 mb-4">4. Links to Other Websites</h3>
+              <p className="text-slate-600 mb-2">
+                <strong>4.1</strong> This website may include links to external websites. These links are provided for your convenience to provide further information. They do not signify that we endorse the website(s).
+              </p>
               <p className="text-slate-600 mb-4">
-                Pizza Anytime shall not be liable for any indirect, incidental, special, or consequential damages arising from the use of our services.
+                <strong>4.2</strong> We have no responsibility for the content of the linked website(s).
               </p>
 
-              <h3 className="text-xl text-slate-900 font-semibold mt-8 mb-4">Governing Law</h3>
+              <h3 className="text-xl text-slate-900 font-semibold mt-8 mb-4">5. Changes to Terms</h3>
               <p className="text-slate-600 mb-4">
-                These terms shall be governed by and construed in accordance with the laws of the State of California, United States.
-              </p>
-            </div>
-          </motion.div>
-
-          {/* Refund Policy */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="mb-16"
-          >
-            <div className="flex items-center gap-3 mb-6">
-              <CreditCard className="w-8 h-8 text-blue-600" />
-              <h2 className="text-3xl text-slate-900 font-bold">Refund Policy</h2>
-            </div>
-            <div className="prose prose-slate max-w-none">
-              <p className="text-slate-600 mb-4">
-                <strong>Last Updated:</strong> December 2025
+                <strong>5.1</strong> High Sierra Vending LLC reserves the right to change these terms at any time by posting changes online. Your continued use of this site after changes are posted constitutes your acceptance of this agreement as modified.
               </p>
 
-              <h3 className="text-xl text-slate-900 font-semibold mt-8 mb-4">Refund Eligibility</h3>
+              <h3 className="text-xl text-slate-900 font-semibold mt-8 mb-4">6. Governing Law</h3>
               <p className="text-slate-600 mb-4">
-                Refund requests must be submitted within 30 days of purchase. Refunds are subject to the following conditions:
-              </p>
-              <ul className="list-disc pl-6 text-slate-600 space-y-2 mb-4">
-                <li>Machine must be in original condition and packaging</li>
-                <li>All accessories and documentation must be included</li>
-                <li>Refund requests must be approved by our support team</li>
-                <li>Shipping costs are non-refundable</li>
-              </ul>
-
-              <h3 className="text-xl text-slate-900 font-semibold mt-8 mb-4">Processing Time</h3>
-              <p className="text-slate-600 mb-4">
-                Approved refunds will be processed within 10-15 business days. Refunds will be issued to the original payment method.
+                <strong>6.1</strong> These terms shall be governed by and interpreted in accordance with the laws of the United States.
               </p>
 
-              <h3 className="text-xl text-slate-900 font-semibold mt-8 mb-4">Contact for Refunds</h3>
+              <h3 className="text-xl text-slate-900 font-semibold mt-8 mb-4">7. Contact Information</h3>
               <p className="text-slate-600 mb-4">
-                To request a refund, please contact our support team at refunds@pizzaanytime.com or call 1-800-PIZZA-24.
+                <strong>7.1</strong> For any questions or queries regarding these terms, please contact us at info@highsierravending.com
+              </p>
+
+              <h3 className="text-xl text-slate-900 font-semibold mt-8 mb-4">8. Communication Preferences</h3>
+              <p className="text-slate-600 mb-2">
+                <strong>8.1</strong> By providing your mobile number to High Sierra Vending LLC, you agree that you may receive periodic text messages from us regarding your inquiries, orders, or updates about our products and services. Standard text messaging rates may apply as provided by your mobile carrier.
+              </p>
+              <p className="text-slate-600 mb-2">
+                <strong>8.2 Opt-Out of Text Messages:</strong>
+              </p>
+              <p className="text-slate-600 mb-2">
+                If you wish to opt out of receiving text messages from us, you can do so at any time. To stop receiving text messages, please reply "STOP" to any text message you receive from High Sierra Vending LLC. After you send the SMS message "STOP" to us, we will send you an SMS message to confirm that you have been unsubscribed. After this, you will no longer receive SMS messages from us. If you want to start receiving messages again, you can sign up as you did the first time.
+              </p>
+              <p className="text-slate-600 mb-2">
+                <strong>8.3 Assistance with Text Messages:</strong>
+              </p>
+              <p className="text-slate-600 mb-4">
+                If at any time you forget what keywords are supported, just text "HELP" to the number from which you received the messages. After you send the SMS message "HELP" to us, we will respond with instructions on how to use our service as well as how to unsubscribe.
+              </p>
+              <p className="text-slate-600 mb-4">
+                Please note that opting out of receiving text messages may impact your use of our services, as certain notifications and updates may only be provided via SMS.
+              </p>
+
+              <h3 className="text-xl text-slate-900 font-semibold mt-8 mb-4">9. Privacy and Data Sharing</h3>
+              <p className="text-slate-600 mb-2">
+                <strong>9.1</strong> Your personal information is used only to enhance our services. We do not share your data with any third party.
+              </p>
+              <p className="text-slate-600 mb-2">
+                <strong>9.2</strong> High Sierra Vending LLC is committed to protecting your privacy. We do not share, sell, rent, or lease your personal data to any third parties for their marketing purposes.
+              </p>
+              <p className="text-slate-600 mb-2">
+                <strong>9.3</strong> Any information collected on this site will be kept strictly confidential and will not be disclosed to any third party without your prior consent, except as required by law.
+              </p>
+              <p className="text-slate-600 mb-4">
+                <strong>9.4</strong> No mobile information will be shared with third parties/affiliates for marketing/promotional purposes. All other categories exclude text messaging originator opt-in data and consent; this information will not be shared with any third parties.
               </p>
             </div>
           </motion.div>
@@ -179,17 +153,30 @@ export function PrivacyTermsPage() {
           >
             <h3 className="text-2xl mb-4 text-slate-900 font-semibold">Questions About Our Policies?</h3>
             <p className="text-slate-600 mb-4">
-              If you have any questions about our Privacy Policy, Terms of Service, or Refund Policy, please contact us:
+              If you have any questions about our Privacy Policy or Terms, please contact us:
             </p>
             <div className="space-y-2 text-slate-600">
-              <p><strong>Email:</strong> legal@pizzaanytime.com</p>
-              <p><strong>Phone:</strong> 1-800-PIZZA-24</p>
-              <p><strong>Address:</strong> 123 Innovation Drive, Tech Park, Suite 500, San Francisco, CA 94105</p>
+              <p><strong>Email:</strong> <a href="mailto:info@pizza-vending-machine.com" className="text-blue-600 hover:underline">info@pizza-vending-machine.com</a></p>
+              <p><strong>Phone:</strong> <a href="tel:+18886991731" className="text-blue-600 hover:underline">(888) 699-1731</a></p>
+              <p><strong>Address:</strong> 4600 Snyder Ave, E, Carson City, Nevada, 89701</p>
             </div>
+          </motion.div>
+
+          {/* Copyright */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="mt-12 text-center text-slate-600"
+          >
+            <p>© 2025 High Sierra Vending, LLC</p>
+            <p className="mt-2">The Pizza Vending Machine people.</p>
+            <p className="mt-2">
+              <a href="mailto:Info@HighSierraVending.com" className="text-blue-600 hover:underline">Info@HighSierraVending.com</a>
+            </p>
           </motion.div>
         </div>
       </section>
     </div>
   );
 }
-

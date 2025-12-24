@@ -52,9 +52,9 @@ export default function App() {
           className="overflow-visible"
         >
           {currentPage === 'home' && <HomePage onNavigate={handleNavigate} />}
-          {currentPage === 'product' && <ProductPage />}
-          {currentPage === 'blog' && <BlogPage />}
-          {currentPage === 'manual' && <ManualPage />}
+          {currentPage === 'product' && <ProductPage onNavigate={handleNavigate} />}
+          {currentPage === 'blog' && <BlogPage onNavigate={handleNavigate} />}
+          {currentPage === 'manual' && <ManualPage onNavigate={handleNavigate} />}
           {currentPage === 'request-access' && <RequestAccessPage />}
           {currentPage === 'landing' && <LandingPage onNavigate={handleNavigate} />}
           {currentPage === 'company' && <CompanyPage onNavigate={handleNavigate} />}

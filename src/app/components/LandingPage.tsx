@@ -169,7 +169,7 @@ export function LandingPage({ onNavigate }: LandingPageProps) {
               </h1>
 
               <p className="text-xl text-blue-50 mb-8 max-w-xl leading-relaxed">
-                Join 50+ successful businesses generating consistent revenue 24/7. No staffing costs. No overhead. Just pure profit.
+                Pizza Anytime™ from High Sierra Vending turns an ordinary corner of your business into a 24-hour profit center—without locking you into someone else's rules or recipes. Our lease-to-own plan is the lowest monthly cost among major competitors, as little as $28 per day.
               </p>
 
               {/* Social Proof Stats */}
@@ -293,7 +293,7 @@ export function LandingPage({ onNavigate }: LandingPageProps) {
                 See Your Business Grow
               </h3>
               <p className="text-xl text-slate-600 mb-8 leading-relaxed">
-                Our machines deliver consistent performance and customer satisfaction, driving repeat business and maximizing your return on investment.
+                Nationwide on-site support is handled through our partnership with Bell and Howell's service network, so downtime stays minimal wherever you operate in the lower 48 states. From installation guidance to real-time monitoring and parts logistics, our team backs your team—so you can focus on serving hungry customers, not troubleshooting hardware.
               </p>
 
               {/* Stats Grid */}
@@ -463,8 +463,113 @@ export function LandingPage({ onNavigate }: LandingPageProps) {
         </div>
       </section>
 
+      {/* Perfect Locations Section */}
+      <section className="relative py-24 bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="text-center mb-12"
+          >
+            <h2 className="text-4xl md:text-5xl mb-4 font-bold text-slate-900">
+              Perfect <span className="text-blue-600">Locations</span>
+            </h2>
+            <p className="text-xl text-slate-600 max-w-2xl mx-auto mb-4">
+              Any high traffic location with 220V power and hungry people is perfect for your branded machine.
+            </p>
+          </motion.div>
+
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {[
+              'Gas station / travel plaza',
+              'Hotel lobby or corridor',
+              'Campground general store',
+              'Casino gaming floor or food court',
+              'Bar or pub entrance',
+              'Airport terminal concourse',
+              'Sports venue (stadium, arena)',
+              'K-12 school cafeteria',
+              'College dormitory common area',
+              'Apartment-complex clubhouse',
+              'Factory break room',
+              'Office building lobby or cafeteria',
+              'Highway rest stop / service area',
+              'Train station concourse',
+              'Bus terminal waiting area',
+              'Shopping mall food court',
+              'Outlet mall promenade',
+              'Convention or expo center',
+              'Hospital visitor lounge',
+              'University student union',
+              'Community college quad',
+              'Military base exchange / commissary',
+              'Truck stop diesel island lobby',
+              'Ferry terminal passenger hall',
+              'Cruise-ship embarkation hall',
+              'Large warehouse or distribution center',
+              'Corporate tech campus atrium',
+              'Movie-theater megaplex lobby',
+              'Bowling-alley arcade zone',
+              'Theme-park midway',
+              'Water-park locker-area corridor',
+              'Ski-resort base lodge',
+              'Beach boardwalk pavilion',
+              'Zoo or aquarium courtyard',
+              'Museum café annex',
+              'City-center public library foyer',
+              'Night-club district pedestrian strip',
+              'Esports arena foyer',
+              'Indoor trampoline or laser-tag park',
+              'Concert hall or performing-arts center',
+              'Farmers-market pavilion (seasonal)',
+              'University research-park commons',
+              'Logistics-hub employee lounge',
+              'Call-center operations facility',
+              'Car-rental center at airport',
+              'Auto-dealership service lounge',
+              'EV-charging superhub waiting area',
+              'Large apartment mail-room vestibule',
+              'Major festival or fairground (temporary placement)',
+              'City parking-garage ground-floor retail nook'
+            ].map((location, index) => (
+              <motion.div
+                key={index}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: Math.floor(index / 3) * 0.05 }}
+                className="flex items-center gap-2 p-3 bg-slate-50 border border-slate-200 rounded-lg hover:border-blue-600 hover:bg-blue-50 transition-all"
+              >
+                <CheckCircle2 className="w-4 h-4 text-blue-600 flex-shrink-0" />
+                <span className="text-slate-700 text-sm">{location}</span>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Financing Section */}
+      <section className="relative py-24 bg-slate-50">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="text-center mb-8"
+          >
+            <h2 className="text-4xl md:text-5xl mb-4 font-bold text-slate-900">
+              Flexible Financing with <span className="text-blue-600">North Star Leasing</span>
+            </h2>
+            <p className="text-xl text-slate-600 max-w-3xl mx-auto leading-relaxed">
+              We've partnered with North Star Leasing to make owning a Pizza Anytime vending machine more accessible than ever. Their flexible financing options are designed to fit your business's unique needs—with fast approvals, simple terms, and payment plans that work for your budget. Whether you're launching your first unit or expanding your footprint, North Star Leasing helps you get started quickly without tying up your capital.
+            </p>
+          </motion.div>
+        </div>
+      </section>
+
       {/* Trust Indicators */}
-      <section className="relative py-16 bg-slate-50">
+      <section className="relative py-16 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -505,9 +610,9 @@ export function LandingPage({ onNavigate }: LandingPageProps) {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
           >
-            <h2 className="text-4xl md:text-5xl mb-6 text-slate-900 font-bold">Don't Wait - Start Today</h2>
+            <h2 className="text-4xl md:text-5xl mb-6 text-slate-900 font-bold">Ready to Turn Unused Floor Space into Reliable Revenue?</h2>
             <p className="text-xl text-slate-600 mb-8">
-              Every day you wait is revenue you're missing. Get started with Pizza Anytime now.
+              More advanced technology. A more flexible business model. The lowest cost of entry in the category. That's why smart operators choose Pizza Anytime. Ready to turn unused floor space into reliable revenue? Let's get baking.
             </p>
             <motion.button
               whileHover={{ 

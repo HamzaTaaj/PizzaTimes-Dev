@@ -23,7 +23,7 @@ export function Footer({ onNavigate }: FooterProps) {
               </span>
             </div>
             <p className="text-slate-600 mb-6 leading-relaxed">
-              Enterprise-grade automated food service solutions delivering operational excellence and consistent quality.
+              Pizza Anytime™ from High Sierra Vending turns an ordinary corner of your business into a 24-hour profit center—without locking you into someone else's rules or recipes.
             </p>
             <div className="flex items-center gap-4">
               <motion.a
@@ -82,7 +82,7 @@ export function Footer({ onNavigate }: FooterProps) {
                   onClick={() => onNavigate('blog')}
                   className="text-slate-600 hover:text-blue-600 transition-colors"
                 >
-                  Press Releases
+                  Latest Updates
                 </button>
               </li>
               <li>
@@ -129,21 +129,21 @@ export function Footer({ onNavigate }: FooterProps) {
             <ul className="space-y-4">
               <li className="flex items-start gap-3">
                 <Mail className="w-5 h-5 text-blue-600 mt-0.5 flex-shrink-0" />
-                <a href="mailto:info@pizzaanytime.com" className="text-slate-600 hover:text-blue-600 transition-colors">
-                  info@pizzaanytime.com
+                <a href="mailto:info@pizza-vending-machine.com" className="text-slate-600 hover:text-blue-600 transition-colors">
+                  info@pizza-vending-machine.com
                 </a>
               </li>
               <li className="flex items-start gap-3">
                 <Phone className="w-5 h-5 text-blue-600 mt-0.5 flex-shrink-0" />
-                <a href="tel:+1-800-PIZZA-24" className="text-slate-600 hover:text-blue-600 transition-colors">
-                  1-800-PIZZA-24
+                <a href="tel:+18886991731" className="text-slate-600 hover:text-blue-600 transition-colors">
+                  (888) 699-1731
                 </a>
               </li>
               <li className="flex items-start gap-3">
                 <MapPin className="w-5 h-5 text-blue-600 mt-0.5 flex-shrink-0" />
                 <span className="text-slate-600">
-                  123 Innovation Drive<br />
-                  Tech City, TC 12345
+                  4600 Snyder Ave, E<br />
+                  Carson City, Nevada, 89701
                 </span>
               </li>
             </ul>
@@ -154,7 +154,7 @@ export function Footer({ onNavigate }: FooterProps) {
         <div className="pt-8 border-t border-slate-200">
           <div className="flex flex-col md:flex-row items-center justify-between gap-4">
             <p className="text-slate-600 text-sm">
-              © {currentYear} Pizza Anytime. All rights reserved.
+              © {currentYear} High Sierra Vending, LLC. All rights reserved.
             </p>
             <div className="flex items-center gap-6 text-sm">
               <a href="#" className="text-slate-600 hover:text-blue-600 transition-colors">

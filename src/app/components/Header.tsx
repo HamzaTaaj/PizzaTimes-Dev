@@ -329,7 +329,7 @@ export function Header({
                       whileTap={{ scale: 0.98 }}
                       className="block w-full text-left px-4 py-3 text-slate-700 transition-all hover:text-blue-600"
                     >
-                      Press Release
+                      Latest Updates
                     </motion.button>
                   </motion.div>
                 )}
@@ -615,7 +615,7 @@ export function Header({
                             }}
                             className="block w-full text-left px-4 py-2 text-slate-600 rounded-lg transition-all text-sm"
                           >
-                            Press Release
+                            Latest Updates
                           </motion.button>
                         </div>
                       </motion.div>

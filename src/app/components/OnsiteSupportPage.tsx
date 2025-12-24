@@ -1,5 +1,5 @@
 import { motion } from 'motion/react';
-import { Wrench, Clock, Phone, CheckCircle2, Truck, Shield, Headphones, Calendar } from 'lucide-react';
+import { Wrench, Clock, Phone, CheckCircle2, Truck, Shield, Headphones, ArrowRight } from 'lucide-react';
 
 interface OnsiteSupportPageProps {
   onNavigate: (page: string) => void;
@@ -97,7 +97,7 @@ export function OnsiteSupportPage({ onNavigate }: OnsiteSupportPageProps) {
               Onsite <span className="text-blue-600">Support</span>
             </h1>
             <p className="text-xl text-slate-600 max-w-2xl mx-auto">
-              Expert support services to keep your operations running smoothly
+              We are Here to Help Anyplace. High Sierra Vending partners with Bell & Howell's nationwide technician network to provide rapid, on-site support for every Pizza Anytime™ machine across the lower 48 states.
             </p>
           </motion.div>
         </div>
@@ -241,23 +241,27 @@ export function OnsiteSupportPage({ onNavigate }: OnsiteSupportPageProps) {
               Our support team is ready to help. Contact us anytime for assistance.
             </p>
             <div className="flex flex-wrap gap-4 justify-center">
-              <motion.a
-                href="tel:+1-800-PIZZA-24"
-                whileHover={{ scale: 1.05 }}
+              <motion.button
+                onClick={() => onNavigate('request-access')}
+                whileHover={{ 
+                  scale: 1.05,
+                  boxShadow: "0 20px 40px rgba(0, 0, 0, 0.3)"
+                }}
                 whileTap={{ scale: 0.95 }}
                 className="px-10 py-5 bg-white text-blue-600 rounded-lg text-lg font-semibold hover:bg-blue-50 transition-colors inline-flex items-center gap-2"
               >
-                <Phone className="w-5 h-5" />
-                Call Support: 1-800-PIZZA-24
-              </motion.a>
+                Request Access
+                <ArrowRight className="w-5 h-5" />
+              </motion.button>
               <motion.button
-                onClick={() => onNavigate('request-access')}
-                whileHover={{ scale: 1.05 }}
+                onClick={() => onNavigate('contact')}
+                whileHover={{ 
+                  scale: 1.05
+                }}
                 whileTap={{ scale: 0.95 }}
-                className="px-10 py-5 border-2 border-white/50 rounded-lg hover:bg-white/10 transition-colors text-white font-semibold text-lg inline-flex items-center gap-2"
+                className="px-10 py-5 border-2 border-white/50 rounded-lg hover:bg-white/10 transition-colors text-white font-semibold text-lg"
               >
-                <Calendar className="w-5 h-5" />
-                Schedule Service
+                Contact Us
               </motion.button>
             </div>
           </motion.div>

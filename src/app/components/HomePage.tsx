@@ -1,8 +1,64 @@
 import { motion, useInView } from 'motion/react';
-import { Zap, Clock, Shield, TrendingUp, ArrowRight, Building2, DollarSign, Users, Globe, BarChart3, Award, CheckCircle2 } from 'lucide-react';
+import { Zap, Clock, Shield, TrendingUp, ArrowRight, Building2, DollarSign, Users, Globe, BarChart3, Award, CheckCircle2, Calendar } from 'lucide-react';
 import { ImageWithFallback } from './figma/ImageWithFallback';
 import vend1Image from '@/assets/vend1.png';
 import { useRef, useEffect, useState } from 'react';
+
+// Letter-by-letter animation component
+function AnimatedTitle({ text, className = '', highlightText = '', highlightClassName = '' }: { text: string; className?: string; highlightText?: string; highlightClassName?: string }) {
+  const ref = useRef(null);
+  const isInView = useInView(ref, { once: true, margin: "-100px" });
+
+  const parts = text.split(highlightText);
+  let charIndex = 0;
+
+  return (
+    <h2 ref={ref} className={className}>
+      {parts.map((part, partIndex) => (
+        <span key={partIndex}>
+          {part.split('').map((char) => {
+            const currentIndex = charIndex++;
+            return (
+              <motion.span
+                key={currentIndex}
+                initial={{ opacity: 0, y: 20 }}
+                animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+                transition={{
+                  duration: 0.3,
+                  delay: 0.2 + (currentIndex * 0.02)
+                }}
+                style={{ display: 'inline-block' }}
+              >
+                {char === ' ' ? '\u00A0' : char}
+              </motion.span>
+            );
+          })}
+          {partIndex < parts.length - 1 && (
+            <span className={highlightClassName}>
+              {highlightText.split('').map((char) => {
+                const currentIndex = charIndex++;
+                return (
+                  <motion.span
+                    key={currentIndex}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+                    transition={{
+                      duration: 0.3,
+                      delay: 0.2 + (currentIndex * 0.02)
+                    }}
+                    style={{ display: 'inline-block' }}
+                  >
+                    {char === ' ' ? '\u00A0' : char}
+                  </motion.span>
+                );
+              })}
+            </span>
+          )}
+        </span>
+      ))}
+    </h2>
+  );
+}
 
 // Animated Counter Component
 function AnimatedCounter({ value, suffix = '', prefix = '', duration = 2 }: { value: number | string; suffix?: string; prefix?: string; duration?: number }) {
@@ -154,20 +210,26 @@ export function HomePage({ onNavigate }: HomePageProps) {
     {
       date: 'Dec 15, 2025',
       title: 'Pizza Anytime Expands to 50 Locations Nationwide',
-      excerpt: 'Strategic expansion brings enterprise-grade vending solutions to corporate campuses and transit hubs.',
-      category: 'Expansion'
+      excerpt: 'Revolutionary vending technology brings fresh pizza to transit hubs and corporate campuses.',
+      category: 'Expansion',
+      image: 'https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=600&h=400&fit=crop',
+      imageAlt: 'Pizza/food service image from Unsplash'
     },
     {
       date: 'Nov 28, 2025',
-      title: 'Industry Recognition: Best Automated Food Service 2025',
-      excerpt: 'Award-winning innovation in automated food service technology and operational excellence.',
-      category: 'Awards'
+      title: 'Innovation Award: Best Automated Food Service 2025',
+      excerpt: 'Industry recognition for pioneering smart vending machine technology.',
+      category: 'Awards',
+      image: 'https://images.unsplash.com/photo-1513104890138-7c749659a591?w=600&h=400&fit=crop',
+      imageAlt: 'Pizza/food image from Unsplash'
     },
     {
       date: 'Nov 10, 2025',
-      title: 'Strategic Partnership with Leading Food Service Providers',
-      excerpt: 'Enterprise collaboration to transform quick-service restaurant operations through automation.',
-      category: 'Partnership'
+      title: 'Partnership with Leading Food Chains Announced',
+      excerpt: 'Strategic collaboration to revolutionize quick-service restaurant industry.',
+      category: 'Partnership',
+      image: 'https://images.unsplash.com/photo-1571066811602-716837d681de?w=600&h=400&fit=crop',
+      imageAlt: 'Pizza/food image from Unsplash'
     }
   ];
 
@@ -247,7 +309,7 @@ export function HomePage({ onNavigate }: HomePageProps) {
               </h1>
 
               <p className="text-xl text-[#cbd5e1] mb-8 max-w-xl leading-relaxed">
-                Enterprise-grade automated vending solutions delivering consistent quality and operational efficiency. Transform your food service operations with cutting-edge technology.
+                Pizza Anytime™ from High Sierra Vending turns an ordinary corner of your business into a 24-hour profit center—without locking you into someone else's rules or recipes. Our lease-to-own plan is the lowest monthly cost among major competitors, as little as $28 per day, so you start earning margin from day one while building equity in the machine itself.
               </p>
 
               <div className="flex flex-wrap gap-4 mb-8">
@@ -256,23 +318,11 @@ export function HomePage({ onNavigate }: HomePageProps) {
                     scale: 1.02
                   }}
                   whileTap={{ scale: 0.98 }}
-                  onClick={() => onNavigate('product')}
+                  onClick={() => onNavigate('request-access')}
                   className="px-8 py-4 bg-blue-600 text-white rounded-lg flex items-center gap-2 group font-medium"
                 >
-                  Explore Solutions
+                  Request Access
                   <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-                </motion.button>
-                <motion.button
-                  whileHover={{
-                    scale: 1.02,
-                    backgroundColor: '#f1f5f9',
-                    borderColor: '#2563eb'
-                  }}
-                  whileTap={{ scale: 0.98 }}
-                  onClick={() => onNavigate('request-access')}
-                  className="px-8 py-4 border-2 border-white/20 rounded-lg transition-colors text-white font-medium hover:border-[#60a5fa] hover:bg-white/10"
-                >
-                  Schedule Demo
                 </motion.button>
               </div>
             </motion.div>
@@ -477,62 +527,102 @@ export function HomePage({ onNavigate }: HomePageProps) {
         </div>
       </section>
 
-      {/* Press Releases Section */}
-      <section className="relative py-24 bg-slate-50">
+      {/* Latest Updates Section */}
+      <section id="blog" className="relative py-24 bg-slate-50 overflow-hidden">
         {/* Curved Top Wave Design */}
         <div className="absolute top-0 left-0 right-0 z-0">
           <svg className="w-full h-24" viewBox="0 0 1440 120" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
             <path d="M0 0L60 15C120 30 240 60 360 75C480 90 600 90 720 82.5C840 75 960 60 1080 52.5C1200 45 1320 45 1380 45L1440 45V0H1380C1320 0 1200 0 1080 0C960 0 840 0 720 0C600 0 480 0 360 0C240 0 120 0 60 0H0Z" fill="#ffffff" />
           </svg>
         </div>
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="flex items-center justify-between mb-12"
-          >
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
+          {/* Header Section */}
+          <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-12">
             <div>
-              <h2 className="text-4xl md:text-5xl mb-4 font-bold text-slate-900">Latest <span className="text-blue-600">Updates</span></h2>
-              <p className="text-xl text-slate-600">Stay informed about our innovations and achievements</p>
+              <AnimatedTitle 
+                text="Latest Updates" 
+                className="text-4xl md:text-5xl mb-4 font-bold text-slate-900"
+                highlightText="Updates"
+                highlightClassName="text-blue-600"
+              />
+              <motion.p
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: 0.4 }}
+                className="text-xl text-slate-600 mt-4"
+              >
+                Stay informed about our innovations
+              </motion.p>
             </div>
             <motion.button
+              initial={{ opacity: 0, x: 20 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: 0.4 }}
               whileHover={{
                 scale: 1.02
               }}
               onClick={() => onNavigate('blog')}
-              className="hidden md:flex items-center gap-2 px-6 py-3 border-2 border-blue-600 rounded-lg hover:bg-blue-600 hover:text-white transition-colors text-blue-600 font-medium"
+              className="hidden md:inline-flex items-center gap-3 bg-blue-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-blue-600/90 transition-all shadow-md hover:shadow-lg group mt-6 md:mt-0"
             >
               View All
-              <ArrowRight className="w-4 h-4" />
+              <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
             </motion.button>
-          </motion.div>
+          </div>
 
-          <div className="grid md:grid-cols-3 gap-6">
+          {/* Blog Posts Grid */}
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
             {pressReleases.map((release, index) => (
               <motion.article
                 key={index}
-                initial={{ opacity: 0, y: 20 }}
+                initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: index * 0.1 }}
+                viewport={{ once: true, margin: "-100px" }}
+                transition={{ duration: 0.5, delay: 0.3 + (index * 0.1) }}
                 whileHover={{
                   y: -4
                 }}
-                className="p-6 bg-white border border-slate-200 rounded-xl transition-all cursor-pointer group hover:border-blue-600"
+                className="bg-white border border-slate-200 rounded-xl overflow-hidden transition-all cursor-pointer group hover:border-blue-600 hover:shadow-lg"
                 onClick={() => onNavigate('blog')}
               >
-                <div className="flex items-center gap-3 mb-4">
-                  <span className="px-3 py-1 bg-blue-50 text-blue-600 rounded-full text-sm font-medium">
-                    {release.category}
-                  </span>
-                  <span className="text-sm text-slate-500">{release.date}</span>
+                {/* Image Container */}
+                <div className="relative h-48 overflow-hidden">
+                  <img
+                    src={release.image}
+                    alt={release.imageAlt}
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                  />
                 </div>
-                <h3 className="text-xl mb-3 text-slate-900 font-semibold group-hover:text-blue-600 transition-colors">{release.title}</h3>
-                <p className="text-slate-600 mb-4 leading-relaxed">{release.excerpt}</p>
-                <div className="flex items-center gap-2 text-blue-600 group-hover:gap-3 transition-all font-medium">
-                  Read More
-                  <ArrowRight className="w-4 h-4" />
+
+                {/* Content Container */}
+                <div className="p-6">
+                  {/* Category Badge and Date */}
+                  <div className="flex items-center gap-3 mb-4">
+                    <span className="px-3 py-1 rounded-full bg-blue-600/10 text-blue-600 text-sm font-medium">
+                      {release.category}
+                    </span>
+                    <div className="flex items-center gap-1">
+                      <Calendar className="w-3 h-3 text-slate-500" />
+                      <span className="text-xs text-slate-500">{release.date}</span>
+                    </div>
+                  </div>
+
+                  {/* Title */}
+                  <h3 className="font-semibold text-slate-900 mb-3 hover:text-blue-600 transition-colors cursor-pointer line-clamp-2">
+                    {release.title}
+                  </h3>
+
+                  {/* Excerpt */}
+                  <p className="text-sm text-slate-600 mb-4 line-clamp-2">
+                    {release.excerpt}
+                  </p>
+
+                  {/* Read More Link */}
+                  <div className="inline-flex items-center gap-2 text-blue-600 text-sm font-medium hover:gap-3 transition-all group/link">
+                    Read More
+                    <ArrowRight className="w-3 h-3" />
+                  </div>
                 </div>
               </motion.article>
             ))}
@@ -560,7 +650,7 @@ export function HomePage({ onNavigate }: HomePageProps) {
               onClick={() => onNavigate('request-access')}
               className="px-10 py-5 bg-white text-blue-600 rounded-lg text-lg font-semibold hover:bg-blue-50 transition-colors"
             >
-              Schedule a Demo
+              Request Access
             </motion.button>
           </motion.div>
         </div>

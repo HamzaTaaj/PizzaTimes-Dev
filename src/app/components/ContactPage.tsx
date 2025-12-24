@@ -95,12 +95,8 @@ export function ContactPage() {
                     <div>
                       <h3 className="text-lg mb-2 text-slate-900 font-semibold">Email</h3>
                       <p className="text-slate-600 mb-2">General Inquiries</p>
-                      <a href="mailto:info@pizzaanytime.com" className="text-blue-600 hover:underline font-medium">
-                        info@pizzaanytime.com
-                      </a>
-                      <p className="text-slate-600 mt-4 mb-2">Enterprise Sales</p>
-                      <a href="mailto:sales@pizzaanytime.com" className="text-blue-600 hover:underline font-medium">
-                        sales@pizzaanytime.com
+                      <a href="mailto:info@pizza-vending-machine.com" className="text-blue-600 hover:underline font-medium">
+                        info@pizza-vending-machine.com
                       </a>
                     </div>
                   </div>
@@ -121,8 +117,8 @@ export function ContactPage() {
                     <div>
                       <h3 className="text-lg mb-2 text-slate-900 font-semibold">Phone</h3>
                       <p className="text-slate-600 mb-2">24/7 Support</p>
-                      <a href="tel:+1-800-PIZZA-24" className="text-blue-600 hover:underline font-medium">
-                        1-800-PIZZA-24
+                      <a href="tel:+18886991731" className="text-blue-600 hover:underline font-medium">
+                        (888) 699-1731
                       </a>
                       <p className="text-slate-600 mt-4 mb-2">Business Hours</p>
                       <p className="text-slate-600 font-medium">Mon-Fri: 9AM-6PM EST</p>
@@ -145,9 +141,8 @@ export function ContactPage() {
                     <div>
                       <h3 className="text-lg mb-2 text-slate-900 font-semibold">Address</h3>
                       <p className="text-slate-600 leading-relaxed">
-                        123 Innovation Drive<br />
-                        Tech Park, Suite 500<br />
-                        San Francisco, CA 94105<br />
+                        4600 Snyder Ave, E<br />
+                        Carson City, Nevada, 89701<br />
                         United States
                       </p>
                     </div>

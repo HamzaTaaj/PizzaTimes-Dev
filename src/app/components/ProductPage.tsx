@@ -1,6 +1,6 @@
 import React, { useRef, useEffect, useState } from 'react';
 import { motion, useInView } from 'motion/react';
-import { Cpu, Thermometer, Gauge, Wifi, Shield, Wrench, Package, Zap, CheckCircle2 } from 'lucide-react';
+import { Cpu, Thermometer, Gauge, Wifi, Shield, Wrench, Package, Zap, CheckCircle2, Flame, UtensilsCrossed } from 'lucide-react';
 import { ImageWithFallback } from './figma/ImageWithFallback';
 import { fadeInUp, staggerContainer, viewportConfig, slideInLeft, slideInRight, scaleUp } from '../utils/animations';
 import vend1Video from '@/assets/vend.mp4';
@@ -57,12 +57,16 @@ function AnimatedCounter({ value, suffix = '', prefix = '', duration = 2 }: { va
   );
 }
 
-export function ProductPage() {
+interface ProductPageProps {
+  onNavigate: (page: string) => void;
+}
+
+export function ProductPage({ onNavigate }: ProductPageProps) {
   const specs = [
     { label: 'Dimensions', value: '72" H × 48" W × 36" D', position: 'left-top' },
     { label: 'Weight', value: '850 lbs', position: 'left-middle' },
     { label: 'Power', value: '220V / 20A', position: 'left-bottom' },
-    { label: 'Capacity', value: '70 pizzas', position: 'right-top' },
+    { label: 'Capacity', value: '69 pizzas', position: 'right-top' },
     { label: 'Cook Time', value: '2-3 minutes', position: 'right-middle' },
     { label: 'Operating Temp', value: '35-95°F', position: 'right-bottom' }
   ];
@@ -173,13 +177,13 @@ export function ProductPage() {
               </motion.h1>
 
               <motion.p variants={fadeInUp} className="text-xl text-slate-600 mb-8 leading-relaxed">
-                Enterprise-grade automated vending solution engineered for high-traffic environments. Advanced robotics, AI-driven operations, and precision food preparation systems.
+                Unlike other vending programs that force you to buy their pizzas by the pallet, Pizza Anytime lets you stay in control. Bake your own signature pies, partner with a beloved local shop, or source nationally distributed brands—whatever keeps customers coming back. Every dollar of sales goes straight to you; we never withhold a share or skim your takings.
               </motion.p>
 
               {/* Key Stats */}
               <motion.div variants={staggerContainer} className="grid grid-cols-2 gap-4 mb-8">
                 {[
-                  { value: 70, label: 'Pizza Capacity', isNumber: true },
+                  { value: 69, label: 'Pizza Capacity', isNumber: true },
                   { value: '24/7', label: 'Operation', isNumber: false },
                   { value: '2-3min', label: 'Service Time', isNumber: false },
                   { value: 'IoT', label: 'Connected', isNumber: false }
@@ -204,20 +208,10 @@ export function ProductPage() {
                     boxShadow: '0 10px 30px rgba(37, 99, 235, 0.3)'
                   }}
                   whileTap={{ scale: 0.98 }}
+                  onClick={() => onNavigate('request-access')}
                   className="px-8 py-4 bg-blue-600 text-white rounded-lg shadow-lg shadow-blue-600/20 font-medium"
                 >
-                  Request Quote
-                </motion.button>
-                <motion.button
-                  whileHover={{
-                    scale: 1.02,
-                    borderColor: '#2563eb',
-                    backgroundColor: '#f1f5f9'
-                  }}
-                  whileTap={{ scale: 0.98 }}
-                  className="px-8 py-4 border-2 border-slate-300 rounded-lg transition-colors text-slate-700 font-medium hover:border-blue-600"
-                >
-                  Schedule Demo
+                  Request Access
                 </motion.button>
               </motion.div>
             </motion.div>
@@ -365,7 +359,7 @@ export function ProductPage() {
                 style={{ perspective: "1000px" }}
                 className="text-xl text-slate-600 mb-8 leading-relaxed"
               >
-                Brilliant 4K touchscreen with intuitive interface for easy ordering and real-time temperature readings.
+                A vivid 55-inch touchscreen entices passers-by, drives upsells, and showcases your custom-branded graphics; we wrap every unit to match your branding, not ours.
               </motion.p>
 
               {/* Features List */}
@@ -434,7 +428,7 @@ export function ProductPage() {
                 style={{ perspective: "1000px" }}
                 className="text-xl text-slate-600 mb-8 leading-relaxed"
               >
-                PizzaMatic Pro X1 hot food kiosks store up to 70 individual pizzas in the refrigeration unit, ensuring continuous service throughout the day.
+                The machine is engineered for serious, scalable performance. A 69-pizza capacity accommodates both frozen and refrigerated inventory, giving you true menu flexibility and longer vending windows. Our dual-mode oven combines convection for golden crusts with microwave speed for consistent center heat—delivering a hot, restaurant-quality pizza in about three minutes.
               </motion.p>
 
               {/* Capacity Card */}
@@ -447,7 +441,7 @@ export function ProductPage() {
                 className="p-8 bg-blue-50 border-2 border-blue-200 rounded-xl"
               >
                 <div className="text-5xl font-bold text-blue-600 mb-3">
-                  <AnimatedCounter value={70} duration={2} /> Pizzas
+                  <AnimatedCounter value={69} duration={2} /> Pizzas
                 </div>
                 <p className="text-slate-700 text-lg leading-relaxed">
                   Maximum storage capacity in the refrigeration unit for continuous service
@@ -505,7 +499,7 @@ export function ProductPage() {
                     className="mb-6"
                   >
                     <div className="text-6xl font-bold text-blue-600 mb-2 tracking-tight">
-                      <AnimatedCounter value={70} duration={2} />
+                      <AnimatedCounter value={69} duration={2} />
                     </div>
                     <div className="text-xl font-semibold text-slate-700">Pizzas</div>
                   </motion.div>
@@ -572,7 +566,7 @@ export function ProductPage() {
               style={{ perspective: "1000px" }}
               className="text-xl text-slate-600 max-w-2xl mx-auto"
             >
-              Items dispensed hot from the smart oven (Microwave + Infrared + Convection)
+              Our dual-mode oven combines convection for golden crusts with microwave speed for consistent center heat—delivering a hot, restaurant-quality pizza in about three minutes.
             </motion.p>
           </motion.div>
 
@@ -584,10 +578,17 @@ export function ProductPage() {
               viewport={{ once: true, margin: "-100px" }}
               transition={{ duration: 0.8, ease: "easeOut", delay: 0.2 }}
               style={{ perspective: "1000px" }}
-              className="relative rounded-xl overflow-hidden bg-gradient-to-br from-orange-50 via-red-50 to-amber-50 border-2 border-orange-200 shadow-xl p-12"
+              whileHover={{
+                y: -4,
+                boxShadow: '0 20px 40px rgba(0, 0, 0, 0.1)',
+                borderColor: '#2563eb'
+              }}
+              className="relative rounded-xl overflow-hidden bg-gradient-to-br from-orange-50 via-red-50 to-amber-50 border-2 border-orange-200 shadow-xl p-12 transition-all group hover:border-blue-600"
             >
               <div className="text-center">
-                <div className="text-6xl mb-6">🔥</div>
+                <div className="w-20 h-20 bg-orange-100 rounded-xl flex items-center justify-center mx-auto mb-6 group-hover:bg-orange-600 group-hover:scale-110 transition-all">
+                  <Flame className="w-10 h-10 text-orange-600 group-hover:text-white transition-colors" />
+                </div>
                 <h3 className="text-3xl font-bold text-slate-900 mb-4">Smart Oven</h3>
                 <p className="text-slate-600 text-lg leading-relaxed">
                   Advanced heating technology combining microwave, infrared, and convection for perfect results
@@ -600,10 +601,17 @@ export function ProductPage() {
               viewport={{ once: true, margin: "-100px" }}
               transition={{ duration: 0.8, ease: "easeOut", delay: 0.3 }}
               style={{ perspective: "1000px" }}
-              className="relative rounded-xl overflow-hidden bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50 border-2 border-blue-200 shadow-xl p-12"
+              whileHover={{
+                y: -4,
+                boxShadow: '0 20px 40px rgba(0, 0, 0, 0.1)',
+                borderColor: '#2563eb'
+              }}
+              className="relative rounded-xl overflow-hidden bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50 border-2 border-blue-200 shadow-xl p-12 transition-all group hover:border-blue-600"
             >
               <div className="text-center">
-                <div className="text-6xl mb-6">🍕</div>
+                <div className="w-20 h-20 bg-blue-100 rounded-xl flex items-center justify-center mx-auto mb-6 group-hover:bg-blue-600 group-hover:scale-110 transition-all">
+                  <UtensilsCrossed className="w-10 h-10 text-blue-600 group-hover:text-white transition-colors" />
+                </div>
                 <h3 className="text-3xl font-bold text-slate-900 mb-4">Menu Variety</h3>
                 <p className="text-slate-600 text-lg leading-relaxed">
                   Wide selection of pizza options and customizable toppings for diverse customer preferences
@@ -955,9 +963,9 @@ export function ProductPage() {
             viewport={viewportConfig}
             variants={scaleUp}
           >
-            <h2 className="text-4xl md:text-5xl mb-6 text-white font-bold">Ready to Deploy?</h2>
+            <h2 className="text-4xl md:text-5xl mb-6 text-white font-bold">Ready to Transform Your Business?</h2>
             <p className="text-xl text-blue-50 mb-8">
-              Contact our enterprise sales team to discuss pricing, installation, and customization options
+              Join the future of automated food service with Pizza Anytime vending machines
             </p>
             <div className="flex flex-wrap gap-4 justify-center">
               <motion.button
@@ -966,9 +974,10 @@ export function ProductPage() {
                   boxShadow: '0 20px 40px rgba(0, 0, 0, 0.2)'
                 }}
                 whileTap={{ scale: 0.95 }}
+                onClick={() => onNavigate('request-access')}
                 className="px-10 py-5 bg-white text-blue-600 rounded-lg text-lg shadow-xl font-semibold hover:bg-blue-50 transition-colors"
               >
-                Contact Sales
+                Request Access
               </motion.button>
               <motion.button
                 whileHover={{
@@ -977,9 +986,10 @@ export function ProductPage() {
                   backgroundColor: 'rgba(255, 255, 255, 0.1)'
                 }}
                 whileTap={{ scale: 0.95 }}
+                onClick={() => onNavigate('contact')}
                 className="px-10 py-5 border-2 border-white/50 rounded-lg transition-colors text-lg text-white font-semibold hover:bg-white/10"
               >
-                Download Brochure
+                Contact Sales
               </motion.button>
             </div>
           </motion.div>

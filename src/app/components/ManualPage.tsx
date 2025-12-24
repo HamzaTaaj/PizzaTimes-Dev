@@ -2,7 +2,11 @@ import { motion } from 'motion/react';
 import { Download, FileText, BookOpen, Video, HelpCircle, CheckCircle } from 'lucide-react';
 import { fadeInUp, staggerContainer, viewportConfig, scaleUp } from '../utils/animations';
 
-export function ManualPage() {
+interface ManualPageProps {
+  onNavigate: (page: string) => void;
+}
+
+export function ManualPage({ onNavigate }: ManualPageProps) {
   const manuals = [
     {
       title: 'Quick Start Guide',
@@ -367,18 +371,12 @@ export function ManualPage() {
             </p>
             <div className="flex flex-wrap gap-4 justify-center">
               <motion.button
+                onClick={() => onNavigate('contact')}
                 whileHover={{ scale: 1.05, boxShadow: '0 20px 40px rgba(0, 0, 0, 0.2)' }}
                 whileTap={{ scale: 0.95 }}
                 className="px-8 py-4 bg-white text-blue-600 rounded-lg font-semibold hover:bg-blue-50 transition-colors"
               >
                 Contact Support
-              </motion.button>
-              <motion.button
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                className="px-8 py-4 border-2 border-white/50 rounded-lg hover:bg-white/10 transition-colors text-white font-semibold"
-              >
-                Schedule Training
               </motion.button>
             </div>
           </motion.div>
