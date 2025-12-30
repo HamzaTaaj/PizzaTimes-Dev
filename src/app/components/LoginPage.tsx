@@ -42,12 +42,8 @@ export function LoginPage({ onNavigate, onLoginSuccess }: LoginPageProps = {}) {
       saveAuthToken(data.token);
       saveAuthUser(data.user);
 
-      // Navigate to admin dashboard
-      if (onLoginSuccess) {
-        onLoginSuccess();
-      } else if (onNavigate) {
-        onNavigate('admin');
-      }
+      // Redirect to Shopify admin customers page
+      window.location.href = 'https://admin.shopify.com/store/pizza-anytime-2/customers?query=tag:access-request';
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Login failed. Please try again.');
     } finally {
