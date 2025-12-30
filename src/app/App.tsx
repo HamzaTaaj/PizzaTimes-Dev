@@ -37,7 +37,7 @@ export default function App() {
     if (page === 'admin' && !isAuthenticated()) {
       setCurrentPage('login');
     } else {
-      setCurrentPage(page);
+    setCurrentPage(page);
     }
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
