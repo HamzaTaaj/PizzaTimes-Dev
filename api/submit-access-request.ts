@@ -48,71 +48,35 @@ export default async function handler(
       });
     }
 
-    // Create a customer in Shopify with tags for tracking
-    const customerData = {
-      customer: {
-        first_name: formData.firstName,
-        last_name: formData.lastName,
-        email: formData.email,
-        tags: 'access-request,pending-review',
-        note: `Company: ${formData.company}\nLocation: ${formData.location || 'N/A'}\nMachine Count: ${formData.machineCount || 'N/A'}\nRole: ${formData.role || 'N/A'}\nMessage: ${formData.message || 'N/A'}\nSubmitted: ${formData.submittedAt}`,
-        metafields: [
-          {
-            namespace: 'access_request',
-            key: 'company',
-            value: formData.company,
-            type: 'single_line_text_field'
-          },
-          {
-            namespace: 'access_request',
-            key: 'location',
-            value: formData.location || '',
-            type: 'single_line_text_field'
-          },
-          {
-            namespace: 'access_request',
-            key: 'machine_count',
-            value: formData.machineCount || '0',
-            type: 'single_line_text_field'
-          },
-          {
-            namespace: 'access_request',
-            key: 'role',
-            value: formData.role || '',
-            type: 'single_line_text_field'
-          },
-          {
-            namespace: 'access_request',
-            key: 'message',
-            value: formData.message || '',
-            type: 'multi_line_text_field'
-          },
-          {
-            namespace: 'access_request',
-            key: 'submitted_at',
-            value: formData.submittedAt,
-            type: 'single_line_text_field'
-          },
-          {
-            namespace: 'access_request',
-            key: 'status',
-            value: 'pending',
-            type: 'single_line_text_field'
-          }
+    // Create a metaobject entry in Shopify for access request
+    const metaobjectData = {
+      metaobject: {
+        type: 'access_request',
+        fields: [
+          { key: 'first_name', value: formData.firstName },
+          { key: 'last_name', value: formData.lastName },
+          { key: 'email', value: formData.email },
+          { key: 'company', value: formData.company },
+          { key: 'location', value: formData.location || '' },
+          { key: 'machine_count', value: formData.machineCount || '' },
+          { key: 'role', value: formData.role || '' },
+          { key: 'message', value: formData.message || '' },
+          { key: 'status', value: 'pending' },
+          { key: 'submitted_at', value: formData.submittedAt }
         ]
       }
     };
 
-    // Send to Shopify
+    // Send to Shopify Metaobjects API
     const shopifyResponse = await fetch(
-      `https://${shopifyDomain}/admin/api/2024-01/customers.json`,
+      `https://${shopifyDomain}/admin/api/2024-01/metaobjects.json`,
       {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           'X-Shopify-Access-Token': accessToken
         },
-        body: JSON.stringify(customerData)
+        body: JSON.stringify(metaobjectData)
       }
     );
 
@@ -120,15 +84,9 @@ export default async function handler(
       const errorData = await shopifyResponse.json();
       console.error('Shopify API error:', errorData);
       
-      // Check if customer already exists
-      if (errorData.errors?.email) {
-        return res.status(400).json({ 
-          error: 'A request with this email already exists' 
-        });
-      }
-      
       return res.status(500).json({ 
-        error: 'Failed to submit request. Please try again.' 
+        error: 'Failed to submit request. Please try again.',
+        details: errorData
       });
     }
 
@@ -137,7 +95,7 @@ export default async function handler(
     return res.status(200).json({ 
       success: true,
       message: 'Access request submitted successfully',
-      id: result.customer.id
+      id: result.metaobject.id
     });
 
   } catch (error) {

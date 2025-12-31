@@ -36,19 +36,12 @@ export default async function handler(
 
     // Check if it's admin login
     if (email === adminEmail && password === adminPassword) {
-      // Generate JWT token for admin
-      const token = jwt.sign(
-        { 
-          email: adminEmail,
-          role: 'admin',
-          exp: Math.floor(Date.now() / 1000) + (24 * 60 * 60) // 24 hours
-        },
-        jwtSecret
-      );
-
+      // Redirect to Shopify admin - Access Requests metaobjects
+      const shopifyAdminUrl = `https://admin.shopify.com/store/${shopifyDomain?.replace('.myshopify.com', '')}/settings/custom_data/metaobjects/access_request`;
+      
       return res.status(200).json({ 
         success: true,
-        token,
+        redirectTo: shopifyAdminUrl,
         user: {
           email: adminEmail,
           role: 'admin'

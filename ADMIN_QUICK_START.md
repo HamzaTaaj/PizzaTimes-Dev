@@ -20,8 +20,8 @@ Your Pizza Vending application now has a complete admin system with:
 5. Name it "Pizza Access Requests", add any URL
 6. Go to **Configuration** → **Admin API access scopes**
 7. Enable these permissions:
-   - ✅ `read_customers`
-   - ✅ `write_customers`
+   - ✅ `read_metaobjects`
+   - ✅ `write_metaobjects`
 8. Click **Save** → Go to **API credentials** → **Install app**
 9. Copy the **Admin API access token** (you'll only see it once!)
    - Format: `shpat_xxxxxxxxxxxxx`

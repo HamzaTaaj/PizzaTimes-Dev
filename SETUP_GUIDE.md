@@ -56,8 +56,8 @@ Since you need API access for backend automation (saving form submissions and re
 1. In your app dashboard, click on **Configuration** in the left sidebar
 2. Scroll down to **Admin API access scopes**
 3. Search for and enable the following permissions:
-   - ✅ `read_customers` - Read customer data
-   - ✅ `write_customers` - Create and update customers
+   - ✅ `read_metaobjects` - Read metaobject data
+   - ✅ `write_metaobjects` - Create and update metaobjects
 4. Click **Save** at the top right
 
 #### d. Install App and Get Access Token
