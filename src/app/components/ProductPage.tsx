@@ -5,10 +5,10 @@ import { Cpu, Thermometer, Gauge, Wifi, Shield, Wrench, Package, Zap, CheckCircl
 import { ImageWithFallback } from './figma/ImageWithFallback';
 import { fadeInUp, staggerContainer, viewportConfig, slideInLeft, slideInRight, scaleUp } from '../utils/animations';
 import vend1Video from '@/assets/vend.mp4';
-import vend1Image from '@/assets/vend1.png';
-import vend2Image from '@/assets/vend2.jpeg';
-import vend3Image from '@/assets/vend3.jpeg';
-import vend4Image from '@/assets/vend4.jpeg';
+import vend1Image from '@/assets/machine1-removebg-preview.png';
+import vend2Image from '@/assets/machine1-removebg-preview.png';
+import vend3Image from '@/assets/machine1-removebg-preview.png';
+import vend4Image from '@/assets/machine1-removebg-preview.png';
 
 // Animated Counter Component
 function AnimatedCounter({ value, suffix = '', prefix = '', duration = 2 }: { value: number | string; suffix?: string; prefix?: string; duration?: number }) {
@@ -683,7 +683,14 @@ export function ProductPage() {
               style={{ perspective: "1000px" }}
               className="text-xl text-slate-600"
             >
-              Comprehensive product specifications and technical details
+              Every detail is mentioned in the user manual.{' '}
+              <motion.button
+                onClick={() => navigate('/manual')}
+                className="text-blue-600 hover:text-blue-700 underline font-semibold"
+                whileHover={{ scale: 1.05 }}
+              >
+                View User Manual
+              </motion.button>
             </motion.p>
           </motion.div>
 
@@ -1093,10 +1100,10 @@ export function ProductPage() {
             className="text-center mb-16"
           >
             <h2 className="text-4xl md:text-5xl mb-4 text-slate-900 font-bold">
-              NAMA & HACCP <span className="text-blue-600">Compliance</span>
+              NAMA <span className="text-blue-600">Compliance</span>
             </h2>
             <p className="text-xl text-slate-600 max-w-2xl mx-auto">
-              Certified compliance with National Automatic Merchandising Association (NAMA) and HACCP food safety standards
+              Certified compliance with National Automatic Merchandising Association (NAMA) standards
             </p>
           </motion.div>
 
@@ -1160,98 +1167,6 @@ export function ProductPage() {
         </div>
       </section>
 
-      {/* Bell & Howell Partnership Section */}
-      <section className="relative py-24 bg-slate-50">
-        {/* Curved Top Wave Design */}
-        <div className="absolute top-0 left-0 right-0 z-0">
-          <svg className="w-full h-24" viewBox="0 0 1440 120" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
-            <path d="M0 0L60 15C120 30 240 60 360 75C480 90 600 90 720 82.5C840 75 960 60 1080 52.5C1200 45 1320 45 1380 45L1440 45V0H1380C1320 0 1200 0 1080 0C960 0 840 0 720 0C600 0 480 0 360 0C240 0 120 0 60 0H0Z" fill="#ffffff" />
-          </svg>
-        </div>
-        {/* Curved Bottom Wave Design */}
-        <div className="absolute bottom-0 left-0 right-0 z-0">
-          <svg className="w-full h-24" viewBox="0 0 1440 120" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
-            <path d="M0 120L60 105C120 90 240 60 360 45C480 30 600 30 720 37.5C840 45 960 60 1080 67.5C1200 75 1320 75 1380 75L1440 75V120H1380C1320 120 1200 120 1080 120C960 120 840 120 720 120C600 120 480 120 360 120C240 120 120 120 60 120H0Z" fill="#2563eb" />
-          </svg>
-        </div>
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-          <motion.div
-            initial={{ opacity: 0, y: 80, rotateX: -20 }}
-            whileInView={{ opacity: 1, y: 0, rotateX: 0 }}
-            viewport={{ once: true, margin: "-100px" }}
-            transition={{ duration: 0.8, ease: "easeOut" }}
-            style={{ perspective: "1000px" }}
-            className="grid lg:grid-cols-2 gap-12 items-center"
-          >
-            {/* Left Content */}
-            <motion.div
-              initial={{ opacity: 0, x: -30 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: 0.2 }}
-            >
-              <h2 className="text-4xl md:text-5xl mb-6 font-bold text-slate-900">
-                Nationwide Support by <span className="text-blue-600">Bell & Howell</span>
-              </h2>
-              <p className="text-xl text-slate-600 mb-6 leading-relaxed">
-                High Sierra Vending partners with Bell & Howell's nationwide technician network to provide rapid, on-site support for every Pizza Anytime™ machine across the lower 48 states.
-              </p>
-              <ul className="space-y-4 mb-8">
-                {[
-                  'Coast-to-coast service coverage',
-                  'Rapid response times for critical issues',
-                  'Certified technicians trained on our systems',
-                  'Complete parts and labor warranty',
-                  'Email and phone support for machine lifetime',
-                  'Preventive maintenance programs'
-                ].map((item, index) => (
-                  <motion.li
-                    key={index}
-                    initial={{ opacity: 0, x: -20 }}
-                    whileInView={{ opacity: 1, x: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.4, delay: 0.3 + index * 0.1 }}
-                    className="flex items-center gap-3 text-slate-700"
-                  >
-                    <div className="w-6 h-6 bg-blue-600 rounded-full flex items-center justify-center flex-shrink-0">
-                      <CheckCircle2 className="w-4 h-4 text-white" />
-                    </div>
-                    <span className="text-lg">{item}</span>
-                  </motion.li>
-                ))}
-              </ul>
-              <motion.button
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
-                onClick={() => navigate('/onsite-support')}
-                className="px-8 py-4 bg-blue-600 text-white rounded-lg shadow-lg font-semibold hover:bg-blue-700 transition-colors"
-              >
-                Learn More About Support
-              </motion.button>
-            </motion.div>
-
-            {/* Right Content - Logo/Image Placeholder */}
-            <motion.div
-              initial={{ opacity: 0, x: 30 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: 0.4 }}
-              className="relative"
-            >
-              <div className="p-12 bg-white border-2 border-slate-200 rounded-2xl shadow-xl">
-                <div className="text-center">
-                  <div className="text-5xl font-bold text-slate-900 mb-4">Bell & Howell</div>
-                  <div className="text-2xl text-blue-600 mb-6">Service Network</div>
-                  <p className="text-slate-600 text-lg leading-relaxed">
-                    Trusted nationwide service partner providing professional on-site technical support and maintenance for all Pizza Anytime vending machines.
-                  </p>
-                </div>
-              </div>
-            </motion.div>
-          </motion.div>
-        </div>
-      </section>
-
       {/* CTA */}
       <section className="relative py-24 overflow-hidden bg-blue-600">
         {/* Curved Top Wave Design */}
@@ -1278,7 +1193,7 @@ export function ProductPage() {
                   boxShadow: '0 20px 40px rgba(0, 0, 0, 0.2)'
                 }}
                 whileTap={{ scale: 0.95 }}
-                onClick={() => onNavigate('request-access')}
+                onClick={() => navigate('/request-access')}
                 className="px-10 py-5 bg-white text-blue-600 rounded-lg text-lg shadow-xl font-semibold hover:bg-blue-50 transition-colors"
               >
                 Request Access

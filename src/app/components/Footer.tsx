@@ -15,7 +15,7 @@ export function Footer() {
           {/* Company Info */}
           <div>
             <div className="flex items-center gap-4 mb-6">
-              <img src={logo} alt="Pizza Anytime Logo" className="w-16 h-16 object-contain" />
+              <img src={logo} alt="Pizza Anytime Logo" className="w-12 h-16 object-contain" />
               <span className="text-xl font-bold text-slate-900">
                 Pizza <span className="text-blue-600">Anytime</span>
               </span>

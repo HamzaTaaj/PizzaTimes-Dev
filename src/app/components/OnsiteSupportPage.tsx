@@ -119,6 +119,96 @@ export function OnsiteSupportPage() {
         </div>
       </section>
 
+      {/* Bell & Howell Partnership Section */}
+      <section className="relative py-24 bg-white">
+        {/* Curved Top Wave Design */}
+        <div className="absolute top-0 left-0 right-0 z-0">
+          <svg className="w-full h-24" viewBox="0 0 1440 120" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+            <path d="M0 0L60 15C120 30 240 60 360 75C480 90 600 90 720 82.5C840 75 960 60 1080 52.5C1200 45 1320 45 1380 45L1440 45V0H1380C1320 0 1200 0 1080 0C960 0 840 0 720 0C600 0 480 0 360 0C240 0 120 0 60 0H0Z" fill="#f8fafc" />
+          </svg>
+        </div>
+        {/* Curved Bottom Wave Design */}
+        <div className="absolute bottom-0 left-0 right-0 z-0">
+          <svg className="w-full h-24" viewBox="0 0 1440 120" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+            <path d="M0 120L60 105C120 90 240 60 360 45C480 30 600 30 720 37.5C840 45 960 60 1080 67.5C1200 75 1320 75 1380 75L1440 75V120H1380C1320 120 1200 120 1080 120C960 120 840 120 720 120C600 120 480 120 360 120C240 120 120 120 60 120H0Z" fill="#f1f5f9" />
+          </svg>
+        </div>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+          <motion.div
+            initial={{ opacity: 0, y: 80, rotateX: -20 }}
+            whileInView={{ opacity: 1, y: 0, rotateX: 0 }}
+            viewport={{ once: true, margin: "-100px" }}
+            transition={{ duration: 0.8, ease: "easeOut" }}
+            style={{ perspective: "1000px" }}
+            className="grid lg:grid-cols-2 gap-12 items-center"
+          >
+            {/* Left Content */}
+            <motion.div
+              initial={{ opacity: 0, x: -30 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6, delay: 0.2 }}
+            >
+              <h2 className="text-4xl md:text-5xl mb-6 font-bold text-slate-900">
+                Nationwide Support by <span className="text-blue-600">Bell & Howell</span>
+              </h2>
+              <p className="text-xl text-slate-600 mb-6 leading-relaxed">
+                High Sierra Vending partners with Bell & Howell's nationwide technician network to provide rapid, on-site support for every Pizza Anytime™ machine across the lower 48 states.
+              </p>
+              <ul className="space-y-4 mb-8">
+                {[
+                  'Coast-to-coast service coverage',
+                  'Rapid response times for critical issues',
+                  'Certified technicians trained on our systems',
+                  'Complete parts and labor warranty',
+                  'Email and phone support for machine lifetime',
+                  'Preventive maintenance programs'
+                ].map((item, index) => (
+                  <motion.li
+                    key={index}
+                    initial={{ opacity: 0, x: -20 }}
+                    whileInView={{ opacity: 1, x: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.4, delay: 0.3 + index * 0.1 }}
+                    className="flex items-center gap-3 text-slate-700"
+                  >
+                    <div className="w-6 h-6 bg-blue-600 rounded-full flex items-center justify-center flex-shrink-0">
+                      <CheckCircle2 className="w-4 h-4 text-white" />
+                    </div>
+                    <span className="text-lg">{item}</span>
+                  </motion.li>
+                ))}
+              </ul>
+            </motion.div>
+
+            {/* Right Content - Logo */}
+            <motion.div
+              initial={{ opacity: 0, x: 30 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6, delay: 0.4 }}
+              className="relative"
+            >
+              <div className="p-12 bg-white border-2 border-slate-200 rounded-2xl shadow-xl">
+                <div className="text-center">
+                  {/* Bell & Howell Logo */}
+                  <div className="mb-6 flex justify-center">
+                    <div className="bg-slate-50 border-2 border-slate-200 rounded-xl p-8 w-full max-w-xs">
+                      <div className="text-4xl font-bold text-slate-900 mb-2 tracking-tight">Bell & Howell</div>
+                      <div className="h-1 w-20 bg-blue-600 mx-auto mb-4"></div>
+                      <div className="text-sm text-slate-600 font-medium">Service Network</div>
+                    </div>
+                  </div>
+                  <p className="text-slate-600 text-lg leading-relaxed">
+                    Trusted nationwide service partner providing professional on-site technical support and maintenance for all Pizza Anytime vending machines.
+                  </p>
+                </div>
+              </div>
+            </motion.div>
+          </motion.div>
+        </div>
+      </section>
+
       {/* Warranty Information Section */}
       <section className="relative py-24 bg-slate-50">
         {/* Curved Top Wave Design */}

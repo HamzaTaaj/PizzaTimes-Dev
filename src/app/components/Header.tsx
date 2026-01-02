@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { motion, AnimatePresence } from "motion/react";
 import { Menu, X, ChevronDown } from "lucide-react";
-import logo from '@/assets/Untitled.svg';
+import logo from '@/assets/logo-variation-7-blue-white-accent.svg';
 
 export function Header() {
   const navigate = useNavigate();
@@ -26,7 +26,7 @@ export function Header() {
             onClick={() => navigate("/")}
             whileHover={{ scale: 1.02 }}
           >
-            <img src={logo} alt="Pizza Anytime Logo" className="w-20 h-20 object-contain" />
+            <img src={logo} alt="Pizza Anytime Logo" className="w-15 h-20 object-contain" />
             <span className="text-2xl tracking-tight font-bold text-slate-900">
               Pizza{" "}
               <span className="text-blue-600">Anytime</span>
