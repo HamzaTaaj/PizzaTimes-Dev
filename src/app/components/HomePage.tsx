@@ -2,7 +2,7 @@ import { motion, useInView } from 'motion/react';
 import { useNavigate } from 'react-router-dom';
 import { Zap, Clock, Shield, TrendingUp, ArrowRight, Building2, DollarSign, Users, Globe, BarChart3, Award, CheckCircle2, Calendar } from 'lucide-react';
 import { ImageWithFallback } from './figma/ImageWithFallback';
-import vend1Image from '@/assets/machine1-removebg-preview.png';
+import vend1Image from '@/assets/machine2-removebg-preview.png';
 import { useRef, useEffect, useState } from 'react';
 
 // Letter-by-letter animation component

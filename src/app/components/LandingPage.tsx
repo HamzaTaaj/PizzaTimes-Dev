@@ -2,7 +2,7 @@ import { motion, useInView } from 'motion/react';
 import { useNavigate } from 'react-router-dom';
 import { ArrowRight, CheckCircle2, TrendingUp, Clock, DollarSign, Users, Zap, Shield, Send, User, Mail } from 'lucide-react';
 import { ImageWithFallback } from './figma/ImageWithFallback';
-import vend1Image from '@/assets/machine1-removebg-preview.png';
+import vend1Image from '@/assets/machine2-removebg-preview.png';
 import { useState, useRef, useEffect } from 'react';
 
 // Animated Counter Component

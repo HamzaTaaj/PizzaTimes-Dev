@@ -1,6 +1,7 @@
 import { motion } from 'motion/react';
 import { useNavigate } from 'react-router-dom';
 import { Wrench, Clock, Phone, CheckCircle2, Truck, Shield, Headphones, ArrowRight } from 'lucide-react';
+import bellHowellLogo from '@/assets/bell-howell-logo.svg';
 
 export function OnsiteSupportPage() {
   const navigate = useNavigate();
@@ -193,10 +194,12 @@ export function OnsiteSupportPage() {
                 <div className="text-center">
                   {/* Bell & Howell Logo */}
                   <div className="mb-6 flex justify-center">
-                    <div className="bg-slate-50 border-2 border-slate-200 rounded-xl p-8 w-full max-w-xs">
-                      <div className="text-4xl font-bold text-slate-900 mb-2 tracking-tight">Bell & Howell</div>
-                      <div className="h-1 w-20 bg-blue-600 mx-auto mb-4"></div>
-                      <div className="text-sm text-slate-600 font-medium">Service Network</div>
+                    <div className="bg-slate-50 border-2 border-slate-200 rounded-xl p-6 w-full max-w-xs flex items-center justify-center">
+                      <img 
+                        src={bellHowellLogo} 
+                        alt="Bell & Howell Logo" 
+                        className="w-full h-auto max-h-16 object-contain"
+                      />
                     </div>
                   </div>
                   <p className="text-slate-600 text-lg leading-relaxed">

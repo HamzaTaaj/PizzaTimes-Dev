@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 60" fill="none">
+  <text x="10" y="35" font-family="Arial, sans-serif" font-size="24" font-weight="bold" fill="#1e293b">Bell &amp; Howell</text>
+  <line x1="10" y1="42" x2="190" y2="42" stroke="#2563eb" stroke-width="2"/>
+  <text x="10" y="55" font-family="Arial, sans-serif" font-size="12" fill="#64748b">Service Network</text>
+</svg>
+

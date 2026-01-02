@@ -5,10 +5,10 @@ import { Cpu, Thermometer, Gauge, Wifi, Shield, Wrench, Package, Zap, CheckCircl
 import { ImageWithFallback } from './figma/ImageWithFallback';
 import { fadeInUp, staggerContainer, viewportConfig, slideInLeft, slideInRight, scaleUp } from '../utils/animations';
 import vend1Video from '@/assets/vend.mp4';
-import vend1Image from '@/assets/machine1-removebg-preview.png';
-import vend2Image from '@/assets/machine1-removebg-preview.png';
-import vend3Image from '@/assets/machine1-removebg-preview.png';
-import vend4Image from '@/assets/machine1-removebg-preview.png';
+import vend1Image from '@/assets/machine2-removebg-preview.png';
+import vend2Image from '@/assets/machine2-removebg-preview.png';
+import vend3Image from '@/assets/machine2-removebg-preview.png';
+import vend4Image from '@/assets/machine2-removebg-preview.png';
 
 // Animated Counter Component
 function AnimatedCounter({ value, suffix = '', prefix = '', duration = 2 }: { value: number | string; suffix?: string; prefix?: string; duration?: number }) {
@@ -66,7 +66,7 @@ export function ProductPage() {
     { label: 'Power', value: '220V / 20A', position: 'left-bottom' },
     { label: 'Capacity', value: '69 pizzas', position: 'right-top' },
     { label: 'Cook Time', value: '2-3 minutes', position: 'right-middle' },
-    { label: 'Operating Temp', value: '35-95°F', position: 'right-bottom' }
+    { label: 'Storage Temp', value: 'Min 20°F', position: 'right-bottom' }
   ];
 
   const features = [
@@ -442,7 +442,7 @@ export function ProductPage() {
                   <AnimatedCounter value={69} duration={2} /> Pizzas
                 </div>
                 <p className="text-slate-700 text-lg leading-relaxed">
-                  Maximum storage capacity in the refrigeration unit for continuous service
+                  Maximum storage capacity in the refrigeration unit for continuous service. Storage temperature: Minimum 20°F.
                 </p>
               </motion.div>
             </motion.div>
@@ -510,7 +510,7 @@ export function ProductPage() {
                     transition={{ duration: 0.6, delay: 0.6 }}
                     className="text-slate-600 text-lg leading-relaxed max-w-md mx-auto"
                   >
-                    Advanced cooling system maintains optimal temperature for freshness.
+                    Advanced cooling system maintains optimal temperature for freshness. Minimum storage temperature: 20°F.
                   </motion.p>
                   
                   {/* Decorative Elements */}
