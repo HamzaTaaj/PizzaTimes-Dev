@@ -332,12 +332,12 @@ export function HomePage() {
               transition={{ duration: 0.6, delay: 0.2 }}
               className="relative"
             >
-              <div className="relative rounded-2xl overflow-hidden">
+              <div className="relative rounded-2xl overflow-hidden ">
                 <div className="relative z-10 scale-110">
                   <ImageWithFallback
                     src={vend1Image}
                     alt="Enterprise Pizza Vending Machine"
-                    className="w-full h-auto rounded-lg"
+                    className="w-[90%] h-auto rounded-lg"
                   />
                 </div>
               </div>
