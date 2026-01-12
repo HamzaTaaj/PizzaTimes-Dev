@@ -19,7 +19,7 @@ export function LoginPage() {
   // Redirect if already authenticated
   useEffect(() => {
     if (isAuthenticated) {
-      navigate('/dashboard');
+      navigate('/shop');
     }
   }, [isAuthenticated, navigate]);
 
@@ -38,7 +38,7 @@ export function LoginPage() {
     const result = await signIn(formData.email, formData.password);
 
     if (result.success) {
-      navigate('/dashboard');
+      navigate('/shop');
     } else if (result.error) {
       setLocalError(result.error);
     }

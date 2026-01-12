@@ -1,14 +1,14 @@
 import React, { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { motion, AnimatePresence } from "motion/react";
-import { Menu, X, ChevronDown } from "lucide-react";
+import { Menu, X, ChevronDown, User } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
 import logo from '@/assets/pizza-anytime-logo.svg';
 
 export function Header() {
   const navigate = useNavigate();
   const location = useLocation();
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, customer } = useAuth();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [resourcesOpen, setResourcesOpen] = useState(false);
   const [aboutUsOpen, setAboutUsOpen] = useState(false);
@@ -32,7 +32,7 @@ export function Header() {
           </motion.div>
 
           {/* Desktop Navigation */}
-          <div className="hidden lg:flex items-center gap-6">
+          <div className="hidden lg:flex items-center gap-4 xl:gap-6">
             {/* 1. Home */}
             <motion.button
               onClick={() => navigate("/")}
@@ -65,14 +65,14 @@ export function Header() {
                 color: "#2563eb"
               }}
               whileTap={{ scale: 0.98 }}
-              className={`relative px-3 py-2 rounded-lg transition-all font-medium ${isActive("/product") ? "text-blue-600" : "text-slate-700 hover:text-blue-600"}`}
+              className={`relative px-3 py-2 rounded-lg transition-all font-medium whitespace-nowrap ${isActive("/product") ? "text-blue-600" : "text-slate-700 hover:text-blue-600"}`}
             >
               <motion.div
                 className="absolute inset-0 bg-blue-50 rounded-lg z-0"
                 initial={{ opacity: 0 }}
                 whileHover={{ opacity: 1 }}
               />
-              <span className="relative z-10">Product Information</span>
+              <span className="relative z-10 text-sm xl:text-base">Product Info</span>
               {isActive("/product") && (
                 <motion.div
                   className="absolute -bottom-0.5 left-0 right-0 h-0.5 bg-blue-600 z-20 rounded-full"
@@ -90,14 +90,14 @@ export function Header() {
                   color: "#2563eb"
                 }}
                 whileTap={{ scale: 0.98 }}
-                className={`relative flex items-center gap-1 px-3 py-2 rounded-lg transition-all font-medium ${aboutUsOpen ? "text-blue-600" : "text-slate-700 hover:text-blue-600"}`}
-              >
-                <motion.div
-                  className="absolute inset-0 bg-blue-50 rounded-lg z-0"
-                  initial={{ opacity: 0 }}
-                  whileHover={{ opacity: 1 }}
-                />
-                <span className="relative z-10">About Us</span>
+              className={`relative flex items-center gap-1 px-3 py-2 rounded-lg transition-all font-medium whitespace-nowrap ${aboutUsOpen ? "text-blue-600" : "text-slate-700 hover:text-blue-600"}`}
+            >
+              <motion.div
+                className="absolute inset-0 bg-blue-50 rounded-lg z-0"
+                initial={{ opacity: 0 }}
+                whileHover={{ opacity: 1 }}
+              />
+              <span className="relative z-10 text-sm xl:text-base">About Us</span>
                 <ChevronDown className="w-4 h-4 relative z-10" />
               </motion.button>
 
@@ -180,14 +180,14 @@ export function Header() {
                 color: "#2563eb"
               }}
               whileTap={{ scale: 0.98 }}
-              className={`relative px-3 py-2 rounded-lg transition-all font-medium ${isActive("/roi-calculator") ? "text-blue-600" : "text-slate-700 hover:text-blue-600"}`}
+              className={`relative px-3 py-2 rounded-lg transition-all font-medium whitespace-nowrap ${isActive("/roi-calculator") ? "text-blue-600" : "text-slate-700 hover:text-blue-600"}`}
             >
               <motion.div
                 className="absolute inset-0 bg-blue-50 rounded-lg z-0"
                 initial={{ opacity: 0 }}
                 whileHover={{ opacity: 1 }}
               />
-              <span className="relative z-10">ROI Calculator</span>
+              <span className="relative z-10 text-sm xl:text-base">ROI</span>
               {isActive("/roi-calculator") && (
                 <motion.div
                   className="absolute -bottom-0.5 left-0 right-0 h-0.5 bg-blue-600 z-20 rounded-full"
@@ -204,14 +204,14 @@ export function Header() {
                 color: "#2563eb"
               }}
               whileTap={{ scale: 0.98 }}
-              className={`relative px-3 py-2 rounded-lg transition-all font-medium ${isActive("/marketing") ? "text-blue-600" : "text-slate-700 hover:text-blue-600"}`}
+              className={`relative px-3 py-2 rounded-lg transition-all font-medium whitespace-nowrap ${isActive("/marketing") ? "text-blue-600" : "text-slate-700 hover:text-blue-600"}`}
             >
               <motion.div
                 className="absolute inset-0 bg-blue-50 rounded-lg z-0"
                 initial={{ opacity: 0 }}
                 whileHover={{ opacity: 1 }}
               />
-              <span className="relative z-10">Marketing</span>
+              <span className="relative z-10 text-sm xl:text-base">Marketing</span>
               {isActive("/marketing") && (
                 <motion.div
                   className="absolute -bottom-0.5 left-0 right-0 h-0.5 bg-blue-600 z-20 rounded-full"
@@ -229,14 +229,14 @@ export function Header() {
                   color: "#2563eb"
                 }}
                 whileTap={{ scale: 0.98 }}
-                className={`relative px-3 py-2 rounded-lg transition-all font-medium ${isActive("/request-access") ? "text-blue-600" : "text-slate-700 hover:text-blue-600"}`}
+                className={`relative px-3 py-2 rounded-lg transition-all font-medium whitespace-nowrap ${isActive("/request-access") ? "text-blue-600" : "text-slate-700 hover:text-blue-600"}`}
               >
                 <motion.div
                   className="absolute inset-0 bg-blue-50 rounded-lg z-0"
                   initial={{ opacity: 0 }}
                   whileHover={{ opacity: 1 }}
                 />
-                <span className="relative z-10">Request Access</span>
+                <span className="relative z-10 text-sm xl:text-base">Request Access</span>
                 {isActive("/request-access") && (
                   <motion.div
                     className="absolute -bottom-0.5 left-0 right-0 h-0.5 bg-blue-600 z-20 rounded-full"
@@ -254,14 +254,14 @@ export function Header() {
                 color: "#2563eb"
               }}
               whileTap={{ scale: 0.98 }}
-              className={`relative px-3 py-2 rounded-lg transition-all font-medium ${isActive("/contact") ? "text-blue-600" : "text-slate-700 hover:text-blue-600"}`}
+              className={`relative px-3 py-2 rounded-lg transition-all font-medium whitespace-nowrap ${isActive("/contact") ? "text-blue-600" : "text-slate-700 hover:text-blue-600"}`}
             >
               <motion.div
                 className="absolute inset-0 bg-blue-50 rounded-lg z-0"
                 initial={{ opacity: 0 }}
                 whileHover={{ opacity: 1 }}
               />
-              <span className="relative z-10">Contact Us</span>
+              <span className="relative z-10 text-sm xl:text-base">Contact</span>
               {isActive("/contact") && (
                 <motion.div
                   className="absolute -bottom-0.5 left-0 right-0 h-0.5 bg-blue-600 z-20 rounded-full"
@@ -279,14 +279,14 @@ export function Header() {
                   color: "#2563eb"
                 }}
                 whileTap={{ scale: 0.98 }}
-                className={`relative flex items-center gap-1 px-3 py-2 rounded-lg transition-all font-medium ${resourcesOpen ? "text-blue-600" : "text-slate-700 hover:text-blue-600"}`}
-              >
-                <motion.div
-                  className="absolute inset-0 bg-blue-50 rounded-lg z-0"
-                  initial={{ opacity: 0 }}
-                  whileHover={{ opacity: 1 }}
-                />
-                <span className="relative z-10">Resources</span>
+              className={`relative flex items-center gap-1 px-3 py-2 rounded-lg transition-all font-medium whitespace-nowrap ${resourcesOpen ? "text-blue-600" : "text-slate-700 hover:text-blue-600"}`}
+            >
+              <motion.div
+                className="absolute inset-0 bg-blue-50 rounded-lg z-0"
+                initial={{ opacity: 0 }}
+                whileHover={{ opacity: 1 }}
+              />
+              <span className="relative z-10 text-sm xl:text-base">Resources</span>
                 <ChevronDown className="w-4 h-4 relative z-10" />
               </motion.button>
 
@@ -333,17 +333,44 @@ export function Header() {
               </AnimatePresence>
             </div>
 
-            <motion.button
-              onClick={() => navigate('/login')}
-              whileHover={{
-                scale: 1.02,
-                boxShadow: "0 10px 30px rgba(37, 99, 235, 0.3)",
-              }}
-              whileTap={{ scale: 0.98 }}
-              className="px-6 py-2.5 bg-blue-600 text-white rounded-lg shadow-md hover:bg-blue-700 transition-all font-medium"
-            >
-              Login
-            </motion.button>
+            {/* Login Button or Profile */}
+            {!isAuthenticated ? (
+              <motion.button
+                onClick={() => navigate('/login')}
+                whileHover={{
+                  scale: 1.02,
+                  boxShadow: "0 10px 30px rgba(37, 99, 235, 0.3)",
+                }}
+                whileTap={{ scale: 0.98 }}
+                className="px-6 py-2.5 bg-blue-600 text-white rounded-lg shadow-md hover:bg-blue-700 transition-all font-medium"
+              >
+                Login
+              </motion.button>
+            ) : (
+              <motion.button
+                onClick={() => navigate('/dashboard')}
+                whileHover={{
+                  scale: 1.02,
+                }}
+                whileTap={{ scale: 0.98 }}
+                className="flex items-center gap-2.5 px-3.5 py-2 bg-gradient-to-r from-blue-50 to-slate-50 border border-blue-200/50 rounded-xl hover:border-blue-400 hover:shadow-md transition-all group"
+              >
+                <div className="relative">
+                  <div className="w-9 h-9 bg-gradient-to-br from-blue-500 to-blue-600 rounded-full flex items-center justify-center shadow-sm group-hover:shadow-md transition-shadow">
+                    <User className="w-5 h-5 text-white" />
+                  </div>
+                  <div className="absolute -top-0.5 -right-0.5 w-3 h-3 bg-green-500 rounded-full border-2 border-white"></div>
+                </div>
+                <div className="flex flex-col items-start">
+                  <span className="text-xs text-slate-500 leading-none hidden xl:block">Account</span>
+                  <span className="text-sm font-semibold text-slate-800 group-hover:text-blue-600 transition-colors leading-tight">
+                    {customer?.firstName 
+                      ? customer.firstName
+                      : customer?.email?.split('@')[0] || 'Profile'}
+                  </span>
+                </div>
+              </motion.button>
+            )}
           </div>
 
           {/* Mobile Menu Button */}
@@ -623,20 +650,50 @@ export function Header() {
                   </AnimatePresence>
                 </div>
                 
-                <motion.button
-                  onClick={() => {
-                    navigate('/login');
-                    setMobileMenuOpen(false);
-                  }}
-                  whileHover={{
-                    scale: 1.02,
-                    boxShadow: "0 10px 30px rgba(37, 99, 235, 0.3)",
-                  }}
-                  whileTap={{ scale: 0.98 }}
-                  className="w-full px-6 py-2.5 bg-blue-600 text-white rounded-lg shadow-md hover:bg-blue-700 transition-all font-medium"
-                >
-                  Login
-                </motion.button>
+                {/* Login Button or Profile - Mobile */}
+                {!isAuthenticated ? (
+                  <motion.button
+                    onClick={() => {
+                      navigate('/login');
+                      setMobileMenuOpen(false);
+                    }}
+                    whileHover={{
+                      scale: 1.02,
+                      boxShadow: "0 10px 30px rgba(37, 99, 235, 0.3)",
+                    }}
+                    whileTap={{ scale: 0.98 }}
+                    className="w-full px-6 py-2.5 bg-blue-600 text-white rounded-lg shadow-md hover:bg-blue-700 transition-all font-medium"
+                  >
+                    Login
+                  </motion.button>
+                ) : (
+                  <motion.button
+                    onClick={() => {
+                      navigate('/dashboard');
+                      setMobileMenuOpen(false);
+                    }}
+                    whileHover={{
+                      scale: 1.02,
+                    }}
+                    whileTap={{ scale: 0.98 }}
+                    className="w-full flex items-center gap-3 px-4 py-3 bg-gradient-to-r from-blue-50 to-slate-50 border border-blue-200/50 rounded-xl hover:border-blue-400 hover:shadow-md transition-all group"
+                  >
+                    <div className="relative">
+                      <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-blue-600 rounded-full flex items-center justify-center shadow-sm">
+                        <User className="w-5 h-5 text-white" />
+                      </div>
+                      <div className="absolute -top-0.5 -right-0.5 w-3 h-3 bg-green-500 rounded-full border-2 border-white"></div>
+                    </div>
+                    <div className="flex flex-col items-start flex-1">
+                      <span className="text-xs text-slate-500 leading-none">My Account</span>
+                      <span className="text-sm font-semibold text-slate-800 group-hover:text-blue-600 transition-colors">
+                        {customer?.firstName 
+                          ? `${customer.firstName}${customer.lastName ? ' ' + customer.lastName : ''}`.trim()
+                          : customer?.email?.split('@')[0] || 'Profile'}
+                      </span>
+                    </div>
+                  </motion.button>
+                )}
               </div>
             </motion.div>
           )}

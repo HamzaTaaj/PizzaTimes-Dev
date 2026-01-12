@@ -14,7 +14,10 @@ import {
   Bell,
   Package,
   Loader2,
-  CheckCircle
+  CheckCircle,
+  ShoppingCart,
+  ArrowRight,
+  Sparkles
 } from 'lucide-react';
 
 // GraphQL query to fetch customer orders and tags
@@ -73,11 +76,12 @@ export function ClientDashboard() {
   const { loading: ordersLoading, data, error: ordersError } = useQuery(GET_CUSTOMER_ORDERS, {
     variables: { 
       customerAccessToken: accessToken || '',
-      first: 10 
+      first: 50 
     },
-    skip: !accessToken || !customer || authLoading,
+    skip: !accessToken || authLoading,
     errorPolicy: 'all',
-    fetchPolicy: 'network-only', // Always fetch fresh data
+    fetchPolicy: 'cache-and-network', // Try cache first, then network
+    notifyOnNetworkStatusChange: true, // Notify when network status changes
   });
 
   // If not authenticated, redirect to login - must be before early return
@@ -91,18 +95,29 @@ export function ClientDashboard() {
   useEffect(() => {
     if (ordersError) {
       console.error('Error fetching customer orders:', ordersError);
+      console.error('Full error details:', JSON.stringify(ordersError, null, 2));
     }
     if (data) {
       console.log('Customer orders data:', data);
+      const customerData = (data as any)?.customer;
+      console.log('Customer data:', customerData);
+      console.log('Orders edges:', customerData?.orders?.edges);
+      console.log('Orders count:', customerData?.orders?.edges?.length || 0);
     }
     if (accessToken) {
       console.log('Access token present:', accessToken.substring(0, 10) + '...');
     } else {
       console.log('No access token found');
     }
-  }, [ordersError, data, accessToken]);
+    console.log('Query skip check:', {
+      hasAccessToken: !!accessToken,
+      authLoading,
+      willSkip: !accessToken || authLoading
+    });
+  }, [ordersError, data, accessToken, authLoading]);
 
-  const isLoading = authLoading || ordersLoading;
+  // Don't block on ordersLoading - we can show dashboard while orders load
+  const isLoading = authLoading;
 
   const handleSignOut = async () => {
     await signOut();
@@ -140,8 +155,9 @@ export function ClientDashboard() {
     }
   }, [ordersLoading, customerData, customer, navigate]);
 
-  // Early return after all hooks
-  if (isLoading || !customer) {
+  // Early return after all hooks - only show loading if we're still authenticating
+  // Don't wait for ordersLoading if we have customer auth
+  if (authLoading || !customer) {
     return (
       <div className="min-h-screen pt-20 bg-gradient-to-br from-slate-50 to-blue-50 flex items-center justify-center">
         <div className="text-center">
@@ -207,7 +223,21 @@ export function ClientDashboard() {
     }
   };
 
-  const orders = customerData?.orders?.edges || [];
+  // Safely extract orders - handle loading state properly
+  const orders = (ordersLoading || !data || !customerData) ? [] : (customerData?.orders?.edges || []);
+  
+  // Debug: Log orders extraction for troubleshooting
+  if (data) {
+    console.log('Orders extraction debug:', {
+      ordersLoading,
+      hasData: !!data,
+      hasCustomerData: !!customerData,
+      hasOrders: !!customerData?.orders,
+      hasEdges: !!customerData?.orders?.edges,
+      ordersLength: orders.length,
+      fullOrdersArray: customerData?.orders?.edges
+    });
+  }
   
   // Calculate total orders from actual orders count
   const totalOrders = orders.length;
@@ -316,7 +346,7 @@ export function ClientDashboard() {
             </motion.button>
           </motion.div>
 
-          {/* Stats Grid */}
+          {/* Stats Grid - Clean 4 Cards Layout */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -340,9 +370,74 @@ export function ClientDashboard() {
             ))}
           </motion.div>
 
-          {/* Main Content Grid */}
+          {/* Prominent Shop Banner */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.3 }}
+            className="relative mb-8 overflow-hidden rounded-2xl bg-gradient-to-r from-blue-600 via-blue-700 to-purple-600 shadow-xl"
+          >
+            {/* Background Pattern */}
+            <div className="absolute inset-0 opacity-10">
+              <div className="absolute top-0 right-0 w-64 h-64 bg-white rounded-full blur-3xl"></div>
+              <div className="absolute bottom-0 left-0 w-48 h-48 bg-orange-300 rounded-full blur-3xl"></div>
+            </div>
+
+            {/* Content */}
+            <div className="relative z-10 px-8 py-8 md:px-12 md:py-10">
+              <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
+                {/* Left Content */}
+                <div className="flex-1">
+                  <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-white/20 backdrop-blur-sm rounded-full mb-4">
+                    <Sparkles className="w-4 h-4 text-white" />
+                    <span className="text-white text-sm font-medium">Explore Our Products</span>
+                  </div>
+                  <h2 className="text-3xl md:text-4xl font-bold text-white mb-3">
+                    Shop Premium Accessories
+                  </h2>
+                  <p className="text-blue-50 text-lg mb-4 max-w-2xl">
+                    Discover our wide range of vending machine accessories, replacement parts, and consumables. Everything you need to keep your business running smoothly.
+                  </p>
+                  <div className="flex flex-wrap items-center gap-4 text-white/90">
+                    <div className="flex items-center gap-2">
+                      <CheckCircle className="w-5 h-5 text-green-300" />
+                      <span className="text-sm">Fast Shipping</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <CheckCircle className="w-5 h-5 text-green-300" />
+                      <span className="text-sm">Quality Guaranteed</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <CheckCircle className="w-5 h-5 text-green-300" />
+                      <span className="text-sm">Direct Checkout</span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Right Content - CTA Button */}
+                <div className="flex-shrink-0">
+                  <motion.button
+                    onClick={() => navigate('/shop')}
+                    whileHover={{ scale: 1.05, boxShadow: '0 20px 40px rgba(0, 0, 0, 0.3)' }}
+                    whileTap={{ scale: 0.95 }}
+                    className="group flex items-center gap-3 px-8 py-4 bg-white text-blue-600 rounded-xl font-semibold text-lg shadow-lg hover:bg-blue-50 transition-all"
+                  >
+                    <ShoppingCart className="w-6 h-6" />
+                    <span>Shop Now</span>
+                    <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                  </motion.button>
+                </div>
+              </div>
+            </div>
+
+            {/* Decorative Elements */}
+            <div className="absolute top-4 right-4 w-24 h-24 border-2 border-white/20 rounded-full"></div>
+            <div className="absolute bottom-4 left-4 w-16 h-16 border-2 border-white/20 rounded-full"></div>
+          </motion.div>
+
+          {/* Main Content Grid - 3 Column Layout */}
           <div className="grid lg:grid-cols-3 gap-6">
-            {/* Profile Card */}
+            {/* Profile Card - Left Sidebar */}
             <motion.div
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
@@ -382,7 +477,7 @@ export function ClientDashboard() {
               </div>
             </motion.div>
 
-            {/* Activity & Actions */}
+            {/* Right Side - Quick Actions & Order History */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -410,9 +505,9 @@ export function ClientDashboard() {
 
               {/* Order History */}
               <div className="bg-white rounded-2xl shadow-sm border border-slate-100 p-6">
-                <div className="flex items-center justify-between mb-4">
-                  <h3 className="text-lg font-semibold text-slate-900">Order History</h3>
-                </div>
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="text-lg font-semibold text-slate-900">Order History</h3>
+              </div>
                 
                 {orders.length > 0 ? (
                   <div className="space-y-4">

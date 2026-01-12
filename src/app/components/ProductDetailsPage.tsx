@@ -1,9 +1,9 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { gql } from '@apollo/client';
 import { useQuery } from '@apollo/client/react';
 import { motion } from 'motion/react';
-import { ShoppingCart, Loader2, AlertCircle, ArrowLeft } from 'lucide-react';
+import { ShoppingCart, Loader2, AlertCircle, ArrowLeft, CheckCircle, HelpCircle, Package, Shield, ChevronDown } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 
 // GraphQL query to check customer approval status
@@ -103,6 +103,24 @@ export function ProductDetailsPage() {
   const { isAuthenticated, isLoading: authLoading } = useAuth();
   const [selectedImageIndex, setSelectedImageIndex] = React.useState(0);
   const [selectedVariantId, setSelectedVariantId] = React.useState<string | null>(null);
+  
+  // Collapsible sections state
+  const [openSections, setOpenSections] = useState<{
+    description: boolean;
+    shipping: boolean;
+    manufacturing: boolean;
+  }>({
+    description: false,
+    shipping: true,
+    manufacturing: true,
+  });
+
+  const toggleSection = (section: keyof typeof openSections) => {
+    setOpenSections((prev) => ({
+      ...prev,
+      [section]: !prev[section],
+    }));
+  };
 
   // Get access token
   const getAccessToken = () => {
@@ -269,18 +287,20 @@ export function ProductDetailsPage() {
 
   return (
     <div className="min-h-screen pt-20 bg-white">
-      {/* Back Button */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-        <motion.button
-          onClick={() => navigate('/shop')}
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
-          className="flex items-center gap-2 text-slate-600 hover:text-blue-600 transition-colors"
-        >
-          <ArrowLeft className="w-5 h-5" />
-          <span>Back to Products</span>
-        </motion.button>
-      </div>
+      {/* Header Section with Back Button */}
+      <section className="relative py-12 bg-gradient-to-b from-blue-50 to-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <motion.button
+            onClick={() => navigate('/shop')}
+            whileHover={{ scale: 1.05, x: -4 }}
+            whileTap={{ scale: 0.95 }}
+            className="flex items-center gap-2 text-slate-600 hover:text-blue-600 transition-colors mb-6"
+          >
+            <ArrowLeft className="w-5 h-5" />
+            <span className="font-medium">Back to Shop</span>
+          </motion.button>
+        </div>
+      </section>
 
       {/* Product Details */}
       <section className="py-12 bg-white">
@@ -340,16 +360,17 @@ export function ProductDetailsPage() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.4 }}
+                className="bg-white rounded-xl p-8 border-2 border-slate-200 shadow-lg"
               >
                 <h1 className="text-4xl md:text-5xl font-bold text-slate-900 mb-4">
                   {product.title}
                 </h1>
 
                 {/* Price */}
-                <div className="mb-6">
-                  <span className="text-4xl font-bold text-blue-600">{selectedPrice}</span>
+                <div className="mb-6 pb-6 border-b-2 border-slate-200">
+                  <span className="text-4xl md:text-5xl font-bold text-blue-600">{selectedPrice}</span>
                   {minPrice !== maxPrice && (
-                    <p className="text-sm text-slate-500 mt-1">
+                    <p className="text-sm text-slate-500 mt-2">
                       Price range: {minPrice} - {maxPrice}
                     </p>
                   )}
@@ -357,25 +378,17 @@ export function ProductDetailsPage() {
 
                 {/* Availability Status */}
                 {!isAvailable && (
-                  <div className="mb-6 px-4 py-3 bg-red-50 border-2 border-red-200 rounded-lg">
-                    <span className="text-red-600 font-semibold">Out of Stock</span>
-                  </div>
-                )}
-
-                {/* Description */}
-                {cleanDescription && (
-                  <div className="prose prose-slate max-w-none mb-6">
-                    <p className="text-lg text-slate-600 leading-relaxed whitespace-pre-wrap">
-                      {cleanDescription}
-                    </p>
+                  <div className="mb-6 px-4 py-3 bg-red-50 border-2 border-red-200 rounded-lg flex items-center gap-2">
+                    <AlertCircle className="w-5 h-5 text-red-600" />
+                    <span className="text-red-600 font-semibold">Currently Out of Stock</span>
                   </div>
                 )}
 
                 {/* Variants */}
                 {product.variants.edges.length > 1 && (
-                  <div className="mb-6">
-                    <h3 className="text-lg font-semibold text-slate-900 mb-3">Select Variant:</h3>
-                    <div className="space-y-2">
+                  <div className="mb-8">
+                    <h3 className="text-xl font-semibold text-slate-900 mb-4">Pack Options:</h3>
+                    <div className="space-y-3">
                       {product.variants.edges.map(({ node: variant }) => {
                         const isSelected = selectedVariantId === variant.id;
                         const isVariantAvailable = variant.availableForSale;
@@ -437,11 +450,11 @@ export function ProductDetailsPage() {
                   href={checkoutUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  whileHover={{ scale: 1.02 }}
+                  whileHover={{ scale: 1.02, boxShadow: '0 20px 40px rgba(37, 99, 235, 0.3)' }}
                   whileTap={{ scale: 0.98 }}
-                  className={`w-full py-4 px-6 rounded-lg font-semibold text-lg text-center transition-colors flex items-center justify-center gap-3 ${
+                  className={`w-full py-4 px-6 rounded-xl font-semibold text-lg text-center transition-all flex items-center justify-center gap-3 mb-6 ${
                     isAvailable
-                      ? 'bg-blue-600 text-white hover:bg-blue-700 shadow-lg shadow-blue-600/20'
+                      ? 'bg-blue-600 text-white hover:bg-blue-700 shadow-lg shadow-blue-600/30'
                       : 'bg-slate-300 text-slate-500 cursor-not-allowed'
                   }`}
                   onClick={(e) => {
@@ -453,9 +466,167 @@ export function ProductDetailsPage() {
                   <ShoppingCart className="w-6 h-6" />
                   Checkout Now
                 </motion.a>
+
+                {/* Collapsible Sections - Improved UI */}
+                <div className="mt-6 pt-6 border-t-2 border-slate-200 space-y-3">
+                  {/* Product Description Section */}
+                  {cleanDescription && (
+                    <div className="border border-slate-200 rounded-xl overflow-hidden bg-white shadow-sm hover:shadow-md transition-shadow">
+                      <button
+                        onClick={() => toggleSection('description')}
+                        className="w-full flex items-center justify-between p-5 bg-gradient-to-r from-slate-50 to-white hover:from-blue-50/50 hover:to-white transition-all group"
+                      >
+                        <span className="text-base font-semibold text-slate-900 group-hover:text-blue-700 transition-colors">
+                          Product Description
+                        </span>
+                        <ChevronDown
+                          className={`w-5 h-5 text-slate-500 group-hover:text-blue-600 transition-all duration-300 ${
+                            openSections.description ? 'rotate-180' : ''
+                          }`}
+                        />
+                      </button>
+                      {openSections.description && (
+                        <motion.div
+                          initial={{ height: 0, opacity: 0 }}
+                          animate={{ height: 'auto', opacity: 1 }}
+                          exit={{ height: 0, opacity: 0 }}
+                          transition={{ duration: 0.3, ease: 'easeInOut' }}
+                          className="overflow-hidden"
+                        >
+                          <div className="p-5 pt-0 bg-white">
+                            <div className="prose prose-slate max-w-none">
+                              <p className="text-sm text-slate-600 leading-relaxed whitespace-pre-wrap">
+                                {cleanDescription}
+                              </p>
+                            </div>
+                          </div>
+                        </motion.div>
+                      )}
+                    </div>
+                  )}
+
+                  {/* Shipping Section */}
+                  <div className="border border-slate-200 rounded-xl overflow-hidden bg-white shadow-sm hover:shadow-md transition-shadow">
+                    <button
+                      onClick={() => toggleSection('shipping')}
+                      className="w-full flex items-center justify-between p-5 bg-gradient-to-r from-slate-50 to-white hover:from-blue-50/50 hover:to-white transition-all group"
+                    >
+                      <span className="text-base font-semibold text-slate-900 group-hover:text-blue-700 transition-colors">
+                        Shipping
+                      </span>
+                      <ChevronDown
+                        className={`w-5 h-5 text-slate-500 group-hover:text-blue-600 transition-all duration-300 ${
+                          openSections.shipping ? 'rotate-180' : ''
+                        }`}
+                      />
+                    </button>
+                    {openSections.shipping && (
+                      <motion.div
+                        initial={{ height: 0, opacity: 0 }}
+                        animate={{ height: 'auto', opacity: 1 }}
+                        exit={{ height: 0, opacity: 0 }}
+                        transition={{ duration: 0.3, ease: 'easeInOut' }}
+                        className="overflow-hidden"
+                      >
+                        <div className="p-5 pt-0 bg-white">
+                          <p className="text-sm text-slate-600 leading-relaxed">
+                            We will work quickly to ship your order as soon as possible. Once your order has shipped, you will receive an email with further information. Delivery times vary depending on your location.
+                          </p>
+                        </div>
+                      </motion.div>
+                    )}
+                  </div>
+
+                  {/* Manufacturing Section */}
+                  <div className="border border-slate-200 rounded-xl overflow-hidden bg-white shadow-sm hover:shadow-md transition-shadow">
+                    <button
+                      onClick={() => toggleSection('manufacturing')}
+                      className="w-full flex items-center justify-between p-5 bg-gradient-to-r from-slate-50 to-white hover:from-blue-50/50 hover:to-white transition-all group"
+                    >
+                      <span className="text-base font-semibold text-slate-900 group-hover:text-blue-700 transition-colors">
+                        Manufacturing
+                      </span>
+                      <ChevronDown
+                        className={`w-5 h-5 text-slate-500 group-hover:text-blue-600 transition-all duration-300 ${
+                          openSections.manufacturing ? 'rotate-180' : ''
+                        }`}
+                      />
+                    </button>
+                    {openSections.manufacturing && (
+                      <motion.div
+                        initial={{ height: 0, opacity: 0 }}
+                        animate={{ height: 'auto', opacity: 1 }}
+                        exit={{ height: 0, opacity: 0 }}
+                        transition={{ duration: 0.3, ease: 'easeInOut' }}
+                        className="overflow-hidden"
+                      >
+                        <div className="p-5 pt-0 bg-white">
+                          <p className="text-sm text-slate-600 leading-relaxed">
+                            Our products are manufactured both locally and globally. We carefully select our manufacturing partners to ensure our products are high quality and a fair value.
+                          </p>
+                        </div>
+                      </motion.div>
+                    )}
+                  </div>
+                </div>
+
+                {/* Product Features */}
+                <div className="mt-8 pt-8 border-t-2 border-slate-200">
+                  <h3 className="text-lg font-semibold text-slate-900 mb-4">Product Features</h3>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    {[
+                      { icon: Package, text: 'Ready to Use' },
+                      { icon: Shield, text: 'Quality Assured' },
+                      { icon: CheckCircle, text: 'Compatible with Our Machines' },
+                    ].map((feature, index) => (
+                      <div key={index} className="flex items-center gap-3 text-slate-700">
+                        <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
+                          <feature.icon className="w-4 h-4 text-blue-600" />
+                        </div>
+                        <span className="text-sm font-medium">{feature.text}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
               </motion.div>
             </div>
           </div>
+        </div>
+      </section>
+
+      {/* Support Section */}
+      <section className="relative py-24 bg-blue-600">
+        {/* Curved Top Wave Design */}
+        <div className="absolute top-0 left-0 right-0 z-0">
+          <svg className="w-full h-24" viewBox="0 0 1440 120" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+            <path d="M0 0L60 15C120 30 240 60 360 75C480 90 600 90 720 82.5C840 75 960 60 1080 52.5C1200 45 1320 45 1380 45L1440 45V0H1380C1320 0 1200 0 1080 0C960 0 840 0 720 0C600 0 480 0 360 0C240 0 120 0 60 0H0Z" fill="#ffffff" />
+          </svg>
+        </div>
+        <div className="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center z-10">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+          >
+            <div className="w-16 h-16 bg-white rounded-full flex items-center justify-center mx-auto mb-6">
+              <HelpCircle className="w-8 h-8 text-blue-600" />
+            </div>
+            <h2 className="text-4xl md:text-5xl mb-6 text-white font-bold">Need Additional Support?</h2>
+            <p className="text-xl text-blue-50 mb-8">
+              Our enterprise technical support team is available 24/7 to assist you
+            </p>
+            <div className="flex flex-wrap gap-4 justify-center">
+              <motion.button
+                onClick={() => navigate('/contact')}
+                whileHover={{ scale: 1.05, boxShadow: '0 20px 40px rgba(0, 0, 0, 0.2)' }}
+                whileTap={{ scale: 0.95 }}
+                className="px-8 py-4 bg-white text-blue-600 rounded-lg font-semibold hover:bg-blue-50 transition-colors text-lg"
+              >
+                Contact Support
+              </motion.button>
+            </div>
+          </motion.div>
         </div>
       </section>
     </div>

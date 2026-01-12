@@ -9,22 +9,7 @@ export function RequestAccessPage() {
   const navigate = useNavigate();
   const { signUp, isLoading: submitting, isAuthenticated, isLoading: authLoading } = useAuth();
   
-  // Redirect to dashboard if already logged in (but show success message first)
-  useEffect(() => {
-    if (!authLoading && isAuthenticated && submitStatus !== 'success') {
-      navigate('/dashboard');
-    }
-  }, [isAuthenticated, authLoading, navigate, submitStatus]);
-  
-  // Show loading while checking authentication
-  if (authLoading && submitStatus === 'idle') {
-    return (
-      <div className="min-h-screen pt-20 bg-white flex items-center justify-center">
-        <Loader2 className="w-8 h-8 animate-spin text-blue-600" />
-      </div>
-    );
-  }
-  
+  // All state declarations must be before any conditional returns or useEffects
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
@@ -41,6 +26,22 @@ export function RequestAccessPage() {
   const [errorMessage, setErrorMessage] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  
+  // Redirect to dashboard if already logged in (but show success message first)
+  useEffect(() => {
+    if (!authLoading && isAuthenticated && submitStatus !== 'success') {
+      navigate('/shop');
+    }
+  }, [isAuthenticated, authLoading, navigate, submitStatus]);
+  
+  // Show loading while checking authentication
+  if (authLoading && submitStatus === 'idle') {
+    return (
+      <div className="min-h-screen pt-20 bg-white flex items-center justify-center">
+        <Loader2 className="w-8 h-8 animate-spin text-blue-600" />
+      </div>
+    );
+  }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

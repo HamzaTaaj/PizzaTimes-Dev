@@ -3,8 +3,10 @@ import { useNavigate } from 'react-router-dom';
 import { gql } from '@apollo/client';
 import { useQuery } from '@apollo/client/react';
 import { motion } from 'motion/react';
-import { ShoppingCart, Loader2, AlertCircle } from 'lucide-react';
+import { ShoppingCart, Loader2, AlertCircle, Mail, Phone, MessageCircle, HelpCircle } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
+import { ImageWithFallback } from './figma/ImageWithFallback';
+import vend1Image from '@/assets/vend1.png';
 
 // GraphQL query to fetch products from Shopify
 const GET_PRODUCTS = gql`
@@ -246,22 +248,155 @@ export function ShopifyProductsPage() {
 
   return (
     <div className="min-h-screen pt-20 bg-white">
-      {/* Header Section */}
-      <section className="py-16 bg-gradient-to-b from-blue-50 to-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      {/* Hero Section - Shop Banner */}
+      <section className="relative py-24 lg:py-32 overflow-hidden bg-gradient-to-br from-slate-900 via-blue-900 to-slate-800">
+        {/* Unique Geometric Background Pattern */}
+        <div className="absolute inset-0 z-0 overflow-hidden opacity-20">
+          <div className="absolute inset-0" style={{
+            backgroundImage: `radial-gradient(circle at 2px 2px, rgba(255,255,255,0.15) 1px, transparent 0)`,
+            backgroundSize: '40px 40px'
+          }} />
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            className="text-center"
-          >
-            <h1 className="text-4xl md:text-5xl font-bold text-slate-900 mb-4">
-              Our <span className="text-blue-600">Products</span>
-            </h1>
-            <p className="text-xl text-slate-600 max-w-2xl mx-auto">
-              Browse our selection of high-quality products and checkout directly
-            </p>
-          </motion.div>
+            animate={{
+              rotate: [0, 360],
+              scale: [1, 1.2, 1],
+            }}
+            transition={{
+              duration: 20,
+              repeat: Infinity,
+              ease: "linear"
+            }}
+            className="absolute top-1/4 right-1/4 w-96 h-96 border-2 border-blue-400/30 rounded-full"
+          />
+          <motion.div
+            animate={{
+              rotate: [360, 0],
+              scale: [1.2, 1, 1.2],
+            }}
+            transition={{
+              duration: 25,
+              repeat: Infinity,
+              ease: "linear"
+            }}
+            className="absolute bottom-1/4 left-1/4 w-80 h-80 border-2 border-blue-300/20 rounded-full"
+          />
+        </div>
+
+        {/* Curved Bottom Wave */}
+        <div className="absolute bottom-0 left-0 right-0 z-0">
+          <svg className="w-full h-20" viewBox="0 0 1440 120" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+            <path d="M0 120L48 110C96 100 192 80 288 70C384 60 480 60 576 65C672 70 768 80 864 82.5C960 85 1056 80 1152 77.5C1248 75 1344 75 1392 75L1440 75V120H1392C1344 120 1248 120 1152 120C1056 120 960 120 864 120C768 120 672 120 576 120C480 120 384 120 288 120C192 120 96 120 48 120H0Z" fill="#ffffff" />
+          </svg>
+        </div>
+
+        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid lg:grid-cols-2 gap-12 items-center">
+            {/* Left Content */}
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.7, ease: "easeOut" }}
+              className="text-white"
+            >
+              {/* Badge */}
+              <motion.div
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ delay: 0.2 }}
+                className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-blue-500/20 to-purple-500/20 border border-blue-400/30 rounded-full mb-6 backdrop-blur-sm"
+              >
+                <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse" />
+                <span className="text-blue-200 font-medium text-sm">Shop Now & Save</span>
+              </motion.div>
+
+              {/* Main Heading */}
+              <h1 className="text-4xl md:text-5xl lg:text-6xl mb-6 font-extrabold text-white leading-tight">
+                Everything You Need for Your
+                <br />
+                <span className="bg-gradient-to-r from-blue-400 via-cyan-300 to-blue-400 bg-clip-text text-transparent">
+                  Vending Machine
+                </span>
+              </h1>
+
+              {/* Description */}
+              <p className="text-lg md:text-xl text-slate-300 mb-8 max-w-xl leading-relaxed">
+                Shop premium accessories, replacement parts, and consumables. Fast shipping, competitive prices, and everything your machine needs to operate at peak performance.
+              </p>
+
+              {/* Key Features */}
+              <div className="flex flex-wrap gap-4 mb-8">
+                <div className="flex items-center gap-2 px-4 py-2 bg-white/10 backdrop-blur-sm rounded-lg border border-white/20">
+                  <div className="w-2 h-2 bg-green-400 rounded-full" />
+                  <span className="text-sm text-slate-200">Fast Shipping</span>
+                </div>
+                <div className="flex items-center gap-2 px-4 py-2 bg-white/10 backdrop-blur-sm rounded-lg border border-white/20">
+                  <div className="w-2 h-2 bg-green-400 rounded-full" />
+                  <span className="text-sm text-slate-200">Direct Checkout</span>
+                </div>
+                <div className="flex items-center gap-2 px-4 py-2 bg-white/10 backdrop-blur-sm rounded-lg border border-white/20">
+                  <div className="w-2 h-2 bg-green-400 rounded-full" />
+                  <span className="text-sm text-slate-200">Quality Guaranteed</span>
+                </div>
+              </div>
+
+              {/* Product Count Badge */}
+              <motion.div
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: 0.4 }}
+                className="inline-flex items-center gap-3 px-6 py-3 bg-gradient-to-r from-blue-600 to-purple-600 rounded-xl shadow-lg"
+              >
+                <ShoppingCart className="w-5 h-5 text-white" />
+                <div>
+                  <div className="text-2xl font-bold text-white">{products.length}</div>
+                  <div className="text-xs text-blue-100">Products Ready to Ship</div>
+                </div>
+              </motion.div>
+            </motion.div>
+
+            {/* Right Content - Image */}
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9, rotate: -5 }}
+              animate={{ opacity: 1, scale: 1, rotate: 0 }}
+              transition={{ duration: 0.7, delay: 0.3 }}
+              className="relative"
+            >
+              {/* Glow Effect Behind Image */}
+              <div className="absolute inset-0 bg-gradient-to-r from-blue-500/30 to-purple-500/30 rounded-3xl blur-3xl -z-10" />
+              
+              <div className="relative rounded-3xl overflow-hidden shadow-2xl border border-white/10">
+                <ImageWithFallback
+                  src={vend1Image}
+                  alt="Pizza Vending Machine Products"
+                  className="w-full h-auto transform hover:scale-105 transition-transform duration-500"
+                />
+              </div>
+
+              {/* Floating Price Tag */}
+              <motion.div
+                animate={{ 
+                  y: [0, -10, 0],
+                  rotate: [0, 5, -5, 0]
+                }}
+                transition={{ 
+                  duration: 3, 
+                  repeat: Infinity, 
+                  ease: "easeInOut" 
+                }}
+                className="absolute -bottom-4 -right-4 px-6 py-4 bg-white rounded-2xl shadow-2xl border-2 border-blue-200 z-20"
+              >
+                <div className="flex items-center gap-3">
+                  <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl flex items-center justify-center">
+                    <ShoppingCart className="w-6 h-6 text-white" />
+                  </div>
+                  <div>
+                    <div className="text-xs text-slate-500 font-medium">Shop & Checkout</div>
+                    <div className="text-lg font-bold text-slate-900">In Minutes</div>
+                  </div>
+                </div>
+              </motion.div>
+            </motion.div>
+          </div>
         </div>
       </section>
 
@@ -351,6 +486,42 @@ export function ShopifyProductsPage() {
               );
             })}
           </div>
+        </div>
+      </section>
+
+      {/* Need Help Section - Better Design like Manual Page */}
+      <section className="relative py-24 bg-blue-600">
+        {/* Curved Top Wave Design */}
+        <div className="absolute top-0 left-0 right-0 z-0">
+          <svg className="w-full h-24" viewBox="0 0 1440 120" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+            <path d="M0 0L60 15C120 30 240 60 360 75C480 90 600 90 720 82.5C840 75 960 60 1080 52.5C1200 45 1320 45 1380 45L1440 45V0H1380C1320 0 1200 0 1080 0C960 0 840 0 720 0C600 0 480 0 360 0C240 0 120 0 60 0H0Z" fill="#ffffff" />
+          </svg>
+        </div>
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center z-10">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+          >
+            <div className="w-16 h-16 bg-white rounded-full flex items-center justify-center mx-auto mb-6">
+              <HelpCircle className="w-8 h-8 text-blue-600" />
+            </div>
+            <h2 className="text-4xl md:text-5xl mb-6 text-white font-bold">Need Additional Support?</h2>
+            <p className="text-xl text-blue-50 mb-8 max-w-2xl mx-auto">
+              Our enterprise technical support team is available 24/7 to assist you with any questions about our products or orders
+            </p>
+            <div className="flex flex-wrap gap-4 justify-center">
+              <motion.button
+                onClick={() => navigate('/contact')}
+                whileHover={{ scale: 1.05, boxShadow: '0 20px 40px rgba(0, 0, 0, 0.2)' }}
+                whileTap={{ scale: 0.95 }}
+                className="px-8 py-4 bg-white text-blue-600 rounded-lg font-semibold hover:bg-blue-50 transition-colors text-lg"
+              >
+                Contact Support
+              </motion.button>
+            </div>
+          </motion.div>
         </div>
       </section>
     </div>
