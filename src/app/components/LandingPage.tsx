@@ -1,4 +1,3 @@
-/// <reference types="vite/client" />
 import React, { useState, useRef, useEffect } from 'react';
 import { motion, useInView } from 'motion/react';
 import { useNavigate } from 'react-router-dom';

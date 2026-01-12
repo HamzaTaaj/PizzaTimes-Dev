@@ -9,25 +9,20 @@ export function RequestAccessPage() {
   const navigate = useNavigate();
   const { signUp, isLoading: submitting, isAuthenticated, isLoading: authLoading } = useAuth();
   
-  // Redirect to dashboard if already logged in
+  // Redirect to dashboard if already logged in (but show success message first)
   useEffect(() => {
-    if (!authLoading && isAuthenticated) {
+    if (!authLoading && isAuthenticated && submitStatus !== 'success') {
       navigate('/dashboard');
     }
-  }, [isAuthenticated, authLoading, navigate]);
+  }, [isAuthenticated, authLoading, navigate, submitStatus]);
   
   // Show loading while checking authentication
-  if (authLoading) {
+  if (authLoading && submitStatus === 'idle') {
     return (
       <div className="min-h-screen pt-20 bg-white flex items-center justify-center">
         <Loader2 className="w-8 h-8 animate-spin text-blue-600" />
       </div>
     );
-  }
-  
-  // Don't render form if already authenticated (will redirect)
-  if (isAuthenticated) {
-    return null;
   }
   
   const [formData, setFormData] = useState({
@@ -97,10 +92,10 @@ export function RequestAccessPage() {
         message: ''
       });
       
-      // Redirect to dashboard after 2 seconds
+      // Redirect to dashboard after 3 seconds (give user time to see success message)
       setTimeout(() => {
         navigate('/dashboard');
-      }, 2000);
+      }, 3000);
     } else if (result.errorCode === 'EMAIL_TAKEN') {
       // Email already exists - prompt sign in
       setSubmitStatus('email_taken');
