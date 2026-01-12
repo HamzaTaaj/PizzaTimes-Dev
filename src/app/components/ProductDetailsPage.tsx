@@ -384,64 +384,50 @@ export function ProductDetailsPage() {
                   </div>
                 )}
 
-                {/* Variants */}
+                {/* Variants Dropdown */}
                 {product.variants.edges.length > 1 && (
                   <div className="mb-8">
-                    <h3 className="text-xl font-semibold text-slate-900 mb-4">Pack Options:</h3>
-                    <div className="space-y-3">
-                      {product.variants.edges.map(({ node: variant }) => {
-                        const isSelected = selectedVariantId === variant.id;
-                        const isVariantAvailable = variant.availableForSale;
-                        
-                        return (
-                          <motion.button
-                            key={variant.id}
-                            onClick={() => {
-                              if (isVariantAvailable) {
-                                setSelectedVariantId(variant.id);
-                              }
-                            }}
-                            whileHover={isVariantAvailable ? { scale: 1.02 } : {}}
-                            whileTap={isVariantAvailable ? { scale: 0.98 } : {}}
-                            disabled={!isVariantAvailable}
-                            className={`w-full flex items-center justify-between p-4 rounded-lg border-2 transition-all ${
-                              isSelected
-                                ? 'bg-blue-50 border-blue-600 ring-2 ring-blue-200'
-                                : isVariantAvailable
-                                ? 'bg-slate-50 border-slate-200 hover:border-blue-400 hover:bg-blue-50/50'
-                                : 'bg-slate-100 border-slate-200 opacity-50 cursor-not-allowed'
-                            }`}
-                          >
-                            <div className="flex items-center gap-3">
-                              <div
-                                className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${
-                                  isSelected
-                                    ? 'border-blue-600 bg-blue-600'
-                                    : 'border-slate-300 bg-white'
-                                }`}
-                              >
-                                {isSelected && (
-                                  <div className="w-2.5 h-2.5 rounded-full bg-white" />
-                                )}
-                              </div>
-                              <span className={`font-medium ${
-                                isSelected ? 'text-blue-900' : 'text-slate-700'
-                              }`}>
-                                {variant.title}
-                              </span>
-                              {!isVariantAvailable && (
-                                <span className="text-xs text-red-600 font-semibold">(Out of Stock)</span>
-                              )}
-                            </div>
-                            <span className={`font-semibold ${
-                              isSelected ? 'text-blue-600' : 'text-slate-600'
-                            }`}>
-                              {formatPrice(variant.price.amount, variant.price.currencyCode)}
-                            </span>
-                          </motion.button>
-                        );
-                      })}
+                    <label htmlFor="variant-select" className="block text-xl font-semibold text-slate-900 mb-3">
+                      Pack Options:
+                    </label>
+                    <div className="relative">
+                      <select
+                        id="variant-select"
+                        value={selectedVariantId || ''}
+                        onChange={(e) => {
+                          const variantId = e.target.value;
+                          if (variantId) {
+                            setSelectedVariantId(variantId);
+                          }
+                        }}
+                        className="w-full px-4 py-3.5 pr-10 bg-white border-2 border-slate-200 rounded-xl text-slate-900 font-medium appearance-none cursor-pointer hover:border-blue-400 focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-200 transition-all"
+                      >
+                        {product.variants.edges.map(({ node: variant }) => {
+                          const isVariantAvailable = variant.availableForSale;
+                          const variantPrice = formatPrice(variant.price.amount, variant.price.currencyCode);
+                          const optionText = isVariantAvailable 
+                            ? `${variant.title} - ${variantPrice}`
+                            : `${variant.title} - ${variantPrice} (Out of Stock)`;
+                          
+                          return (
+                            <option 
+                              key={variant.id} 
+                              value={variant.id}
+                              disabled={!isVariantAvailable}
+                              className={!isVariantAvailable ? 'text-slate-400' : ''}
+                            >
+                              {optionText}
+                            </option>
+                          );
+                        })}
+                      </select>
+                      <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-500 pointer-events-none" />
                     </div>
+                    {selectedVariant && !selectedVariant.availableForSale && (
+                      <p className="mt-2 text-sm text-red-600 font-medium">
+                        ⚠️ This option is currently out of stock
+                      </p>
+                    )}
                   </div>
                 )}
 

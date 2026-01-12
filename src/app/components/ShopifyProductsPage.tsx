@@ -1,9 +1,9 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { gql } from '@apollo/client';
 import { useQuery } from '@apollo/client/react';
 import { motion } from 'motion/react';
-import { ShoppingCart, Loader2, AlertCircle, Mail, Phone, MessageCircle, HelpCircle } from 'lucide-react';
+import { ShoppingCart, Loader2, AlertCircle, Mail, Phone, MessageCircle, HelpCircle, ChevronDown } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { ImageWithFallback } from './figma/ImageWithFallback';
 import vend1Image from '@/assets/vend1.png';
@@ -32,10 +32,11 @@ const GET_PRODUCTS = gql`
               }
             }
           }
-          variants(first: 1) {
+          variants(first: 10) {
             edges {
               node {
                 id
+                title
                 availableForSale
                 price {
                   amount
@@ -83,6 +84,7 @@ interface Product {
     edges: Array<{
       node: {
         id: string;
+        title: string;
         availableForSale: boolean;
         price: {
           amount: string;
@@ -96,6 +98,7 @@ interface Product {
 export function ShopifyProductsPage() {
   const navigate = useNavigate();
   const { isAuthenticated, isLoading: authLoading } = useAuth();
+  const [selectedVariantIds, setSelectedVariantIds] = useState<Record<string, string>>({});
   
   // Get access token
   const getAccessToken = () => {
@@ -110,6 +113,57 @@ export function ShopifyProductsPage() {
     skip: !accessToken || !isAuthenticated,
     errorPolicy: 'all',
   });
+
+  const { loading, error, data } = useQuery(GET_PRODUCTS, {
+    variables: { first: 50 },
+    errorPolicy: 'all',
+    skip: !isAuthenticated || customerLoading || !customerData?.customer, // Skip if not authenticated or checking approval
+  });
+
+  // Function to create direct checkout URL
+  const getCheckoutUrl = (product: Product, variantId?: string): string => {
+    try {
+      // Use provided variantId or get from selected variants or default to first
+      const targetVariantId = variantId || selectedVariantIds[product.id] || product.variants?.edges[0]?.node?.id;
+      if (!targetVariantId) {
+        return '#';
+      }
+      // Extract variant ID (format: gid://shopify/ProductVariant/XXXXX)
+      const variantIdMatch = targetVariantId.match(/\/(\d+)$/);
+      if (!variantIdMatch) {
+        return '#';
+      }
+      const numericVariantId = variantIdMatch[1];
+      
+      // Create direct checkout URL - adds to cart and redirects to checkout
+      const shopifyDomain = 'pizzaanytime.myshopify.com';
+      return `https://${shopifyDomain}/cart/add?id=${numericVariantId}&quantity=1&return_to=/checkout`;
+    } catch (err) {
+      console.error('Error creating checkout URL:', err);
+      return '#';
+    }
+  };
+
+  // Initialize selected variants when products load
+  useEffect(() => {
+    if (data?.products?.edges) {
+      setSelectedVariantIds(prev => {
+        const newSelectedVariants: Record<string, string> = { ...prev };
+        let hasUpdates = false;
+        
+        data.products.edges.forEach(({ node: product }: { node: Product }) => {
+          if (!newSelectedVariants[product.id] && product.variants?.edges?.length > 0) {
+            // Set first available variant or first variant
+            const availableVariant = product.variants.edges.find(({ node }) => node.availableForSale);
+            newSelectedVariants[product.id] = (availableVariant || product.variants.edges[0])?.node?.id || '';
+            hasUpdates = true;
+          }
+        });
+        
+        return hasUpdates ? newSelectedVariants : prev;
+      });
+    }
+  }, [data?.products?.edges]);
 
   // Redirect to account review page if not approved
   useEffect(() => {
@@ -138,35 +192,6 @@ export function ShopifyProductsPage() {
       navigate('/login', { replace: true });
     }
   }, [authLoading, customerLoading, isAuthenticated, customerData, navigate]);
-
-  const { loading, error, data } = useQuery(GET_PRODUCTS, {
-    variables: { first: 50 },
-    errorPolicy: 'all',
-    skip: !isAuthenticated || customerLoading || !customerData?.customer, // Skip if not authenticated or checking approval
-  });
-
-  // Function to create direct checkout URL
-  const getCheckoutUrl = (product: Product): string => {
-    try {
-      const variantId = product.variants?.edges[0]?.node?.id;
-      if (!variantId) {
-        return '#';
-      }
-      // Extract variant ID (format: gid://shopify/ProductVariant/XXXXX)
-      const variantIdMatch = variantId.match(/\/(\d+)$/);
-      if (!variantIdMatch) {
-        return '#';
-      }
-      const numericVariantId = variantIdMatch[1];
-      
-      // Create direct checkout URL - adds to cart and redirects to checkout
-      const shopifyDomain = 'pizzaanytime.myshopify.com';
-      return `https://${shopifyDomain}/cart/add?id=${numericVariantId}&quantity=1&return_to=/checkout`;
-    } catch (err) {
-      console.error('Error creating checkout URL:', err);
-      return '#';
-    }
-  };
 
   // Format price
   const formatPrice = (amount: string, currencyCode: string): string => {
@@ -400,11 +425,173 @@ export function ShopifyProductsPage() {
         </div>
       </section>
 
-      {/* Products Grid */}
+      {/* Products Section - Single Product Featured Layout or Grid */}
       <section className="py-12 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-            {products.map(({ node: product }: { node: Product }, index: number) => {
+          {/* Single Product - Featured Layout */}
+          {products.length === 1 ? (
+            <div className="max-w-5xl mx-auto">
+              {products.map(({ node: product }: { node: Product }, index: number) => {
+                const imageUrl = product.images.edges[0]?.node.url || '';
+                const imageAlt = product.images.edges[0]?.node.altText || product.title;
+                // Get selected variant or default to first
+                const selectedVariantId = selectedVariantIds[product.id] || product.variants?.edges[0]?.node?.id;
+                const selectedVariant = product.variants?.edges?.find(({ node }) => node.id === selectedVariantId)?.node;
+                
+                const price = selectedVariant
+                  ? formatPrice(selectedVariant.price.amount, selectedVariant.price.currencyCode)
+                  : product.priceRange?.minVariantPrice 
+                    ? formatPrice(
+                        product.priceRange.minVariantPrice.amount,
+                        product.priceRange.minVariantPrice.currencyCode
+                      )
+                    : 'N/A';
+                const isAvailable = selectedVariant?.availableForSale ?? false;
+                const checkoutUrl = getCheckoutUrl(product, selectedVariantId);
+                const cleanDescription = product.description?.replace(/<[^>]*>/g, '') || '';
+                const truncatedDescription = cleanDescription.length > 200 
+                  ? cleanDescription.substring(0, 200) + '...' 
+                  : cleanDescription;
+
+                return (
+                  <motion.div
+                    key={product.id}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.6, delay: 0.2 }}
+                    className="bg-white rounded-2xl shadow-xl border-2 border-slate-200 overflow-hidden hover:border-blue-300 transition-all"
+                  >
+                    <div className="grid md:grid-cols-2 gap-8 p-8">
+                      {/* Product Image */}
+                      <div className="relative">
+                        <div className="aspect-square rounded-xl overflow-hidden bg-slate-100 border-2 border-slate-200">
+                          {imageUrl ? (
+                            <img
+                              src={imageUrl}
+                              alt={imageAlt}
+                              className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
+                            />
+                          ) : (
+                            <div className="w-full h-full flex items-center justify-center">
+                              <ShoppingCart className="w-24 h-24 text-slate-300" />
+                            </div>
+                          )}
+                        </div>
+                        {!isAvailable && (
+                          <div className="absolute top-4 right-4 px-4 py-2 bg-red-600 text-white text-sm font-semibold rounded-full">
+                            Out of Stock
+                          </div>
+                        )}
+                      </div>
+
+                      {/* Product Info */}
+                      <div className="flex flex-col justify-center space-y-6">
+                        <div>
+                          <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-4">
+                            {product.title}
+                          </h2>
+                          <div className="text-4xl font-bold text-blue-600 mb-4">
+                            {price}
+                          </div>
+                          {truncatedDescription && (
+                            <p className="text-slate-600 leading-relaxed mb-6">
+                              {truncatedDescription}
+                            </p>
+                          )}
+                        </div>
+
+                        {/* Variants Dropdown */}
+                        {product.variants.edges.length > 1 && (
+                          <div className="mb-6">
+                            <label htmlFor={`variant-select-${product.id}`} className="block text-base font-semibold text-slate-900 mb-3">
+                              Pack Options:
+                            </label>
+                            <div className="relative">
+                              <select
+                                id={`variant-select-${product.id}`}
+                                value={selectedVariantId || ''}
+                                onChange={(e) => {
+                                  const variantId = e.target.value;
+                                  if (variantId) {
+                                    setSelectedVariantIds(prev => ({
+                                      ...prev,
+                                      [product.id]: variantId
+                                    }));
+                                  }
+                                }}
+                                className="w-full px-4 py-3.5 pr-10 bg-white border-2 border-slate-200 rounded-xl text-slate-900 font-medium appearance-none cursor-pointer hover:border-blue-400 focus:outline-none focus:border-blue-600 focus:ring-2 focus:ring-blue-200 transition-all"
+                              >
+                                {product.variants.edges.map(({ node: variant }) => {
+                                  const isVariantAvailable = variant.availableForSale;
+                                  const variantPrice = formatPrice(variant.price.amount, variant.price.currencyCode);
+                                  const optionText = isVariantAvailable 
+                                    ? `${variant.title} - ${variantPrice}`
+                                    : `${variant.title} - ${variantPrice} (Out of Stock)`;
+                                  
+                                  return (
+                                    <option 
+                                      key={variant.id} 
+                                      value={variant.id}
+                                      disabled={!isVariantAvailable}
+                                      className={!isVariantAvailable ? 'text-slate-400' : ''}
+                                    >
+                                      {optionText}
+                                    </option>
+                                  );
+                                })}
+                              </select>
+                              <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-500 pointer-events-none" />
+                            </div>
+                            {selectedVariant && !selectedVariant.availableForSale && (
+                              <p className="mt-2 text-sm text-red-600 font-medium">
+                                ⚠️ This option is currently out of stock
+                              </p>
+                            )}
+                          </div>
+                        )}
+
+                        {/* Checkout Button */}
+                        <motion.a
+                          href={checkoutUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          whileHover={{ scale: 1.02, boxShadow: '0 20px 40px rgba(37, 99, 235, 0.3)' }}
+                          whileTap={{ scale: 0.98 }}
+                          onClick={(e) => {
+                            if (!isAvailable) {
+                              e.preventDefault();
+                            }
+                          }}
+                          className={`w-full py-4 px-6 rounded-xl font-semibold text-lg text-center transition-all flex items-center justify-center gap-3 ${
+                            isAvailable
+                              ? 'bg-blue-600 text-white hover:bg-blue-700 shadow-lg shadow-blue-600/30'
+                              : 'bg-slate-300 text-slate-500 cursor-not-allowed'
+                          }`}
+                        >
+                          <ShoppingCart className="w-6 h-6" />
+                          Checkout Now
+                        </motion.a>
+
+                        {/* View Details Link */}
+                        <motion.button
+                          onClick={() => navigate(`/shop/${product.handle}`)}
+                          whileHover={{ scale: 1.02 }}
+                          whileTap={{ scale: 0.98 }}
+                          className="text-blue-600 hover:text-blue-700 font-medium inline-flex items-center gap-2 self-start"
+                        >
+                          View Full Details →
+                        </motion.button>
+                      </div>
+                    </div>
+                  </motion.div>
+                );
+              })}
+            </div>
+          ) : (
+            /* Multiple Products - Grid Layout */
+            <>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                {products.map(({ node: product }: { node: Product }, index: number) => {
               const imageUrl = product.images.edges[0]?.node.url || '';
               const imageAlt = product.images.edges[0]?.node.altText || product.title;
               const price = product.priceRange?.minVariantPrice 
@@ -484,8 +671,10 @@ export function ShopifyProductsPage() {
                   </div>
                 </motion.div>
               );
-            })}
-          </div>
+                })}
+              </div>
+            </>
+          )}
         </div>
       </section>
 
