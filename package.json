@@ -6,7 +6,10 @@
   "scripts": {
     "build": "vite build",
     "dev": "vite",
-    "dev:vercel": "vercel dev"
+    "dev:vercel": "vercel dev",
+    "server": "node server.js",
+    "dev:local": "concurrently \"npm run server\" \"npm run dev\"",
+    "dev:all": "concurrently \"npm run server\" \"vite\""
   },
   "dependencies": {
     "@apollo/client": "^4.0.11",
@@ -75,6 +78,9 @@
     "@types/react-dom": "^19.2.3",
     "@vercel/node": "3.2.26",
     "@vitejs/plugin-react": "4.7.0",
+    "concurrently": "^9.2.1",
+    "cors": "^2.8.5",
+    "express": "^5.2.1",
     "tailwindcss": "4.1.12",
     "vite": "6.3.5"
   },

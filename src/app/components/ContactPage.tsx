@@ -1,6 +1,6 @@
+import React, { useState } from 'react';
 import { motion } from 'motion/react';
-import { Mail, Phone, MapPin, Clock, Send, MessageSquare } from 'lucide-react';
-import { useState } from 'react';
+import { Mail, Phone, MapPin, Clock, Send, MessageSquare, CheckCircle, AlertCircle } from 'lucide-react';
 
 export function ContactPage() {
   const [formData, setFormData] = useState({
@@ -12,10 +12,115 @@ export function ContactPage() {
     message: ''
   });
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitStatus, setSubmitStatus] = useState<{
+    type: 'success' | 'error' | null;
+    message: string;
+  }>({ type: null, message: '' });
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Handle form submission
-    console.log('Form submitted:', formData);
+    setIsSubmitting(true);
+    setSubmitStatus({ type: null, message: '' });
+
+    try {
+      // Validate required fields
+      if (!formData.name || !formData.email || !formData.subject || !formData.message) {
+        throw new Error('Please fill in all required fields (Name, Email, Subject, Message)');
+      }
+
+      // Use GraphQL mutation through existing /api/shopify-admin proxy (same as RequestAccessPage uses)
+      const mutation = `
+        mutation metaobjectCreate($metaobject: MetaobjectCreateInput!) {
+          metaobjectCreate(metaobject: $metaobject) {
+            metaobject {
+              id
+              handle
+              type
+            }
+            userErrors {
+              field
+              message
+            }
+          }
+        }
+      `;
+
+      const variables = {
+        metaobject: {
+          type: 'contact_submission',
+          fields: [
+            { key: 'full_name', value: formData.name },
+            { key: 'email', value: formData.email },
+            { key: 'phone', value: formData.phone || '' },
+            { key: 'company', value: formData.company || '' },
+            { key: 'subject', value: formData.subject },
+            { key: 'message', value: formData.message },
+            { key: 'source', value: 'vercel-contact-form' },
+            { key: 'submitted_at', value: new Date().toISOString() }
+          ]
+        }
+      };
+
+      console.log('📤 Submitting contact form to Shopify:', variables);
+
+      // Use existing /api/shopify-admin proxy (works in both dev and production)
+      const response = await fetch('/api/shopify-admin', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          query: mutation,
+          variables,
+        }),
+      });
+
+      const result = await response.json();
+      console.log('📥 Shopify API response:', result);
+
+      // Check for GraphQL errors
+      if (result.errors) {
+        console.error('❌ GraphQL errors:', result.errors);
+        throw new Error(result.errors[0]?.message || 'Failed to submit contact form');
+      }
+
+      // Check for user errors from Shopify
+      const userErrors = result.data?.metaobjectCreate?.userErrors;
+      if (userErrors && userErrors.length > 0) {
+        console.error('❌ User errors:', userErrors);
+        throw new Error(userErrors[0].message || 'Failed to submit contact form');
+      }
+
+      // Success!
+      if (result.data?.metaobjectCreate?.metaobject?.id) {
+        setSubmitStatus({
+          type: 'success',
+          message: 'Your message has been sent successfully! We will get back to you soon.',
+        });
+
+        // Reset form
+        setFormData({
+          name: '',
+          email: '',
+          phone: '',
+          company: '',
+          subject: '',
+          message: '',
+        });
+      } else {
+        console.error('Unexpected response format:', result);
+        throw new Error('Failed to submit contact form. Please try again.');
+      }
+    } catch (error: any) {
+      console.error('Contact form submission error:', error);
+      setSubmitStatus({
+        type: 'error',
+        message: error.message || 'An error occurred. Please try again later.',
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
@@ -283,17 +388,54 @@ export function ContactPage() {
                     />
                   </div>
 
+                  {/* Status Messages */}
+                  {submitStatus.type === 'success' && (
+                    <motion.div
+                      initial={{ opacity: 0, y: -10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      className="p-4 bg-green-50 border-2 border-green-200 rounded-lg flex items-start gap-3"
+                    >
+                      <CheckCircle className="w-5 h-5 text-green-600 flex-shrink-0 mt-0.5" />
+                      <p className="text-green-800 text-sm">{submitStatus.message}</p>
+                    </motion.div>
+                  )}
+
+                  {submitStatus.type === 'error' && (
+                    <motion.div
+                      initial={{ opacity: 0, y: -10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      className="p-4 bg-red-50 border-2 border-red-200 rounded-lg flex items-start gap-3"
+                    >
+                      <AlertCircle className="w-5 h-5 text-red-600 flex-shrink-0 mt-0.5" />
+                      <p className="text-red-800 text-sm">{submitStatus.message}</p>
+                    </motion.div>
+                  )}
+
                   <motion.button
                     type="submit"
-                    whileHover={{ 
+                    disabled={isSubmitting}
+                    whileHover={isSubmitting ? {} : { 
                       scale: 1.02,
                       boxShadow: '0 10px 30px rgba(37, 99, 235, 0.3)'
                     }}
-                    whileTap={{ scale: 0.98 }}
-                    className="w-full py-4 bg-blue-600 text-white rounded-lg shadow-lg shadow-blue-600/20 transition-all font-semibold hover:bg-blue-700 inline-flex items-center justify-center gap-2"
+                    whileTap={isSubmitting ? {} : { scale: 0.98 }}
+                    className={`w-full py-4 rounded-lg shadow-lg transition-all font-semibold inline-flex items-center justify-center gap-2 ${
+                      isSubmitting
+                        ? 'bg-slate-400 text-white cursor-not-allowed'
+                        : 'bg-blue-600 text-white shadow-blue-600/20 hover:bg-blue-700'
+                    }`}
                   >
-                    <Send className="w-5 h-5" />
-                    Send Message
+                    {isSubmitting ? (
+                      <>
+                        <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                        Sending...
+                      </>
+                    ) : (
+                      <>
+                        <Send className="w-5 h-5" />
+                        Send Message
+                      </>
+                    )}
                   </motion.button>
                 </form>
               </div>
