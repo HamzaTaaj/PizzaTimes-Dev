@@ -4,12 +4,54 @@ import { useState, useRef, useEffect } from 'react';
 import { 
   ArrowRight, CheckCircle2, TrendingUp, Clock, DollarSign, Users, Zap, Shield, 
   Send, User, Mail, Phone, Cpu, Thermometer, Gauge, Wifi, Wrench, Package, 
-  Calculator, Calendar, X
+  Calculator, Calendar, X, CheckCircle, AlertCircle
 } from 'lucide-react';
 import { ImageWithFallback } from './figma/ImageWithFallback';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogClose } from './ui/dialog';
 import vend1Image from '@/assets/vend1.png';
 import bellHowellLogo from '@/assets/BellAndHowell2.svg';
+
+async function submitMarketingLead(
+    data: { firstName: string; lastName: string; email: string; phone: string },
+    source: string
+  ) {
+    const mutation = `
+      mutation metaobjectCreate($metaobject: MetaobjectCreateInput!) {
+        metaobjectCreate(metaobject: $metaobject) {
+          metaobject { id }
+          userErrors { message }
+        }
+      }
+    `;
+  
+    const variables = {
+      metaobject: {
+        type: 'marketing_lead',
+        fields: [
+          { key: 'first_name', value: data.firstName },
+          { key: 'last_name', value: data.lastName },
+          { key: 'email', value: data.email },
+          { key: 'phone', value: data.phone },
+          { key: 'submitted_at', value: new Date().toISOString() }
+        ]
+      }
+    };
+  
+    const res = await fetch('/api/shopify-admin', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ query: mutation, variables })
+    });
+  
+    const json = await res.json();
+  
+    if (json.errors) throw new Error(json.errors[0]?.message);
+    const userErrors = json.data?.metaobjectCreate?.userErrors;
+    if (userErrors?.length) throw new Error(userErrors[0].message);
+  
+    return json.data.metaobjectCreate.metaobject.id;
+  }
+  
 
 // Animated Counter Component
 function AnimatedCounter({ value, suffix = '', prefix = '', duration = 2 }: { value: number | string; suffix?: string; prefix?: string; duration?: number }) {
@@ -58,118 +100,46 @@ function AnimatedCounter({ value, suffix = '', prefix = '', duration = 2 }: { va
 
 // CTA Popup Component
 function CTAPopup({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) {
-  const navigate = useNavigate();
-  const [formData, setFormData] = useState({
-    firstName: '',
-    lastName: '',
-    email: '',
-    phone: ''
-  });
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    navigate('/request-access');
-  };
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value
+    const navigate = useNavigate();
+    const [formData, setFormData] = useState({
+      firstName: '',
+      lastName: '',
+      email: '',
+      phone: ''
     });
-  };
-
-  return (
-    <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
-      <DialogContent className="max-w-md bg-white border-slate-200">
-        <DialogHeader className="relative">
-          <DialogTitle className="text-2xl font-bold text-slate-900 pr-8">Get Started Today</DialogTitle>
-          <DialogClose asChild>
-            <motion.button
-              whileHover={{ scale: 1.1, backgroundColor: '#f1f5f9' }}
-              whileTap={{ scale: 0.9 }}
-              onClick={onClose}
-              className="absolute top-0 right-0 p-2 text-slate-500 hover:text-slate-900 rounded-lg transition-colors z-10"
-              aria-label="Close"
-            >
-              <X className="w-5 h-5" />
-            </motion.button>
-          </DialogClose>
-        </DialogHeader>
-        <form onSubmit={handleSubmit} className="space-y-4 mt-4">
-          <div>
-            <label htmlFor="popup-firstName" className="block text-sm mb-2 text-slate-700 font-medium">
-              First Name *
-            </label>
-            <input
-              type="text"
-              id="popup-firstName"
-              name="firstName"
-              value={formData.firstName}
-              onChange={handleChange}
-              required
-              className="w-full px-4 py-3 bg-white border-2 border-slate-200 rounded-lg focus:outline-none focus:border-blue-600 transition-colors text-slate-900 placeholder-slate-400"
-              placeholder="John"
-            />
-          </div>
-          <div>
-            <label htmlFor="popup-lastName" className="block text-sm mb-2 text-slate-700 font-medium">
-              Last Name *
-            </label>
-            <input
-              type="text"
-              id="popup-lastName"
-              name="lastName"
-              value={formData.lastName}
-              onChange={handleChange}
-              required
-              className="w-full px-4 py-3 bg-white border-2 border-slate-200 rounded-lg focus:outline-none focus:border-blue-600 transition-colors text-slate-900 placeholder-slate-400"
-              placeholder="Doe"
-            />
-          </div>
-          <div>
-            <label htmlFor="popup-email" className="block text-sm mb-2 text-slate-700 font-medium">
-              Email *
-            </label>
-            <input
-              type="email"
-              id="popup-email"
-              name="email"
-              value={formData.email}
-              onChange={handleChange}
-              required
-              className="w-full px-4 py-3 bg-white border-2 border-slate-200 rounded-lg focus:outline-none focus:border-blue-600 transition-colors text-slate-900 placeholder-slate-400"
-              placeholder="john@example.com"
-            />
-          </div>
-          <div>
-            <label htmlFor="popup-phone" className="block text-sm mb-2 text-slate-700 font-medium">
-              Phone *
-            </label>
-            <input
-              type="tel"
-              id="popup-phone"
-              name="phone"
-              value={formData.phone}
-              onChange={handleChange}
-              required
-              className="w-full px-4 py-3 bg-white border-2 border-slate-200 rounded-lg focus:outline-none focus:border-blue-600 transition-colors text-slate-900 placeholder-slate-400"
-              placeholder="+1 (555) 123-4567"
-            />
-          </div>
-          <motion.button
-            type="submit"
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.98 }}
-            className="w-full py-4 bg-blue-600 text-white rounded-lg flex items-center justify-center gap-2 font-semibold text-lg hover:bg-blue-700 transition-colors mt-6"
-          >
-            <Send className="w-5 h-5" />
-            Submit
-          </motion.button>
-        </form>
-      </DialogContent>
-    </Dialog>
-  );
-}
+  
+    const handleSubmit = async (e: React.FormEvent) => {
+      e.preventDefault();
+  
+      await submitMarketingLead(formData, 'cta-popup');
+      onClose();
+      navigate('/request-access');
+    };
+  
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+      setFormData({ ...formData, [e.target.name]: e.target.value });
+    };
+  
+    return (
+      <Dialog open={isOpen} onOpenChange={(o) => !o && onClose()}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Get Started Today</DialogTitle>
+          </DialogHeader>
+  
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <input name="firstName" required onChange={handleChange} placeholder="First Name" />
+            <input name="lastName" required onChange={handleChange} placeholder="Last Name" />
+            <input name="email" type="email" required onChange={handleChange} placeholder="Email" />
+            <input name="phone" required onChange={handleChange} placeholder="Phone" />
+  
+            <button type="submit">Submit</button>
+          </form>
+        </DialogContent>
+      </Dialog>
+    );
+  }
+  
 
 export function MarketingPage() {
   const navigate = useNavigate();
@@ -181,9 +151,48 @@ export function MarketingPage() {
     phone: ''
   });
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitStatus, setSubmitStatus] = useState<{
+    type: 'success' | 'error' | null;
+    message: string;
+  }>({ type: null, message: '' });
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    navigate('/request-access');
+    setIsSubmitting(true);
+    setSubmitStatus({ type: null, message: '' });
+
+    try {
+      // Validate required fields
+      if (!formData.firstName || !formData.lastName || !formData.email || !formData.phone) {
+        throw new Error('Please fill in all required fields');
+      }
+
+      // Submit to Shopify using the existing submitMarketingLead function
+      await submitMarketingLead(formData, 'marketing-page-form');
+
+      // Success!
+      setSubmitStatus({
+        type: 'success',
+        message: 'Thank you! Your information has been submitted successfully. We will contact you soon.',
+      });
+
+      // Reset form
+      setFormData({
+        firstName: '',
+        lastName: '',
+        email: '',
+        phone: '',
+      });
+    } catch (error: any) {
+      console.error('Marketing form submission error:', error);
+      setSubmitStatus({
+        type: 'error',
+        message: error.message || 'An error occurred. Please try again later.',
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -393,17 +402,54 @@ export function MarketingPage() {
                     </div>
                   </div>
 
+                  {/* Status Messages */}
+                  {submitStatus.type === 'success' && (
+                    <motion.div
+                      initial={{ opacity: 0, y: -10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      className="p-4 bg-green-50/90 backdrop-blur-sm border-2 border-green-200 rounded-lg flex items-start gap-3"
+                    >
+                      <CheckCircle className="w-5 h-5 text-green-600 flex-shrink-0 mt-0.5" />
+                      <p className="text-green-800 text-sm">{submitStatus.message}</p>
+                    </motion.div>
+                  )}
+
+                  {submitStatus.type === 'error' && (
+                    <motion.div
+                      initial={{ opacity: 0, y: -10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      className="p-4 bg-red-50/90 backdrop-blur-sm border-2 border-red-200 rounded-lg flex items-start gap-3"
+                    >
+                      <AlertCircle className="w-5 h-5 text-red-600 flex-shrink-0 mt-0.5" />
+                      <p className="text-red-800 text-sm">{submitStatus.message}</p>
+                    </motion.div>
+                  )}
+
                   <motion.button
                     type="submit"
-                    whileHover={{ 
+                    disabled={isSubmitting}
+                    whileHover={isSubmitting ? {} : { 
                       scale: 1.02,
                       boxShadow: "0 20px 40px rgba(0, 0, 0, 0.3)"
                     }}
-                    whileTap={{ scale: 0.98 }}
-                    className="w-full py-4 bg-white text-blue-600 rounded-lg flex items-center justify-center gap-2 font-semibold text-lg hover:bg-blue-50 transition-colors mt-6"
+                    whileTap={isSubmitting ? {} : { scale: 0.98 }}
+                    className={`w-full py-4 rounded-lg flex items-center justify-center gap-2 font-semibold text-lg transition-colors mt-6 ${
+                      isSubmitting
+                        ? 'bg-white/50 text-blue-400 cursor-not-allowed'
+                        : 'bg-white text-blue-600 hover:bg-blue-50'
+                    }`}
                   >
-                    <Send className="w-5 h-5" />
-                    Submit
+                    {isSubmitting ? (
+                      <>
+                        <div className="w-5 h-5 border-2 border-blue-600 border-t-transparent rounded-full animate-spin" />
+                        Submitting...
+                      </>
+                    ) : (
+                      <>
+                        <Send className="w-5 h-5" />
+                        Submit
+                      </>
+                    )}
                   </motion.button>
                 </form>
               </div>
