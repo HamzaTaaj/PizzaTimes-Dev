@@ -17,7 +17,9 @@ import {
   CheckCircle,
   ShoppingCart,
   ArrowRight,
-  Sparkles
+  Sparkles,
+  MessageCircle,
+  HelpCircle
 } from 'lucide-react';
 
 // GraphQL query to fetch customer orders and tags
@@ -301,7 +303,7 @@ export function ClientDashboard() {
 
   // Quick actions
   const quickActions = [
-    { label: 'Find Machines', icon: MapPin, href: '/product', color: 'text-blue-600' },
+    { label: 'Support Ticket', icon: HelpCircle, href: '/support-ticket', color: 'text-blue-600' },
     { label: 'Shop Now', icon: Package, href: '/shop', color: 'text-orange-600' },
   ];
 
@@ -375,7 +377,7 @@ export function ClientDashboard() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.3 }}
-            className="relative mb-8 overflow-hidden rounded-2xl bg-gradient-to-r from-blue-600 via-blue-700 to-purple-600 shadow-xl"
+            className="relative mb-8 overflow-hidden rounded-2xl bg-blue-600 shadow-xl"
           >
             {/* Background Pattern */}
             <div className="absolute inset-0 opacity-10">
@@ -444,7 +446,7 @@ export function ClientDashboard() {
               transition={{ duration: 0.6, delay: 0.2 }}
               className="lg:col-span-1 bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden"
             >
-              <div className="bg-gradient-to-r from-blue-600 to-blue-700 p-6">
+              <div className="bg-blue-600 p-6">
                 <div className="w-20 h-20 bg-white/20 backdrop-blur-sm rounded-full flex items-center justify-center mx-auto mb-4">
                   <User className="w-10 h-10 text-white" />
                 </div>
@@ -589,14 +591,14 @@ export function ClientDashboard() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.5 }}
-              className="mt-8 bg-gradient-to-r from-orange-500 to-orange-600 rounded-2xl p-6 md:p-8 text-white relative overflow-hidden"
+              className="mt-8 bg-blue-600 rounded-2xl p-6 md:p-8 text-white relative overflow-hidden"
             >
               <div className="absolute right-0 top-0 w-40 h-40 bg-white/10 rounded-full -translate-y-1/2 translate-x-1/2"></div>
               <div className="absolute left-10 bottom-0 w-24 h-24 bg-white/10 rounded-full translate-y-1/2"></div>
               <div className="relative z-10 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
                 <div>
                   <h3 className="text-2xl font-bold mb-2">🎉 Thank you for your orders!</h3>
-                  <p className="text-orange-100">
+                  <p className="text-blue-100">
                     {totalItems > 0 
                       ? `You've purchased ${totalItems} ${totalItems === 1 ? 'item' : 'items'} so far`
                       : 'Keep ordering to see your stats here'
@@ -607,7 +609,7 @@ export function ClientDashboard() {
                   onClick={() => navigate('/shop')}
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
-                  className="px-6 py-3 bg-white text-orange-600 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-shadow whitespace-nowrap"
+                  className="px-6 py-3 bg-white text-blue-600 rounded-xl font-semibold shadow-lg hover:shadow-xl transition-shadow whitespace-nowrap"
                 >
                   Shop Now
                 </motion.button>

@@ -1,10 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { gql } from '@apollo/client';
-import { useQuery } from '@apollo/client/react';
+import { useQuery, useMutation } from '@apollo/client/react';
 import { motion } from 'motion/react';
-import { ShoppingCart, Loader2, AlertCircle, Mail, Phone, MessageCircle, HelpCircle, ChevronDown } from 'lucide-react';
+import { ShoppingCart, Loader2, AlertCircle, Mail, Phone, MessageCircle, HelpCircle, ChevronDown, Plus } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
+import { useCart } from '../context/CartContext';
 import { ImageWithFallback } from './figma/ImageWithFallback';
 import vend1Image from '@/assets/vend1.png';
 
@@ -51,12 +52,55 @@ const GET_PRODUCTS = gql`
   }
 `;
 
-// GraphQL query to check customer approval status
+// GraphQL query to check customer approval status and get customer info
 const GET_CUSTOMER_TAGS = gql`
   query getCustomerTags($customerAccessToken: String!) {
     customer(customerAccessToken: $customerAccessToken) {
       id
+      email
+      firstName
+      lastName
+      phone
       tags
+    }
+  }
+`;
+
+// GraphQL mutation to create cart with buyer identity (for automatic prefill)
+const CREATE_CART_WITH_BUYER = gql`
+  mutation cartCreate($input: CartInput!) {
+    cartCreate(input: $input) {
+      cart {
+        id
+        checkoutUrl
+        buyerIdentity {
+          email
+          customer {
+            id
+            email
+          }
+        }
+      }
+      userErrors {
+        field
+        message
+      }
+    }
+  }
+`;
+
+// GraphQL mutation to add delivery address to cart
+const ADD_DELIVERY_ADDRESS = gql`
+  mutation cartDeliveryAddressesAdd($cartId: ID!, $addresses: [CartSelectableAddressInput!]!) {
+    cartDeliveryAddressesAdd(cartId: $cartId, addresses: $addresses) {
+      cart {
+        id
+        checkoutUrl
+      }
+      userErrors {
+        field
+        message
+      }
     }
   }
 `;
@@ -98,7 +142,9 @@ interface Product {
 export function ShopifyProductsPage() {
   const navigate = useNavigate();
   const { isAuthenticated, isLoading: authLoading } = useAuth();
+  const { addToCart } = useCart();
   const [selectedVariantIds, setSelectedVariantIds] = useState<Record<string, string>>({});
+  const [checkoutLoading, setCheckoutLoading] = useState<string | null>(null); // Track which product is checking out
   
   // Get access token
   const getAccessToken = () => {
@@ -120,29 +166,116 @@ export function ShopifyProductsPage() {
     skip: !isAuthenticated || customerLoading || !customerData?.customer, // Skip if not authenticated or checking approval
   });
 
-  // Function to create direct checkout URL
-  const getCheckoutUrl = (product: Product, variantId?: string): string => {
-    try {
-      // Use provided variantId or get from selected variants or default to first
-      const targetVariantId = variantId || selectedVariantIds[product.id] || product.variants?.edges[0]?.node?.id;
-      if (!targetVariantId) {
-        return '#';
-      }
-      // Extract variant ID (format: gid://shopify/ProductVariant/XXXXX)
-      const variantIdMatch = targetVariantId.match(/\/(\d+)$/);
-      if (!variantIdMatch) {
-        return '#';
-      }
-      const numericVariantId = variantIdMatch[1];
-      
-      // Create direct checkout URL - adds to cart and redirects to checkout
-      const shopifyDomain = 'pizzaanytime.myshopify.com';
-      return `https://${shopifyDomain}/cart/add?id=${numericVariantId}&quantity=1&return_to=/checkout`;
-    } catch (err) {
-      console.error('Error creating checkout URL:', err);
-      return '#';
+  // Cart creation mutation with buyer identity
+  const [createCart] = useMutation(CREATE_CART_WITH_BUYER);
+  
+  // Add delivery address to cart mutation
+  const [addDeliveryAddress] = useMutation(ADD_DELIVERY_ADDRESS);
+
+  // Function to handle checkout with customer association (automatic prefill)
+  const handleCheckout = useCallback(async (product: Product, variantId?: string) => {
+    if (!accessToken || !isAuthenticated) {
+      navigate('/login');
+      return;
     }
-  };
+
+    const targetVariantId = variantId || selectedVariantIds[product.id] || product.variants?.edges[0]?.node?.id;
+    if (!targetVariantId) {
+      return;
+    }
+
+    setCheckoutLoading(product.id);
+    
+    try {
+      const customerEmail = customerData?.customer?.email;
+
+      // Create cart with buyer identity using customerAccessToken
+      // This associates the logged-in customer with the cart
+      const { data: cartData } = await createCart({
+        variables: {
+          input: {
+            lines: [
+              {
+                merchandiseId: targetVariantId,
+                quantity: 1,
+              },
+            ],
+            // Associate the logged-in customer with the cart
+            // This enables automatic prefill of customer details at checkout
+            buyerIdentity: {
+              customerAccessToken: accessToken,
+              email: customerEmail,
+            },
+          },
+        },
+      });
+
+      if (cartData?.cartCreate?.userErrors?.length > 0) {
+        const errorMessages = cartData.cartCreate.userErrors
+          .map((err: { message: string }) => err.message)
+          .join(', ');
+        console.error('Checkout error:', errorMessages);
+        alert('Checkout error: ' + errorMessages);
+        setCheckoutLoading(null);
+        return;
+      }
+
+      const cartId = cartData?.cartCreate?.cart?.id;
+      let checkoutUrl = cartData?.cartCreate?.cart?.checkoutUrl;
+
+      // Get customer's first name and last name for name prefill
+      const customerFirstName = customerData?.customer?.firstName || '';
+      const customerLastName = customerData?.customer?.lastName || '';
+
+      // Add delivery address with customer name for auto-fill
+      if (cartId && (customerFirstName || customerLastName)) {
+        try {
+          const { data: addressData } = await addDeliveryAddress({
+            variables: {
+              cartId: cartId,
+              addresses: [
+                {
+                  address: {
+                    deliveryAddress: {
+                      firstName: customerFirstName || '',
+                      lastName: customerLastName || '',
+                    },
+                  },
+                  selected: true, // Pre-select this address
+                },
+              ],
+            },
+          });
+
+          // Use the updated checkout URL if available
+          if (addressData?.cartDeliveryAddressesAdd?.cart?.checkoutUrl) {
+            checkoutUrl = addressData.cartDeliveryAddressesAdd.cart.checkoutUrl;
+          }
+
+          // Log any address errors but don't block checkout
+          if (addressData?.cartDeliveryAddressesAdd?.userErrors?.length > 0) {
+            console.warn('Address prefill warning:', addressData.cartDeliveryAddressesAdd.userErrors);
+          }
+        } catch (addressErr) {
+          // Don't block checkout if address prefill fails, just log it
+          console.warn('Could not prefill customer name:', addressErr);
+        }
+      }
+
+      if (checkoutUrl) {
+        // Redirect to Shopify checkout with customer email and name auto-filled
+        window.location.href = checkoutUrl;
+      } else {
+        console.error('Failed to create checkout');
+        alert('Failed to create checkout. Please try again.');
+        setCheckoutLoading(null);
+      }
+    } catch (error: any) {
+      console.error('Checkout error:', error);
+      alert('Failed to process checkout: ' + (error.message || 'Please try again.'));
+      setCheckoutLoading(null);
+    }
+  }, [accessToken, isAuthenticated, customerData, createCart, addDeliveryAddress, selectedVariantIds, navigate]);
 
   // Initialize selected variants when products load
   useEffect(() => {
@@ -274,43 +407,51 @@ export function ShopifyProductsPage() {
   return (
     <div className="min-h-screen pt-20 bg-white">
       {/* Hero Section - Shop Banner */}
-      <section className="relative py-24 lg:py-32 overflow-hidden bg-gradient-to-br from-slate-900 via-blue-900 to-slate-800">
-        {/* Unique Geometric Background Pattern */}
-        <div className="absolute inset-0 z-0 overflow-hidden opacity-20">
-          <div className="absolute inset-0" style={{
-            backgroundImage: `radial-gradient(circle at 2px 2px, rgba(255,255,255,0.15) 1px, transparent 0)`,
-            backgroundSize: '40px 40px'
-          }} />
+      <section className="relative py-24 lg:py-32 overflow-hidden bg-[#0f172a] rounded-b-[3rem]">
+        {/* Attractive Background Design */}
+        <div className="absolute inset-0 z-0 overflow-hidden">
           <motion.div
             animate={{
-              rotate: [0, 360],
-              scale: [1, 1.2, 1],
+              scale: [1, 1.1, 1],
+              opacity: [0.1, 0.15, 0.1],
+            }}
+            transition={{
+              duration: 15,
+              repeat: Infinity,
+              ease: "easeInOut"
+            }}
+            className="absolute top-1/4 -right-1/4 w-[800px] h-[800px] bg-[#2563eb] rounded-full"
+          />
+          <motion.div
+            animate={{
+              scale: [1.1, 1, 1.1],
+              opacity: [0.08, 0.12, 0.08],
+            }}
+            transition={{
+              duration: 18,
+              repeat: Infinity,
+              ease: "easeInOut"
+            }}
+            className="absolute -bottom-1/4 -left-1/4 w-[700px] h-[700px] bg-[#3b82f6] rounded-full"
+          />
+          <motion.div
+            animate={{
+              scale: [1, 1.15, 1],
+              opacity: [0.06, 0.10, 0.06],
             }}
             transition={{
               duration: 20,
               repeat: Infinity,
-              ease: "linear"
+              ease: "easeInOut"
             }}
-            className="absolute top-1/4 right-1/4 w-96 h-96 border-2 border-blue-400/30 rounded-full"
-          />
-          <motion.div
-            animate={{
-              rotate: [360, 0],
-              scale: [1.2, 1, 1.2],
-            }}
-            transition={{
-              duration: 25,
-              repeat: Infinity,
-              ease: "linear"
-            }}
-            className="absolute bottom-1/4 left-1/4 w-80 h-80 border-2 border-blue-300/20 rounded-full"
+            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-[#60a5fa] rounded-full"
           />
         </div>
 
-        {/* Curved Bottom Wave */}
+        {/* Curved Bottom Wave Design */}
         <div className="absolute bottom-0 left-0 right-0 z-0">
-          <svg className="w-full h-20" viewBox="0 0 1440 120" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
-            <path d="M0 120L48 110C96 100 192 80 288 70C384 60 480 60 576 65C672 70 768 80 864 82.5C960 85 1056 80 1152 77.5C1248 75 1344 75 1392 75L1440 75V120H1392C1344 120 1248 120 1152 120C1056 120 960 120 864 120C768 120 672 120 576 120C480 120 384 120 288 120C192 120 96 120 48 120H0Z" fill="#ffffff" />
+          <svg className="w-full h-24" viewBox="0 0 1440 120" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+            <path d="M0 120L60 105C120 90 240 60 360 45C480 30 600 30 720 37.5C840 45 960 60 1080 67.5C1200 75 1320 75 1380 75L1440 75V120H1380C1320 120 1200 120 1080 120C960 120 840 120 720 120C600 120 480 120 360 120C240 120 120 120 60 120H0Z" fill="#ffffff" />
           </svg>
         </div>
 
@@ -328,7 +469,7 @@ export function ShopifyProductsPage() {
                 initial={{ opacity: 0, scale: 0.9 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ delay: 0.2 }}
-                className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-blue-500/20 to-purple-500/20 border border-blue-400/30 rounded-full mb-6 backdrop-blur-sm"
+                className="inline-flex items-center gap-2 px-4 py-2 bg-blue-500/20 border border-blue-400/30 rounded-full mb-6 backdrop-blur-sm"
               >
                 <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse" />
                 <span className="text-blue-200 font-medium text-sm">Shop Now & Save</span>
@@ -338,7 +479,7 @@ export function ShopifyProductsPage() {
               <h1 className="text-4xl md:text-5xl lg:text-6xl mb-6 font-extrabold text-white leading-tight">
                 Everything You Need for Your
                 <br />
-                <span className="bg-gradient-to-r from-blue-400 via-cyan-300 to-blue-400 bg-clip-text text-transparent">
+                <span className="text-blue-400">
                   Vending Machine
                 </span>
               </h1>
@@ -369,7 +510,7 @@ export function ShopifyProductsPage() {
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: 0.4 }}
-                className="inline-flex items-center gap-3 px-6 py-3 bg-gradient-to-r from-blue-600 to-purple-600 rounded-xl shadow-lg"
+                className="inline-flex items-center gap-3 px-6 py-3 bg-blue-600 rounded-xl shadow-lg"
               >
                 <ShoppingCart className="w-5 h-5 text-white" />
                 <div>
@@ -387,7 +528,7 @@ export function ShopifyProductsPage() {
               className="relative"
             >
               {/* Glow Effect Behind Image */}
-              <div className="absolute inset-0 bg-gradient-to-r from-blue-500/30 to-purple-500/30 rounded-3xl blur-3xl -z-10" />
+              <div className="absolute inset-0 bg-blue-500/30 rounded-3xl blur-3xl -z-10" />
               
               <div className="relative rounded-3xl overflow-hidden shadow-2xl border border-white/10">
                 <ImageWithFallback
@@ -411,7 +552,7 @@ export function ShopifyProductsPage() {
                 className="absolute -bottom-4 -right-4 px-6 py-4 bg-white rounded-2xl shadow-2xl border-2 border-blue-200 z-20"
               >
                 <div className="flex items-center gap-3">
-                  <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl flex items-center justify-center">
+                  <div className="w-12 h-12 bg-blue-600 rounded-xl flex items-center justify-center">
                     <ShoppingCart className="w-6 h-6 text-white" />
                   </div>
                   <div>
@@ -447,7 +588,6 @@ export function ShopifyProductsPage() {
                       )
                     : 'N/A';
                 const isAvailable = selectedVariant?.availableForSale ?? false;
-                const checkoutUrl = getCheckoutUrl(product, selectedVariantId);
                 const cleanDescription = product.description?.replace(/<[^>]*>/g, '') || '';
                 const truncatedDescription = cleanDescription.length > 200 
                   ? cleanDescription.substring(0, 200) + '...' 
@@ -550,27 +690,62 @@ export function ShopifyProductsPage() {
                           </div>
                         )}
 
-                        {/* Checkout Button */}
-                        <motion.a
-                          href={checkoutUrl}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          whileHover={{ scale: 1.02, boxShadow: '0 20px 40px rgba(37, 99, 235, 0.3)' }}
-                          whileTap={{ scale: 0.98 }}
-                          onClick={(e) => {
-                            if (!isAvailable) {
-                              e.preventDefault();
-                            }
-                          }}
-                          className={`w-full py-4 px-6 rounded-xl font-semibold text-lg text-center transition-all flex items-center justify-center gap-3 ${
-                            isAvailable
-                              ? 'bg-blue-600 text-white hover:bg-blue-700 shadow-lg shadow-blue-600/30'
-                              : 'bg-slate-300 text-slate-500 cursor-not-allowed'
-                          }`}
-                        >
-                          <ShoppingCart className="w-6 h-6" />
-                          Checkout Now
-                        </motion.a>
+                        {/* Add to Cart and Checkout Buttons */}
+                        <div className="flex gap-3">
+                          <motion.button
+                            onClick={() => {
+                              if (isAvailable && selectedVariant) {
+                                const imageUrl = product.images.edges[0]?.node.url || '';
+                                addToCart({
+                                  productId: product.id,
+                                  variantId: selectedVariantId || '',
+                                  title: product.title,
+                                  variantTitle: selectedVariant.title || 'Default',
+                                  price: selectedVariant.price,
+                                  quantity: 1,
+                                  image: imageUrl,
+                                  handle: product.handle,
+                                  availableForSale: selectedVariant.availableForSale,
+                                });
+                              }
+                            }}
+                            disabled={!isAvailable || !selectedVariant}
+                            whileHover={{ scale: isAvailable ? 1.02 : 1 }}
+                            whileTap={{ scale: isAvailable ? 0.98 : 1 }}
+                            className={`flex-1 py-4 px-6 rounded-xl font-semibold text-lg text-center transition-all flex items-center justify-center gap-3 ${
+                              isAvailable && selectedVariant
+                                ? 'bg-slate-700 text-white hover:bg-slate-800 shadow-lg'
+                                : 'bg-slate-300 text-slate-500 cursor-not-allowed'
+                            }`}
+                          >
+                            <Plus className="w-6 h-6" />
+                            Add to Cart
+                          </motion.button>
+                          
+                          <motion.button
+                            onClick={() => handleCheckout(product, selectedVariantId)}
+                            disabled={!isAvailable || !selectedVariant || checkoutLoading === product.id}
+                            whileHover={{ scale: isAvailable && !checkoutLoading ? 1.02 : 1, boxShadow: isAvailable && !checkoutLoading ? '0 20px 40px rgba(37, 99, 235, 0.3)' : undefined }}
+                            whileTap={{ scale: isAvailable && !checkoutLoading ? 0.98 : 1 }}
+                            className={`flex-1 py-4 px-6 rounded-xl font-semibold text-lg text-center transition-all flex items-center justify-center gap-3 ${
+                              isAvailable && !checkoutLoading && selectedVariant
+                                ? 'bg-blue-600 text-white hover:bg-blue-700 shadow-lg shadow-blue-600/30'
+                                : 'bg-slate-300 text-slate-500 cursor-not-allowed'
+                            }`}
+                          >
+                            {checkoutLoading === product.id ? (
+                              <>
+                                <Loader2 className="w-6 h-6 animate-spin" />
+                                Processing...
+                              </>
+                            ) : (
+                              <>
+                                <ShoppingCart className="w-6 h-6" />
+                                Checkout
+                              </>
+                            )}
+                          </motion.button>
+                        </div>
 
                         {/* View Details Link */}
                         <motion.button
@@ -601,7 +776,6 @@ export function ShopifyProductsPage() {
                   )
                 : 'N/A';
               const isAvailable = product.variants?.edges[0]?.node?.availableForSale ?? false;
-              const checkoutUrl = getCheckoutUrl(product);
 
               return (
                 <motion.div
@@ -648,26 +822,71 @@ export function ShopifyProductsPage() {
                       <span className="text-2xl font-bold text-blue-600">{price}</span>
                     </div>
 
-                    {/* Checkout Button */}
-                    <motion.button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        if (isAvailable) {
-                          window.open(checkoutUrl, '_blank');
-                        }
-                      }}
-                      whileHover={{ scale: 1.02 }}
-                      whileTap={{ scale: 0.98 }}
-                      className={`w-full py-3 px-4 rounded-lg font-semibold text-center transition-colors flex items-center justify-center gap-2 ${
-                        isAvailable
-                          ? 'bg-blue-600 text-white hover:bg-blue-700 shadow-lg shadow-blue-600/20'
-                          : 'bg-slate-300 text-slate-500 cursor-not-allowed'
-                      }`}
-                      disabled={!isAvailable}
-                    >
-                      <ShoppingCart className="w-5 h-5" />
-                      Checkout Now
-                    </motion.button>
+                    {/* Add to Cart and Checkout Buttons */}
+                    <div className="flex gap-2" onClick={(e) => e.stopPropagation()}>
+                      <motion.button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          if (isAvailable) {
+                            const selectedVariant = product.variants?.edges[0]?.node;
+                            const variantId = selectedVariantIds[product.id] || selectedVariant?.id;
+                            if (variantId && selectedVariant) {
+                              addToCart({
+                                productId: product.id,
+                                variantId: variantId,
+                                title: product.title,
+                                variantTitle: selectedVariant.title || 'Default',
+                                price: selectedVariant.price,
+                                quantity: 1,
+                                image: imageUrl,
+                                handle: product.handle,
+                                availableForSale: selectedVariant.availableForSale,
+                              });
+                            }
+                          }
+                        }}
+                        disabled={!isAvailable}
+                        whileHover={{ scale: isAvailable ? 1.02 : 1 }}
+                        whileTap={{ scale: isAvailable ? 0.98 : 1 }}
+                        className={`flex-1 py-3 px-4 rounded-lg font-semibold text-center transition-colors flex items-center justify-center gap-2 ${
+                          isAvailable
+                            ? 'bg-slate-700 text-white hover:bg-slate-800 shadow-lg'
+                            : 'bg-slate-300 text-slate-500 cursor-not-allowed'
+                        }`}
+                      >
+                        <Plus className="w-4 h-4" />
+                        Add
+                      </motion.button>
+                      
+                      <motion.button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          if (isAvailable) {
+                            handleCheckout(product);
+                          }
+                        }}
+                        disabled={!isAvailable || checkoutLoading === product.id}
+                        whileHover={{ scale: isAvailable && !checkoutLoading ? 1.02 : 1 }}
+                        whileTap={{ scale: isAvailable && !checkoutLoading ? 0.98 : 1 }}
+                        className={`flex-1 py-3 px-4 rounded-lg font-semibold text-center transition-colors flex items-center justify-center gap-2 ${
+                          isAvailable && !checkoutLoading
+                            ? 'bg-blue-600 text-white hover:bg-blue-700 shadow-lg shadow-blue-600/20'
+                            : 'bg-slate-300 text-slate-500 cursor-not-allowed'
+                        }`}
+                      >
+                        {checkoutLoading === product.id ? (
+                          <>
+                            <Loader2 className="w-4 h-4 animate-spin" />
+                            Processing...
+                          </>
+                        ) : (
+                          <>
+                            <ShoppingCart className="w-4 h-4" />
+                            Buy
+                          </>
+                        )}
+                      </motion.button>
+                    </div>
                   </div>
                 </motion.div>
               );

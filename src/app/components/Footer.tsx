@@ -2,7 +2,8 @@ import React from 'react';
 import { motion } from 'motion/react';
 import { useNavigate } from 'react-router-dom';
 import { Facebook, Twitter, Linkedin, Instagram, Mail, Phone, MapPin } from 'lucide-react';
-import logo from '@/assets/Untitled.svg';
+// import logo from '@/assets/straight horizantal_Artboard 10 copy 2.svg';
+import logo from '@/assets/straight horizantal_Artboard 8 copy.svg';
 
 export function Footer() {
   const navigate = useNavigate();
@@ -11,16 +12,13 @@ export function Footer() {
   return (
     <footer className="relative border-t border-slate-200 bg-slate-50 overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-12 mb-12">
+        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-2 mb-12">
           {/* Company Info */}
           <div>
-            <div className="flex items-center gap-4 mb-6">
-              <img src={logo} alt="Pizza Anytime Logo" className="w-12 h-16 object-contain" />
-              <span className="text-xl font-bold text-slate-900">
-                Pizza <span className="text-blue-600">Anytime</span>
-              </span>
+            <div className="flex items-center mt-[-28px]">
+              <img src={logo} alt="Pizza Anytime Logo" className="h-26 object-contain" />
             </div>
-            <p className="text-slate-600 mb-6 leading-relaxed">
+            <p className="text-slate-600 mb-6 leading-relaxed mt-[-20px]">
               Pizza Anytime™ from High Sierra Vending turns an ordinary corner of your business into a 24-hour profit center—without locking you into someone else's rules or recipes.
             </p>
             <div className="flex items-center gap-4">

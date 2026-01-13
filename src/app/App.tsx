@@ -10,6 +10,7 @@ import { BlogPage } from './components/BlogPage';
 import { ManualPage } from './components/ManualPage';
 import { RequestAccessPage } from './components/RequestAccessPage';
 import { AccountUnderReviewPage } from './components/AccountUnderReviewPage';
+import { CartPage } from './components/CartPage';
 import { LandingPage } from './components/LandingPage';
 import { MarketingPage } from './components/MarketingPage';
 import { CompanyPage } from './components/CompanyPage';
@@ -23,9 +24,11 @@ import { ForgotPasswordPage } from './components/ForgotPasswordPage';
 import { ResetPasswordPage } from './components/ResetPasswordPage';
 import { AdminDashboard } from './components/AdminDashboard';
 import { ClientDashboard } from './components/ClientDashboard';
+import { SupportTicketPage } from './components/SupportTicketPage';
 import { Footer } from './components/Footer';
 import { ArrowUp } from 'lucide-react';
 import { AuthProvider, useAuth } from './context/AuthContext';
+import { CartProvider } from './context/CartContext';
 import { ShopifyConnectionTest } from '../lib/shopify-test';
 import { isAuthenticated } from './utils/auth';
 
@@ -125,6 +128,7 @@ function AppContent() {
             <Route path="/product" element={<ProductPage />} />
             <Route path="/shop" element={<ShopifyProductsPage />} />
             <Route path="/shop/:handle" element={<ProductDetailsPage />} />
+            <Route path="/cart" element={<CartPage />} />
             <Route path="/account-under-review" element={<AccountUnderReviewPage />} />
             <Route path="/blog" element={<BlogPage />} />
             <Route path="/manual" element={<ManualPage />} />
@@ -145,6 +149,14 @@ function AppContent() {
               element={
                 <ClientProtectedRoute>
                   <ClientDashboard />
+                </ClientProtectedRoute>
+              } 
+            />
+            <Route 
+              path="/support-ticket" 
+              element={
+                <ClientProtectedRoute>
+                  <SupportTicketPage />
                 </ClientProtectedRoute>
               } 
             />
@@ -185,7 +197,9 @@ function AppContent() {
 export default function App() {
   return (
     <AuthProvider>
-      <AppContent />
+      <CartProvider>
+        <AppContent />
+      </CartProvider>
     </AuthProvider>
   );
 }

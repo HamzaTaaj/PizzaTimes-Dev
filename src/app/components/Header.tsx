@@ -1,14 +1,16 @@
 import React, { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { motion, AnimatePresence } from "motion/react";
-import { Menu, X, ChevronDown, User } from "lucide-react";
+import { Menu, X, ChevronDown, User, ShoppingCart } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
+import { useCart } from "../context/CartContext";
 import logo from '@/assets/pizza-anytime-logo.svg';
 
 export function Header() {
   const navigate = useNavigate();
   const location = useLocation();
   const { isAuthenticated, customer } = useAuth();
+  const { cartCount } = useCart();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [resourcesOpen, setResourcesOpen] = useState(false);
   const [aboutUsOpen, setAboutUsOpen] = useState(false);
@@ -24,11 +26,11 @@ export function Header() {
         <div className="flex items-center justify-between h-20 w-full">
           {/* Logo */}
           <motion.div
-            className="flex items-center cursor-pointer"
+            className="flex items-center cursor-pointer py-2"
             onClick={() => navigate("/")}
             whileHover={{ scale: 1.02 }}
           >
-            <img src={logo} alt="Pizza Anytime Logo" className="h-16 sm:h-20 md:h-24 max-w-none sm:max-w-none md:max-w-none object-contain" />
+            <img src={logo} alt="Pizza Anytime Logo" className="w-auto object-contain h-[8.125rem] sm:h-[8.625rem] md:h-[9.125rem]" />
           </motion.div>
 
           {/* Desktop Navigation */}
@@ -72,7 +74,7 @@ export function Header() {
                 initial={{ opacity: 0 }}
                 whileHover={{ opacity: 1 }}
               />
-              <span className="relative z-10 text-sm xl:text-base">Product Info</span>
+              <span className="relative z-10 text-sm xl:text-base">Product Information</span>
               {isActive("/product") && (
                 <motion.div
                   className="absolute -bottom-0.5 left-0 right-0 h-0.5 bg-blue-600 z-20 rounded-full"
@@ -172,7 +174,7 @@ export function Header() {
               </AnimatePresence>
             </div>
 
-            {/* 4. ROI Calculator */}
+            {/* 4. Cash Flow Calculator */}
             <motion.button
               onClick={() => navigate("/roi-calculator")}
               whileHover={{ 
@@ -187,7 +189,7 @@ export function Header() {
                 initial={{ opacity: 0 }}
                 whileHover={{ opacity: 1 }}
               />
-              <span className="relative z-10 text-sm xl:text-base">ROI</span>
+              <span className="relative z-10 text-sm xl:text-base">Cash Flow Calculator</span>
               {isActive("/roi-calculator") && (
                 <motion.div
                   className="absolute -bottom-0.5 left-0 right-0 h-0.5 bg-blue-600 z-20 rounded-full"
@@ -197,7 +199,7 @@ export function Header() {
             </motion.button>
 
             {/* 5. Marketing */}
-            <motion.button
+            {/* <motion.button
               onClick={() => navigate("/marketing")}
               whileHover={{ 
                 scale: 1.02,
@@ -218,7 +220,7 @@ export function Header() {
                   layoutId="activeTab"
                 />
               )}
-            </motion.button>
+            </motion.button> */}
 
             {/* 6. Request Access - Only show if not logged in */}
             {!isAuthenticated && (
@@ -261,7 +263,7 @@ export function Header() {
                 initial={{ opacity: 0 }}
                 whileHover={{ opacity: 1 }}
               />
-              <span className="relative z-10 text-sm xl:text-base">Contact</span>
+              <span className="relative z-10 text-sm xl:text-base">Contact Us</span>
               {isActive("/contact") && (
                 <motion.div
                   className="absolute -bottom-0.5 left-0 right-0 h-0.5 bg-blue-600 z-20 rounded-full"
@@ -332,6 +334,28 @@ export function Header() {
                 )}
               </AnimatePresence>
             </div>
+
+            {/* Cart Icon - Only show on shop page */}
+            {isAuthenticated && location.pathname === "/shop" && (
+              <motion.button
+                onClick={() => navigate('/cart')}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                className="relative px-3 py-2 text-slate-700 hover:text-blue-600 transition-colors"
+                title="Shopping Cart"
+              >
+                <ShoppingCart className="w-6 h-6" />
+                {cartCount > 0 && (
+                  <motion.span
+                    initial={{ scale: 0 }}
+                    animate={{ scale: 1 }}
+                    className="absolute -top-1 -right-1 w-5 h-5 bg-blue-600 text-white text-xs font-bold rounded-full flex items-center justify-center"
+                  >
+                    {cartCount > 99 ? '99+' : cartCount}
+                  </motion.span>
+                )}
+              </motion.button>
+            )}
 
             {/* Login Button or Profile */}
             {!isAuthenticated ? (
@@ -520,7 +544,7 @@ export function Header() {
                   </AnimatePresence>
                 </div>
                 
-                {/* 4. ROI Calculator */}
+                {/* 4. Cash Flow Calculator */}
                 <motion.button
                   onClick={() => {
                     navigate("/roi-calculator");
@@ -534,7 +558,7 @@ export function Header() {
                   whileTap={{ scale: 0.98 }}
                   className="block w-full text-left px-4 py-2 text-slate-700 rounded-lg transition-all font-medium"
                 >
-                  ROI Calculator
+                  Cash Flow Calculator
                 </motion.button>
                 
                 {/* 5. Marketing */}
@@ -650,6 +674,29 @@ export function Header() {
                   </AnimatePresence>
                 </div>
                 
+                    {/* Cart Icon - Mobile - Only show on shop page */}
+                    {isAuthenticated && location.pathname === "/shop" && (
+                      <motion.button
+                        onClick={() => {
+                          navigate('/cart');
+                          setMobileMenuOpen(false);
+                        }}
+                        whileHover={{ scale: 1.02 }}
+                        whileTap={{ scale: 0.98 }}
+                        className="w-full flex items-center justify-between px-4 py-3 text-slate-700 hover:bg-blue-50 rounded-lg transition-colors"
+                      >
+                        <div className="flex items-center gap-3">
+                          <ShoppingCart className="w-5 h-5" />
+                          <span className="font-medium">Shopping Cart</span>
+                        </div>
+                        {cartCount > 0 && (
+                          <span className="px-2 py-1 bg-blue-600 text-white text-xs font-bold rounded-full">
+                            {cartCount > 99 ? '99+' : cartCount}
+                          </span>
+                        )}
+                      </motion.button>
+                    )}
+
                 {/* Login Button or Profile - Mobile */}
                 {!isAuthenticated ? (
                   <motion.button

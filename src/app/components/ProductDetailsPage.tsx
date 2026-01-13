@@ -1,17 +1,77 @@
-import React, { useEffect, useState } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
 import { gql } from '@apollo/client';
-import { useQuery } from '@apollo/client/react';
+import { useMutation, useQuery } from '@apollo/client/react';
+import { AlertCircle, ArrowLeft, CheckCircle, ChevronDown, HelpCircle, Loader2, Package, Shield, ShoppingCart } from 'lucide-react';
 import { motion } from 'motion/react';
-import { ShoppingCart, Loader2, AlertCircle, ArrowLeft, CheckCircle, HelpCircle, Package, Shield, ChevronDown } from 'lucide-react';
+import React, { useCallback, useEffect, useState } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
+
 import { useAuth } from '../context/AuthContext';
 
-// GraphQL query to check customer approval status
-const GET_CUSTOMER_TAGS = gql`
-  query getCustomerTags($customerAccessToken: String!) {
+// GraphQL query to check customer approval status and get default address
+const GET_CUSTOMER_INFO = gql`
+  query getCustomerInfo($customerAccessToken: String!) {
     customer(customerAccessToken: $customerAccessToken) {
       id
+      email
+      firstName
+      lastName
+      phone
       tags
+      defaultAddress {
+        id
+        firstName
+        lastName
+        address1
+        address2
+        city
+        province
+        provinceCode
+        country
+        countryCodeV2
+        zip
+        phone
+      }
+    }
+  }
+`;
+
+// GraphQL mutation to create cart with buyer identity (for automatic prefill)
+const CREATE_CART_WITH_BUYER = gql`
+  mutation cartCreate($input: CartInput!) {
+    cartCreate(input: $input) {
+      cart {
+        id
+        checkoutUrl
+        buyerIdentity {
+          email
+          customer {
+            id
+            email
+            firstName
+            lastName
+          }
+        }
+      }
+      userErrors {
+        field
+        message
+      }
+    }
+  }
+`;
+
+// GraphQL mutation to add delivery address to cart
+const ADD_DELIVERY_ADDRESS = gql`
+  mutation cartDeliveryAddressesAdd($cartId: ID!, $addresses: [CartSelectableAddressInput!]!) {
+    cartDeliveryAddressesAdd(cartId: $cartId, addresses: $addresses) {
+      cart {
+        id
+        checkoutUrl
+      }
+      userErrors {
+        field
+        message
+      }
     }
   }
 `;
@@ -103,6 +163,8 @@ export function ProductDetailsPage() {
   const { isAuthenticated, isLoading: authLoading } = useAuth();
   const [selectedImageIndex, setSelectedImageIndex] = React.useState(0);
   const [selectedVariantId, setSelectedVariantId] = React.useState<string | null>(null);
+  const [isCheckingOut, setIsCheckingOut] = useState(false);
+  const [checkoutError, setCheckoutError] = useState<string | null>(null);
   
   // Collapsible sections state
   const [openSections, setOpenSections] = useState<{
@@ -128,9 +190,15 @@ export function ProductDetailsPage() {
   };
   
   const accessToken = getAccessToken();
+
+  // Cart creation mutation with buyer identity
+  const [createCart] = useMutation(CREATE_CART_WITH_BUYER);
   
-  // Check customer approval status
-  const { data: customerData, loading: customerLoading } = useQuery(GET_CUSTOMER_TAGS, {
+  // Add delivery address to cart mutation
+  const [addDeliveryAddress] = useMutation(ADD_DELIVERY_ADDRESS);
+  
+  // Check customer approval status and get customer info including address
+  const { data: customerData, loading: customerLoading } = useQuery(GET_CUSTOMER_INFO, {
     variables: { customerAccessToken: accessToken || '' },
     skip: !accessToken || !isAuthenticated,
     errorPolicy: 'all',
@@ -165,27 +233,116 @@ export function ProductDetailsPage() {
     errorPolicy: 'all',
   });
 
-  // Function to create direct checkout URL
-  const getCheckoutUrl = (variantId: string): string => {
-    try {
-      if (!variantId) {
-        return '#';
-      }
-      // Extract variant ID (format: gid://shopify/ProductVariant/XXXXX)
-      const variantIdMatch = variantId.match(/\/(\d+)$/);
-      if (!variantIdMatch) {
-        return '#';
-      }
-      const numericVariantId = variantIdMatch[1];
-      
-      // Create direct checkout URL - adds to cart and redirects to checkout
-      const shopifyDomain = 'pizzaanytime.myshopify.com';
-      return `https://${shopifyDomain}/cart/add?id=${numericVariantId}&quantity=1&return_to=/checkout`;
-    } catch (err) {
-      console.error('Error creating checkout URL:', err);
-      return '#';
+  // Function to handle checkout with customer association (automatic prefill)
+  const handleCheckout = useCallback(async () => {
+    if (!selectedVariantId || !accessToken) {
+      setCheckoutError('Please select a variant and ensure you are logged in.');
+      return;
     }
-  };
+
+    setIsCheckingOut(true);
+    setCheckoutError(null);
+
+    try {
+      // Get customer's default address for prefilling
+      const defaultAddress = customerData?.customer?.defaultAddress;
+      const customerEmail = customerData?.customer?.email;
+
+      // Create cart with buyer identity using customerAccessToken
+      // This associates the logged-in customer with the cart
+      const { data: cartData } = await createCart({
+        variables: {
+          input: {
+            lines: [
+              {
+                merchandiseId: selectedVariantId,
+                quantity: 1,
+              },
+            ],
+            // Associate the logged-in customer with the cart
+            // This enables automatic prefill of customer details at checkout
+            buyerIdentity: {
+              customerAccessToken: accessToken,
+              email: customerEmail,
+            },
+          },
+        },
+      });
+
+      if (cartData?.cartCreate?.userErrors?.length > 0) {
+        const errorMessages = cartData.cartCreate.userErrors
+          .map((err: { message: string }) => err.message)
+          .join(', ');
+        setCheckoutError(errorMessages);
+        setIsCheckingOut(false);
+        return;
+      }
+
+      const cartId = cartData?.cartCreate?.cart?.id;
+      let checkoutUrl = cartData?.cartCreate?.cart?.checkoutUrl;
+
+      // Get customer's first name and last name (prioritize customer info over address)
+      const customerFirstName = customerData?.customer?.firstName || '';
+      const customerLastName = customerData?.customer?.lastName || '';
+      const customerPhone = customerData?.customer?.phone || '';
+
+      // Always try to add delivery address with customer info (even if no saved address)
+      if (cartId && (defaultAddress || customerFirstName || customerLastName)) {
+        try {
+          const { data: addressData } = await addDeliveryAddress({
+            variables: {
+              cartId: cartId,
+              addresses: [
+                {
+                  address: {
+                    deliveryAddress: {
+                      // Always use customer's name first, fallback to address name
+                      firstName: customerFirstName || defaultAddress?.firstName || '',
+                      lastName: customerLastName || defaultAddress?.lastName || '',
+                      // Use address fields if available
+                    //   address1: defaultAddress?.address1 || '',
+                    //   address2: defaultAddress?.address2 || '',
+                    //   city: defaultAddress?.city || '',
+                    //   provinceCode: defaultAddress?.provinceCode || '',
+                    //   countryCode: defaultAddress?.countryCodeV2 || 'US',
+                    //   zip: defaultAddress?.zip || '',
+                    //   phone: defaultAddress?.phone || customerPhone || '',
+                    },
+                  },
+                  selected: true, // Pre-select this address
+                },
+              ],
+            },
+          });
+
+          // Use the updated checkout URL if available
+          if (addressData?.cartDeliveryAddressesAdd?.cart?.checkoutUrl) {
+            checkoutUrl = addressData.cartDeliveryAddressesAdd.cart.checkoutUrl;
+          }
+
+          // Log any address errors but don't block checkout
+          if (addressData?.cartDeliveryAddressesAdd?.userErrors?.length > 0) {
+            console.warn('Address prefill warning:', addressData.cartDeliveryAddressesAdd.userErrors);
+          }
+        } catch (addressErr) {
+          // Don't block checkout if address prefill fails, just log it
+          console.warn('Could not prefill address:', addressErr);
+        }
+      }
+
+      if (checkoutUrl) {
+        // Redirect to Shopify checkout with customer info prefilled
+        window.location.href = checkoutUrl;
+      } else {
+        setCheckoutError('Failed to create checkout. Please try again.');
+        setIsCheckingOut(false);
+      }
+    } catch (err) {
+      console.error('Checkout error:', err);
+      setCheckoutError('An error occurred during checkout. Please try again.');
+      setIsCheckingOut(false);
+    }
+  }, [selectedVariantId, accessToken, createCart, addDeliveryAddress, customerData]);
 
   // Set default selected variant when product loads
   React.useEffect(() => {
@@ -280,7 +437,6 @@ export function ProductDetailsPage() {
   const selectedPrice = selectedVariant 
     ? formatPrice(selectedVariant.price.amount, selectedVariant.price.currencyCode)
     : minPrice;
-  const checkoutUrl = selectedVariantId ? getCheckoutUrl(selectedVariantId) : '#';
 
   // Clean HTML from description
   const cleanDescription = product.description?.replace(/<[^>]*>/g, '') || '';
@@ -431,27 +587,38 @@ export function ProductDetailsPage() {
                   </div>
                 )}
 
+                {/* Checkout Error Message */}
+                {checkoutError && (
+                  <div className="mb-4 px-4 py-3 bg-red-50 border-2 border-red-200 rounded-lg flex items-center gap-2">
+                    <AlertCircle className="w-5 h-5 text-red-600 flex-shrink-0" />
+                    <span className="text-red-600 text-sm font-medium">{checkoutError}</span>
+                  </div>
+                )}
+
                 {/* Checkout Button */}
-                <motion.a
-                  href={checkoutUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  whileHover={{ scale: 1.02, boxShadow: '0 20px 40px rgba(37, 99, 235, 0.3)' }}
-                  whileTap={{ scale: 0.98 }}
+                <motion.button
+                  onClick={handleCheckout}
+                  disabled={!isAvailable || isCheckingOut}
+                  whileHover={isAvailable && !isCheckingOut ? { scale: 1.02, boxShadow: '0 20px 40px rgba(37, 99, 235, 0.3)' } : {}}
+                  whileTap={isAvailable && !isCheckingOut ? { scale: 0.98 } : {}}
                   className={`w-full py-4 px-6 rounded-xl font-semibold text-lg text-center transition-all flex items-center justify-center gap-3 mb-6 ${
-                    isAvailable
+                    isAvailable && !isCheckingOut
                       ? 'bg-blue-600 text-white hover:bg-blue-700 shadow-lg shadow-blue-600/30'
                       : 'bg-slate-300 text-slate-500 cursor-not-allowed'
                   }`}
-                  onClick={(e) => {
-                    if (!isAvailable) {
-                      e.preventDefault();
-                    }
-                  }}
                 >
-                  <ShoppingCart className="w-6 h-6" />
-                  Checkout Now
-                </motion.a>
+                  {isCheckingOut ? (
+                    <>
+                      <Loader2 className="w-6 h-6 animate-spin" />
+                      Creating Checkout...
+                    </>
+                  ) : (
+                    <>
+                      <ShoppingCart className="w-6 h-6" />
+                      Checkout Now
+                    </>
+                  )}
+                </motion.button>
 
                 {/* Collapsible Sections - Improved UI */}
                 <div className="mt-6 pt-6 border-t-2 border-slate-200 space-y-3">
