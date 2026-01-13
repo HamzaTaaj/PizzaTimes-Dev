@@ -27,6 +27,14 @@ export default defineConfig({
           'X-Shopify-Access-Token': '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',
         },
       },
+      '/api/support-email': {
+        target: 'http://localhost:3001',
+        changeOrigin: true,
+      },
+      '/api/contact-submit': {
+        target: 'http://localhost:3001',
+        changeOrigin: true,
+      },
     },
   },
 });

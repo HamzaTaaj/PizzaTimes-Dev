@@ -68,6 +68,19 @@ export function SupportTicketPage() {
     return Object.keys(newErrors).length === 0;
   };
 
+  // Convert file to base64
+  const fileToBase64 = (file: File): Promise<string> => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => {
+        const base64String = (reader.result as string).split(',')[1]; // Remove data:image/jpeg;base64, prefix
+        resolve(base64String);
+      };
+      reader.onerror = (error) => reject(error);
+    });
+  };
+
   // Handle form submission
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -76,34 +89,74 @@ export function SupportTicketPage() {
       return;
     }
 
+    // Check if user is logged in
+    if (!customer?.email) {
+      setErrors({ submit: 'You must be logged in to submit a support ticket.' });
+      return;
+    }
+
     setIsSubmitting(true);
+    setErrors({});
 
     try {
-      // TODO: Integrate with Zendesk API
-      // For now, simulate API call
-      await new Promise(resolve => setTimeout(resolve, 2000));
+      // Prepare requester name
+      const requesterName = customer.firstName && customer.lastName 
+        ? `${customer.firstName} ${customer.lastName}` 
+        : customer.email.split('@')[0];
 
-      // Prepare ticket data (ready for Zendesk integration)
-      const ticketData = {
-        subject: formData.subject,
-        category: formData.category,
-        priority: formData.priority,
-        description: formData.description,
-        customerEmail: customer?.email || '',
-        customerName: customer?.firstName && customer?.lastName 
-          ? `${customer.firstName} ${customer.lastName}` 
-          : customer?.email?.split('@')[0] || 'Customer',
-        attachment: formData.attachment ? {
-          name: formData.attachment.name,
-          size: formData.attachment.size,
-          type: formData.attachment.type,
-        } : null,
-        timestamp: new Date().toISOString(),
+      // Format description with category
+      const description = `Category: ${formData.category || 'N/A'}\n\n${formData.description}`;
+
+      // Prepare Zendesk request payload
+      const requestData = {
+        request: {
+          subject: formData.subject,
+          comment: {
+            body: description,
+          },
+          requester: {
+            name: requesterName,
+            email: customer.email,
+          },
+        },
       };
 
-      console.log('Ticket data ready for Zendesk:', ticketData);
+      // Submit directly to Zendesk API
+      const response = await fetch('https://highsierravendingcoffee.zendesk.com/api/v2/requests.json', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(requestData),
+      });
 
-      // Simulate success
+      // Handle response
+      const responseText = await response.text();
+      
+      if (!response.ok) {
+        let errorMessage = 'Failed to submit support ticket. Please try again.';
+        try {
+          if (responseText) {
+            const errorData = JSON.parse(responseText);
+            errorMessage = errorData.error?.message || errorData.description || errorMessage;
+          }
+        } catch (parseError) {
+          console.error('Failed to parse error response:', parseError);
+        }
+        throw new Error(errorMessage);
+      }
+
+      // Parse success response
+      let result;
+      try {
+        result = responseText ? JSON.parse(responseText) : {};
+      } catch (parseError) {
+        console.error('Failed to parse success response:', parseError);
+        throw new Error('Ticket submitted but failed to confirm. Please check your email.');
+      }
+
+      // Success
+      console.log('Ticket created successfully:', result);
       setIsSubmitted(true);
       
       // Reset form after 3 seconds
@@ -118,9 +171,11 @@ export function SupportTicketPage() {
         });
       }, 3000);
 
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error submitting ticket:', error);
-      setErrors({ submit: 'Failed to submit ticket. Please try again.' });
+      setErrors({ 
+        submit: error.message || 'Failed to submit ticket. Please try again later.' 
+      });
     } finally {
       setIsSubmitting(false);
     }
@@ -312,6 +367,18 @@ export function SupportTicketPage() {
                 {formData.description.length} characters (minimum 10 required)
               </p>
             </div>
+
+            {/* Attachment Error */}
+            {errors.attachment && (
+              <motion.div
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="p-4 bg-red-50 border border-red-200 rounded-lg flex items-start gap-3"
+              >
+                <AlertCircle className="w-5 h-5 text-red-600 flex-shrink-0 mt-0.5" />
+                <p className="text-red-700 text-sm">{errors.attachment}</p>
+              </motion.div>
+            )}
 
             {/* Attachment */}
             <div>

@@ -302,20 +302,22 @@ export function Header() {
                     onMouseLeave={() => setResourcesOpen(false)}
                     className="absolute top-full left-0 mt-2 w-56 bg-white border border-slate-200 rounded-lg shadow-xl overflow-hidden"
                   >
-                    <motion.button
-                      onClick={() => {
-                        navigate("/manual");
-                        setResourcesOpen(false);
-                      }}
-                      whileHover={{ 
-                        x: 4,
-                        backgroundColor: "#f1f5f9"
-                      }}
-                      whileTap={{ scale: 0.98 }}
-                      className="block w-full text-left px-4 py-3 text-slate-700 transition-all hover:text-blue-600"
-                    >
-                      User Manual
-                    </motion.button>
+                    {isAuthenticated && (
+                      <motion.button
+                        onClick={() => {
+                          navigate("/manual");
+                          setResourcesOpen(false);
+                        }}
+                        whileHover={{ 
+                          x: 4,
+                          backgroundColor: "#f1f5f9"
+                        }}
+                        whileTap={{ scale: 0.98 }}
+                        className="block w-full text-left px-4 py-3 text-slate-700 transition-all hover:text-blue-600"
+                      >
+                        User Manual
+                      </motion.button>
+                    )}
                     <motion.button
                       onClick={() => {
                         navigate("/blog");
@@ -638,21 +640,23 @@ export function Header() {
                         className="overflow-hidden"
                       >
                         <div className="pl-8 space-y-2 pt-2">
-                          <motion.button
-                            onClick={() => {
-                              navigate("/manual");
-                              setMobileMenuOpen(false);
-                              setMobileResourcesOpen(false);
-                            }}
-                            whileHover={{ 
-                              x: 4,
-                              backgroundColor: "#f1f5f9",
-                              color: "#2563eb"
-                            }}
-                            className="block w-full text-left px-4 py-2 text-slate-600 rounded-lg transition-all text-sm"
-                          >
-                            User Manual
-                          </motion.button>
+                          {isAuthenticated && (
+                            <motion.button
+                              onClick={() => {
+                                navigate("/manual");
+                                setMobileMenuOpen(false);
+                                setMobileResourcesOpen(false);
+                              }}
+                              whileHover={{ 
+                                x: 4,
+                                backgroundColor: "#f1f5f9",
+                                color: "#2563eb"
+                              }}
+                              className="block w-full text-left px-4 py-2 text-slate-600 rounded-lg transition-all text-sm"
+                            >
+                              User Manual
+                            </motion.button>
+                          )}
                           <motion.button
                             onClick={() => {
                               navigate("/blog");
