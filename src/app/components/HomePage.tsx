@@ -2,7 +2,7 @@ import { motion, useInView } from 'motion/react';
 import { useNavigate } from 'react-router-dom';
 import { Zap, Clock, Shield, TrendingUp, ArrowRight, Building2, DollarSign, Users, Globe, BarChart3, Award, CheckCircle2, Calendar } from 'lucide-react';
 import { ImageWithFallback } from './figma/ImageWithFallback';
-import vend1Image from '@/assets/machine2-removebg-preview.png';
+import vend1Image from '@/assets/vend1.png';
 import { useRef, useEffect, useState } from 'react';
 
 // Letter-by-letter animation component
@@ -167,7 +167,7 @@ export function HomePage() {
     },
     {
       icon: Shield,
-      title: 'Enterprise Security',
+      title: 'Advanced Security',
       description: 'Bank-level encryption and compliance with industry standards for data protection'
     },
     {
@@ -188,7 +188,7 @@ export function HomePage() {
       icon: Users,
       title: 'Client Satisfaction',
       value: '98%',
-      description: 'Enterprise clients rate service excellence as outstanding'
+      description: 'Clients rate service excellence as outstanding'
     },
     {
       icon: Globe,
@@ -200,7 +200,7 @@ export function HomePage() {
       icon: BarChart3,
       title: 'Revenue Growth',
       value: '45%',
-      description: 'Average monthly revenue increase for enterprise deployments'
+      description: 'Average monthly revenue increase for deployments'
     }
   ];
 
@@ -381,7 +381,7 @@ export function HomePage() {
             className="text-center mb-16"
           >
             <h2 className="text-4xl md:text-5xl mb-4 font-bold text-slate-900">
-              Enterprise <span className="text-blue-600">Capabilities</span>
+            Business <span className="text-blue-600">Solutions</span>
             </h2>
             <p className="text-xl text-slate-600 max-w-2xl mx-auto">
               Advanced technology solutions designed for operational excellence
@@ -439,7 +439,8 @@ export function HomePage() {
               Proven <span className="text-blue-600">Business Results</span>
             </h2>
             <p className="text-xl text-slate-600 max-w-2xl mx-auto">
-              Measurable outcomes from enterprise deployments nationwide
+            Measurable outcomes from deployments nationwide, from startups to large organizations
+
             </p>
           </motion.div>
 

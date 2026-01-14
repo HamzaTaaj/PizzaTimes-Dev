@@ -20,13 +20,6 @@ export function Header() {
   // Helper function to check if current path matches
   const isActive = (path: string) => location.pathname === path;
 
-  // Helper function to check if cart should be shown (shop page or product pages)
-  const shouldShowCart = () => {
-    return location.pathname === "/shop" || 
-           location.pathname === "/product" || 
-           location.pathname.startsWith("/shop/");
-  };
-
   return (
     <header className="fixed top-0 left-0 right-0 z-50 border-b border-slate-200 backdrop-blur-xl bg-white/95 shadow-sm">
       <nav className="w-full px-4 sm:px-6 lg:px-8">
@@ -344,8 +337,8 @@ export function Header() {
               </AnimatePresence>
             </div>
 
-            {/* Cart Icon - Show on shop page and product pages */}
-            {isAuthenticated && shouldShowCart() && (
+            {/* Cart Icon - Only show on shop page */}
+            {isAuthenticated && location.pathname === "/shop" && (
               <motion.button
                 onClick={() => navigate('/cart')}
                 whileHover={{ scale: 1.05 }}
@@ -685,8 +678,8 @@ export function Header() {
                   </AnimatePresence>
                 </div>
                 
-                    {/* Cart Icon - Mobile - Show on shop page and product pages */}
-                    {isAuthenticated && shouldShowCart() && (
+                    {/* Cart Icon - Mobile - Only show on shop page */}
+                    {isAuthenticated && location.pathname === "/shop" && (
                       <motion.button
                         onClick={() => {
                           navigate('/cart');

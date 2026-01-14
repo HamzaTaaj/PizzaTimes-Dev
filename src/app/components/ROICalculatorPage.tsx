@@ -148,18 +148,6 @@ export function ROICalculatorPage() {
 
                 <div>
                   <label className="block text-sm mb-2 text-slate-700 font-medium">
-                    Machine Cost ($)
-                  </label>
-                  <input
-                    type="number"
-                    value={inputs.machineCost}
-                    onChange={(e) => handleInputChange('machineCost', parseFloat(e.target.value) || 0)}
-                    className="w-full px-4 py-3 bg-white border-2 border-slate-200 rounded-lg focus:outline-none focus:border-blue-600 transition-colors text-slate-900"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-sm mb-2 text-slate-700 font-medium">
                     Monthly Rent ($)
                   </label>
                   <input

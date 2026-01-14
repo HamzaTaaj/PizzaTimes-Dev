@@ -1,13 +1,14 @@
+import React, { useState, useRef, useEffect } from 'react';
 import { motion, useInView } from 'motion/react';
 import { useNavigate } from 'react-router-dom';
-import { useState, useRef, useEffect } from 'react';
 import { 
   ArrowRight, CheckCircle2, TrendingUp, Clock, DollarSign, Users, Zap, Shield, 
   Send, User, Mail, Phone, Cpu, Thermometer, Gauge, Wifi, Wrench, Package, 
-  Calculator, Calendar, X, CheckCircle, AlertCircle
+  Calculator, Calendar, X, CheckCircle, AlertCircle, Lock, MapPin, Eye, EyeOff, Loader2
 } from 'lucide-react';
 import { ImageWithFallback } from './figma/ImageWithFallback';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogClose } from './ui/dialog';
+import { useAuth } from '../context/AuthContext';
 import vend1Image from '@/assets/vend1.png';
 import bellHowellLogo from '@/assets/BellAndHowell2.svg';
 
@@ -98,9 +99,8 @@ function AnimatedCounter({ value, suffix = '', prefix = '', duration = 2 }: { va
   );
 }
 
-// CTA Popup Component
-function CTAPopup({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) {
-    const navigate = useNavigate();
+// Get Started Popup Component (Simple Form)
+function GetStartedPopup({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) {
     const [formData, setFormData] = useState({
       firstName: '',
       lastName: '',
@@ -108,32 +108,593 @@ function CTAPopup({ isOpen, onClose }: { isOpen: boolean; onClose: () => void })
       phone: ''
     });
   
+    const [isSubmitting, setIsSubmitting] = useState(false);
+    const [submitStatus, setSubmitStatus] = useState<{
+      type: 'success' | 'error' | null;
+      message: string;
+    }>({ type: null, message: '' });
+  
     const handleSubmit = async (e: React.FormEvent) => {
       e.preventDefault();
+      setIsSubmitting(true);
+      setSubmitStatus({ type: null, message: '' });
   
-      await submitMarketingLead(formData, 'cta-popup');
-      onClose();
-      navigate('/request-access');
+      try {
+        // Validate required fields
+        if (!formData.firstName || !formData.lastName || !formData.email || !formData.phone) {
+          throw new Error('Please fill in all required fields');
+        }
+  
+        // Submit to Shopify using the existing submitMarketingLead function
+        await submitMarketingLead(formData, 'get-started-popup');
+  
+        // Success!
+        setSubmitStatus({
+          type: 'success',
+          message: 'Thank you! Your information has been submitted successfully. We will contact you soon.',
+        });
+  
+        // Reset form
+        setFormData({
+          firstName: '',
+          lastName: '',
+          email: '',
+          phone: '',
+        });
+  
+        // Close popup after 2 seconds on success
+        setTimeout(() => {
+          onClose();
+        }, 2000);
+      } catch (error: any) {
+        console.error('Get started popup form submission error:', error);
+        setSubmitStatus({
+          type: 'error',
+          message: error.message || 'An error occurred. Please try again later.',
+        });
+      } finally {
+        setIsSubmitting(false);
+      }
     };
   
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-      setFormData({ ...formData, [e.target.name]: e.target.value });
+      setFormData({
+        ...formData,
+        [e.target.name]: e.target.value
+      });
     };
   
     return (
       <Dialog open={isOpen} onOpenChange={(o) => !o && onClose()}>
-        <DialogContent>
+        <DialogContent className="max-w-md bg-white">
           <DialogHeader>
-            <DialogTitle>Get Started Today</DialogTitle>
+            <DialogTitle className="text-2xl md:text-3xl mb-6 text-slate-900 font-bold text-center">Get Started Today</DialogTitle>
           </DialogHeader>
   
           <form onSubmit={handleSubmit} className="space-y-4">
-            <input name="firstName" required onChange={handleChange} placeholder="First Name" />
-            <input name="lastName" required onChange={handleChange} placeholder="Last Name" />
-            <input name="email" type="email" required onChange={handleChange} placeholder="Email" />
-            <input name="phone" required onChange={handleChange} placeholder="Phone" />
+            <div>
+              <label htmlFor="getstarted-firstName" className="block text-sm mb-2 text-slate-700 font-medium">
+                First Name *
+              </label>
+              <div className="relative">
+                <User className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
+                <input
+                  type="text"
+                  id="getstarted-firstName"
+                  name="firstName"
+                  value={formData.firstName}
+                  onChange={handleChange}
+                  required
+                  className="w-full pl-12 pr-4 py-3 bg-white border-2 border-slate-200 rounded-lg focus:outline-none focus:border-blue-600 transition-colors text-slate-900 placeholder-slate-400"
+                  placeholder="John"
+                />
+              </div>
+            </div>
   
-            <button type="submit">Submit</button>
+            <div>
+              <label htmlFor="getstarted-lastName" className="block text-sm mb-2 text-slate-700 font-medium">
+                Last Name *
+              </label>
+              <div className="relative">
+                <User className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
+                <input
+                  type="text"
+                  id="getstarted-lastName"
+                  name="lastName"
+                  value={formData.lastName}
+                  onChange={handleChange}
+                  required
+                  className="w-full pl-12 pr-4 py-3 bg-white border-2 border-slate-200 rounded-lg focus:outline-none focus:border-blue-600 transition-colors text-slate-900 placeholder-slate-400"
+                  placeholder="Doe"
+                />
+              </div>
+            </div>
+  
+            <div>
+              <label htmlFor="getstarted-email" className="block text-sm mb-2 text-slate-700 font-medium">
+                Email *
+              </label>
+              <div className="relative">
+                <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
+                <input
+                  type="email"
+                  id="getstarted-email"
+                  name="email"
+                  value={formData.email}
+                  onChange={handleChange}
+                  required
+                  className="w-full pl-12 pr-4 py-3 bg-white border-2 border-slate-200 rounded-lg focus:outline-none focus:border-blue-600 transition-colors text-slate-900 placeholder-slate-400"
+                  placeholder="john@example.com"
+                />
+              </div>
+            </div>
+  
+            <div>
+              <label htmlFor="getstarted-phone" className="block text-sm mb-2 text-slate-700 font-medium">
+                Phone *
+              </label>
+              <div className="relative">
+                <Phone className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
+                <input
+                  type="tel"
+                  id="getstarted-phone"
+                  name="phone"
+                  value={formData.phone}
+                  onChange={handleChange}
+                  required
+                  className="w-full pl-12 pr-4 py-3 bg-white border-2 border-slate-200 rounded-lg focus:outline-none focus:border-blue-600 transition-colors text-slate-900 placeholder-slate-400"
+                  placeholder="+1 (555) 123-4567"
+                />
+              </div>
+            </div>
+  
+            {/* Status Messages */}
+            {submitStatus.type === 'success' && (
+              <motion.div
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="p-4 bg-green-50 border-2 border-green-200 rounded-lg flex items-start gap-3"
+              >
+                <CheckCircle className="w-5 h-5 text-green-600 flex-shrink-0 mt-0.5" />
+                <p className="text-green-800 text-sm">{submitStatus.message}</p>
+              </motion.div>
+            )}
+  
+            {submitStatus.type === 'error' && (
+              <motion.div
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="p-4 bg-red-50 border-2 border-red-200 rounded-lg flex items-start gap-3"
+              >
+                <AlertCircle className="w-5 h-5 text-red-600 flex-shrink-0 mt-0.5" />
+                <p className="text-red-800 text-sm">{submitStatus.message}</p>
+              </motion.div>
+            )}
+  
+            <motion.button
+              type="submit"
+              disabled={isSubmitting}
+              whileHover={isSubmitting ? {} : { 
+                scale: 1.02,
+                boxShadow: "0 20px 40px rgba(0, 0, 0, 0.2)"
+              }}
+              whileTap={isSubmitting ? {} : { scale: 0.98 }}
+              className={`w-full py-4 rounded-lg flex items-center justify-center gap-2 font-semibold text-lg transition-colors mt-6 ${
+                isSubmitting
+                  ? 'bg-slate-400 text-white cursor-not-allowed'
+                  : 'bg-blue-600 text-white hover:bg-blue-700'
+              }`}
+            >
+              {isSubmitting ? (
+                <>
+                  <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                  Submitting...
+                </>
+              ) : (
+                <>
+                  <Send className="w-5 h-5" />
+                  Submit
+                </>
+              )}
+            </motion.button>
+          </form>
+        </DialogContent>
+      </Dialog>
+    );
+  }
+
+// Request Access Popup Component (Full Form)
+function RequestAccessPopup({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) {
+    const navigate = useNavigate();
+    const { signUp, isLoading: submitting } = useAuth();
+    
+    const [formData, setFormData] = useState({
+      firstName: '',
+      lastName: '',
+      email: '',
+      password: '',
+      confirmPassword: '',
+      company: '',
+      location: '',
+      machineCount: '',
+      role: '',
+      message: ''
+    });
+  
+    const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error' | 'email_taken'>('idle');
+    const [errorMessage, setErrorMessage] = useState('');
+    const [showPassword, setShowPassword] = useState(false);
+    const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  
+    const handleSubmit = async (e: React.FormEvent) => {
+      e.preventDefault();
+      setSubmitStatus('idle');
+      setErrorMessage('');
+
+      // Validate passwords match
+      if (formData.password !== formData.confirmPassword) {
+        setSubmitStatus('error');
+        setErrorMessage('Passwords do not match');
+        return;
+      }
+
+      // Validate password strength
+      if (formData.password.length < 8) {
+        setSubmitStatus('error');
+        setErrorMessage('Password must be at least 8 characters long');
+        return;
+      }
+
+      // Use signUp from AuthContext with all form fields
+      const result = await signUp({
+        email: formData.email,
+        password: formData.password,
+        firstName: formData.firstName,
+        lastName: formData.lastName,
+        acceptsMarketing: true,
+        // Additional business fields
+        company: formData.company,
+        location: formData.location,
+        machineCount: formData.machineCount,
+        role: formData.role,
+        message: formData.message,
+      });
+
+      if (result.success) {
+        setSubmitStatus('success');
+        // Reset form
+        setFormData({
+          firstName: '',
+          lastName: '',
+          email: '',
+          password: '',
+          confirmPassword: '',
+          company: '',
+          location: '',
+          machineCount: '',
+          role: '',
+          message: ''
+        });
+        
+        // Close popup and redirect after 2 seconds
+        setTimeout(() => {
+          onClose();
+          navigate('/dashboard');
+        }, 2000);
+      } else if (result.errorCode === 'EMAIL_TAKEN') {
+        // Email already exists - prompt sign in
+        setSubmitStatus('email_taken');
+        setErrorMessage('Please sign in to update your request details.');
+      } else {
+        setSubmitStatus('error');
+        setErrorMessage(result.error || 'Failed to create account. Please try again.');
+      }
+    };
+  
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+      setFormData({
+        ...formData,
+        [e.target.name]: e.target.value
+      });
+    };
+  
+    return (
+      <Dialog open={isOpen} onOpenChange={(o) => !o && onClose()}>
+        <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto bg-white">
+          <DialogHeader>
+            <DialogTitle className="text-2xl mb-8 text-slate-900 font-semibold">Request Access</DialogTitle>
+          </DialogHeader>
+  
+          <form onSubmit={handleSubmit} className="space-y-6">
+            {/* First Name and Last Name */}
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label htmlFor="popup-firstName" className="block text-sm mb-2 text-slate-700 font-medium">
+                  First Name *
+                </label>
+                <div className="relative">
+                  <User className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
+                  <input
+                    type="text"
+                    id="popup-firstName"
+                    name="firstName"
+                    value={formData.firstName}
+                    onChange={handleChange}
+                    required
+                    className="w-full pl-12 pr-4 py-3 bg-white border-2 border-slate-200 rounded-lg focus:outline-none focus:border-blue-600 transition-colors text-slate-900 placeholder-slate-400"
+                    placeholder="John"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label htmlFor="popup-lastName" className="block text-sm mb-2 text-slate-700 font-medium">
+                  Last Name *
+                </label>
+                <div className="relative">
+                  <User className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
+                  <input
+                    type="text"
+                    id="popup-lastName"
+                    name="lastName"
+                    value={formData.lastName}
+                    onChange={handleChange}
+                    required
+                    className="w-full pl-12 pr-4 py-3 bg-white border-2 border-slate-200 rounded-lg focus:outline-none focus:border-blue-600 transition-colors text-slate-900 placeholder-slate-400"
+                    placeholder="Doe"
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* Email and Company */}
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label htmlFor="popup-email" className="block text-sm mb-2 text-slate-700 font-medium">
+                  Email Address *
+                </label>
+                <div className="relative">
+                  <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
+                  <input
+                    type="email"
+                    id="popup-email"
+                    name="email"
+                    value={formData.email}
+                    onChange={handleChange}
+                    required
+                    className="w-full pl-12 pr-4 py-3 bg-white border-2 border-slate-200 rounded-lg focus:outline-none focus:border-blue-600 transition-colors text-slate-900 placeholder-slate-400"
+                    placeholder="john@example.com"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label htmlFor="popup-company" className="block text-sm mb-2 text-slate-700 font-medium">
+                  Company *
+                </label>
+                <div className="relative">
+                  <User className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
+                  <input
+                    type="text"
+                    id="popup-company"
+                    name="company"
+                    value={formData.company}
+                    onChange={handleChange}
+                    required
+                    className="w-full pl-12 pr-4 py-3 bg-white border-2 border-slate-200 rounded-lg focus:outline-none focus:border-blue-600 transition-colors text-slate-900 placeholder-slate-400"
+                    placeholder="Company Name"
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* Password Fields */}
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label htmlFor="popup-password" className="block text-sm mb-2 text-slate-700 font-medium">
+                  Password *
+                </label>
+                <div className="relative">
+                  <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
+                  <input
+                    type={showPassword ? "text" : "password"}
+                    id="popup-password"
+                    name="password"
+                    value={formData.password}
+                    onChange={handleChange}
+                    required
+                    minLength={8}
+                    className="w-full pl-12 pr-12 py-3 bg-white border-2 border-slate-200 rounded-lg focus:outline-none focus:border-blue-600 transition-colors text-slate-900 placeholder-slate-400"
+                    placeholder="Min. 8 characters"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 transition-colors"
+                  >
+                    {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                  </button>
+                </div>
+              </div>
+
+              <div>
+                <label htmlFor="popup-confirmPassword" className="block text-sm mb-2 text-slate-700 font-medium">
+                  Confirm Password *
+                </label>
+                <div className="relative">
+                  <Lock className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
+                  <input
+                    type={showConfirmPassword ? "text" : "password"}
+                    id="popup-confirmPassword"
+                    name="confirmPassword"
+                    value={formData.confirmPassword}
+                    onChange={handleChange}
+                    required
+                    minLength={8}
+                    className="w-full pl-12 pr-12 py-3 bg-white border-2 border-slate-200 rounded-lg focus:outline-none focus:border-blue-600 transition-colors text-slate-900 placeholder-slate-400"
+                    placeholder="Confirm password"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                    className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 transition-colors"
+                  >
+                    {showConfirmPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                  </button>
+                </div>
+              </div>
+            </div>
+            
+            {/* Password Requirements Hint */}
+            <p className="text-xs text-slate-500 -mt-2">
+              Password must be at least 8 characters long
+            </p>
+
+            {/* Location */}
+            <div>
+              <label htmlFor="popup-location" className="block text-sm mb-2 text-slate-700 font-medium">
+                Location
+              </label>
+              <div className="relative">
+                <MapPin className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
+                <input
+                  type="text"
+                  id="popup-location"
+                  name="location"
+                  value={formData.location}
+                  onChange={handleChange}
+                  className="w-full pl-12 pr-4 py-3 bg-white border-2 border-slate-200 rounded-lg focus:outline-none focus:border-blue-600 transition-colors text-slate-900 placeholder-slate-400"
+                  placeholder="City, Country"
+                />
+              </div>
+            </div>
+
+            {/* Machine Count and Role */}
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label htmlFor="popup-machineCount" className="block text-sm mb-2 text-slate-700 font-medium">
+                  How many machines are you interested in?
+                </label>
+                <input
+                  type="number"
+                  id="popup-machineCount"
+                  name="machineCount"
+                  value={formData.machineCount}
+                  onChange={handleChange}
+                  min="1"
+                  className="w-full px-4 py-3 bg-white border-2 border-slate-200 rounded-lg focus:outline-none focus:border-blue-600 transition-colors text-slate-900 placeholder-slate-400"
+                />
+              </div>
+
+              <div>
+                <label htmlFor="popup-role" className="block text-sm mb-2 text-slate-700 font-medium">
+                  I am a...
+                </label>
+                <select
+                  id="popup-role"
+                  name="role"
+                  value={formData.role}
+                  onChange={handleChange}
+                  className="w-full px-4 py-3 bg-white border-2 border-slate-200 rounded-lg focus:outline-none focus:border-blue-600 transition-colors text-slate-900"
+                >
+                  <option value="">Select an option</option>
+                  <option value="Operator">Operator</option>
+                  <option value="Restaurant Owner">Restaurant Owner</option>
+                  <option value="Site/Operations Manager">Site/Operations Manager</option>
+                  <option value="Cafeteria Manager">Cafeteria Manager</option>
+                  <option value="Interested in Providing Info to a Location">Interested in Providing Info to a Location</option>
+                  <option value="New Business">New Business</option>
+                  <option value="Other">Other</option>
+                </select>
+              </div>
+            </div>
+
+            {/* Message */}
+            <div>
+              <label htmlFor="popup-message" className="block text-sm mb-2 text-slate-700 font-medium">
+                Anything else you'd like us to know about your request?
+              </label>
+              <textarea
+                id="popup-message"
+                name="message"
+                value={formData.message}
+                onChange={handleChange}
+                rows={4}
+                className="w-full px-4 py-3 bg-white border-2 border-slate-200 rounded-lg focus:outline-none focus:border-blue-600 transition-colors text-slate-900 placeholder-slate-400 resize-none"
+              />
+            </div>
+
+            {/* Status Messages */}
+            {submitStatus === 'success' && (
+              <motion.div
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="p-4 bg-green-50 border-2 border-green-200 rounded-lg"
+              >
+                <div className="flex items-center gap-2 text-green-700">
+                  <CheckCircle2 className="w-5 h-5" />
+                  <p className="font-medium">Request submitted successfully! We'll be in touch soon.</p>
+                </div>
+              </motion.div>
+            )}
+
+            {submitStatus === 'email_taken' && (
+              <motion.div
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="p-4 bg-amber-50 border-2 border-amber-200 rounded-lg"
+              >
+                <div className="text-amber-800">
+                  <p className="font-medium mb-2">An account with this email already exists.</p>
+                  <p className="text-sm mb-3">{errorMessage}</p>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      onClose();
+                      navigate('/login');
+                    }}
+                    className="inline-flex items-center gap-2 px-4 py-2 bg-amber-600 hover:bg-amber-700 text-white rounded-lg font-medium transition-colors"
+                  >
+                    Sign In to Your Account
+                  </button>
+                </div>
+              </motion.div>
+            )}
+
+            {submitStatus === 'error' && (
+              <motion.div
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="p-4 bg-red-50 border-2 border-red-200 rounded-lg"
+              >
+                <p className="text-red-700 font-medium">{errorMessage}</p>
+              </motion.div>
+            )}
+
+            {/* Submit Button */}
+            <motion.button
+              type="submit"
+              disabled={submitting}
+              whileHover={!submitting ? {
+                scale: 1.02,
+                boxShadow: '0 10px 30px rgba(37, 99, 235, 0.3)'
+              } : {}}
+              whileTap={!submitting ? { scale: 0.98 } : {}}
+              className={`w-full py-4 rounded-lg shadow-lg shadow-blue-600/20 transition-all font-semibold flex items-center justify-center gap-2 ${
+                submitting 
+                  ? 'bg-blue-400 cursor-not-allowed' 
+                  : 'bg-blue-600 hover:bg-blue-700 text-white'
+              }`}
+            >
+              {submitting ? (
+                <>
+                  <Loader2 className="w-5 h-5 animate-spin" />
+                  Submitting...
+                </>
+              ) : (
+                'Send Request'
+              )}
+            </motion.button>
           </form>
         </DialogContent>
       </Dialog>
@@ -143,7 +704,9 @@ function CTAPopup({ isOpen, onClose }: { isOpen: boolean; onClose: () => void })
 
 export function MarketingPage() {
   const navigate = useNavigate();
-  const [showCTAPopup, setShowCTAPopup] = useState(false);
+  const { isAuthenticated } = useAuth();
+  const [showGetStartedPopup, setShowGetStartedPopup] = useState(false);
+  const [showRequestAccessPopup, setShowRequestAccessPopup] = useState(false);
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
@@ -723,17 +1286,19 @@ export function MarketingPage() {
               Join successful businesses already using Pizza Anytime to increase their revenue
             </p>
             <div className="flex flex-wrap gap-4 justify-center">
-              <motion.button
-                whileHover={{ 
-                  scale: 1.05,
-                  boxShadow: "0 20px 40px rgba(0, 0, 0, 0.3)"
-                }}
-                whileTap={{ scale: 0.95 }}
-                onClick={() => setShowCTAPopup(true)}
-                className="px-10 py-5 bg-white text-blue-600 rounded-lg text-lg font-semibold hover:bg-blue-50 transition-colors"
-              >
-                Request Access Now
-              </motion.button>
+              {!isAuthenticated && (
+                <motion.button
+                  whileHover={{ 
+                    scale: 1.05,
+                    boxShadow: "0 20px 40px rgba(0, 0, 0, 0.3)"
+                  }}
+                  whileTap={{ scale: 0.95 }}
+                  onClick={() => setShowRequestAccessPopup(true)}
+                  className="px-10 py-5 bg-white text-blue-600 rounded-lg text-lg font-semibold hover:bg-blue-50 transition-colors"
+                >
+                  Request Access Now
+                </motion.button>
+              )}
               <motion.button
                 whileHover={{ 
                   scale: 1.05
@@ -1131,15 +1696,17 @@ export function MarketingPage() {
                 </div>
               </div>
 
-              <motion.button
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
-                onClick={() => setShowCTAPopup(true)}
-                className="w-full px-8 py-4 bg-blue-600 text-white rounded-lg flex items-center justify-center gap-2 font-semibold hover:bg-blue-700 transition-colors text-lg"
-              >
-                Get Started
-                <ArrowRight className="w-5 h-5" />
-              </motion.button>
+              {!isAuthenticated && (
+                <motion.button
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  onClick={() => setShowGetStartedPopup(true)}
+                  className="w-full px-8 py-4 bg-blue-600 text-white rounded-lg flex items-center justify-center gap-2 font-semibold hover:bg-blue-700 transition-colors text-lg"
+                >
+                  Get Started
+                  <ArrowRight className="w-5 h-5" />
+                </motion.button>
+              )}
             </motion.div>
           </div>
         </div>
@@ -1188,24 +1755,27 @@ export function MarketingPage() {
             <p className="text-xl text-blue-50 mb-8">
               More advanced technology. A more flexible business model. The lowest cost of entry in the category. That's why smart operators choose Pizza Anytime. Ready to turn unused floor space into reliable revenue? Let's get baking.
             </p>
-            <motion.button
-              whileHover={{ 
-                scale: 1.05,
-                boxShadow: "0 20px 40px rgba(37, 99, 235, 0.4)"
-              }}
-              whileTap={{ scale: 0.95 }}
-              onClick={() => setShowCTAPopup(true)}
-              className="px-12 py-5 bg-white text-blue-600 rounded-lg text-lg font-semibold hover:bg-blue-50 transition-colors inline-flex items-center gap-2"
-            >
-              Get Started Now
-              <ArrowRight className="w-5 h-5" />
-            </motion.button>
+            {!isAuthenticated && (
+              <motion.button
+                whileHover={{ 
+                  scale: 1.05,
+                  boxShadow: "0 20px 40px rgba(37, 99, 235, 0.4)"
+                }}
+                whileTap={{ scale: 0.95 }}
+                onClick={() => setShowGetStartedPopup(true)}
+                className="px-12 py-5 bg-white text-blue-600 rounded-lg text-lg font-semibold hover:bg-blue-50 transition-colors inline-flex items-center gap-2"
+              >
+                Get Started Now
+                <ArrowRight className="w-5 h-5" />
+              </motion.button>
+            )}
           </motion.div>
         </div>
       </section>
 
-      {/* CTA Popup */}
-      <CTAPopup isOpen={showCTAPopup} onClose={() => setShowCTAPopup(false)} />
+      {/* Popups */}
+      <GetStartedPopup isOpen={showGetStartedPopup} onClose={() => setShowGetStartedPopup(false)} />
+      <RequestAccessPopup isOpen={showRequestAccessPopup} onClose={() => setShowRequestAccessPopup(false)} />
     </div>
   );
 }

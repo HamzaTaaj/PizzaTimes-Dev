@@ -68,6 +68,54 @@ export function CompanyPage() {
         </div>
       </section>
 
+ {/* Our Story Section */}
+ <section className="relative py-24 bg-white">
+        {/* Curved Top Wave Design */}
+        <div className="absolute top-0 left-0 right-0 z-0">
+          <svg className="w-full h-24" viewBox="0 0 1440 120" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+            <path d="M0 0L60 15C120 30 240 60 360 75C480 90 600 90 720 82.5C840 75 960 60 1080 52.5C1200 45 1320 45 1380 45L1440 45V0H1380C1320 0 1200 0 1080 0C960 0 840 0 720 0C600 0 480 0 360 0C240 0 120 0 60 0H0Z" fill="#f8fafc"/>
+          </svg>
+        </div>
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="text-center mb-12"
+          >
+            <h2 className="text-4xl md:text-5xl mb-4 font-bold text-slate-900">
+              Our <span className="text-blue-600">Story</span>
+            </h2>
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.1 }}
+            className="prose prose-lg max-w-none"
+          >
+            <p className="text-slate-700 text-lg leading-relaxed mb-6">
+              Our company was formed in response to a challenge we saw firsthand across the gaming industry: persistent labor shortages that did not fully recover following COVID. This was especially evident during overnight and late-night hours, when maintaining reliable food service became increasingly difficult for many operators.
+            </p>
+            <p className="text-slate-700 text-lg leading-relaxed mb-6">
+              In searching for a practical solution, our founder evaluated several existing pizza vending and automated food programs. While these offerings showed potential, none fully addressed the needs of operators in real-world environments. Pricing structures were restrictive, technology was inflexible, support was limited, and private labeling options were often secondary. Most solutions appeared to be designed around the manufacturer rather than the operator.
+            </p>
+            <p className="text-slate-700 text-lg leading-relaxed mb-6">
+              As a result, we set out to build a program that approached automation differently.
+            </p>
+            <p className="text-slate-700 text-lg leading-relaxed mb-6">
+              From the beginning, our focus has been on creating an operator-centric solution. That means competitive, transparent pricing; strong warranties; responsive support; flexible technology; and straightforward private labeling that allows operators to align the equipment with their own brand. The goal was not to replace staff, but to provide a reliable way to serve guests during the hours when staffing is most difficult.
+            </p>
+            <p className="text-slate-700 text-lg leading-relaxed mb-6">
+              Today, we work with operators in gaming, hospitality, and other high-traffic environments who need dependable, scalable food service without added operational complexity. Our approach is rooted in practicality, predictability, and long-term sustainability.
+            </p>
+            <p className="text-slate-700 text-lg leading-relaxed">
+              We believe automation should support operators—not complicate their business—and that principle continues to guide everything we do.
+            </p>
+          </motion.div>
+        </div>
+      </section>
       {/* Six Points Section */}
       <section className="relative py-24 bg-white">
         {/* Curved Top Wave Design */}

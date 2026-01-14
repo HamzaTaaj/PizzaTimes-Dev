@@ -61,12 +61,12 @@ function AnimatedCounter({ value, suffix = '', prefix = '', duration = 2 }: { va
 export function ProductPage() {
   const navigate = useNavigate();
   const specs = [
-    { label: 'Dimensions', value: '72" H × 48" W × 36" D', position: 'left-top' },
-    { label: 'Weight', value: '850 lbs', position: 'left-middle' },
-    { label: 'Power', value: '220V / 20A', position: 'left-bottom' },
+    { label: 'Dimensions', value: '71" L × 38" W × 89" H', position: 'left-top' },
+    { label: 'Weight', value: '1,433 lbs', position: 'left-middle' },
+    { label: 'Power', value: ' 208V / 40A (8,700W)', position: 'left-bottom' },
     { label: 'Capacity', value: '69 pizzas', position: 'right-top' },
-    { label: 'Cook Time', value: '2-3 minutes', position: 'right-middle' },
-    { label: 'Storage Temp', value: 'Min 20°F', position: 'right-bottom' }
+    { label: 'Screen Size', value: '55 inches', position: 'right-middle' },
+    { label: 'Pizza Size', value: '12 inches', position: 'right-bottom' }
   ];
 
   const features = [
@@ -253,9 +253,9 @@ export function ProductPage() {
               {/* Dimension Cards */}
               <div className="grid grid-cols-3 gap-4">
                 {[
-                  { value: '72"', label: 'Height' },
-                  { value: '48"', label: 'Width' },
-                  { value: '36"', label: 'Depth' }
+                  { value: '89"', label: 'Height' },
+                  { value: '38"', label: 'Width' },
+                  { value: '71"', label: 'Length' }
                 ].map((dimension, index) => (
                   <motion.div
                     key={index}
@@ -426,8 +426,10 @@ export function ProductPage() {
                 style={{ perspective: "1000px" }}
                 className="text-xl text-slate-600 mb-8 leading-relaxed"
               >
-                The machine is engineered for serious, scalable performance. A 69-pizza capacity accommodates both frozen and refrigerated inventory, giving you true menu flexibility and longer vending windows. Our dual-mode oven combines convection for golden crusts with microwave speed for consistent center heat—delivering a hot, restaurant-quality pizza in about three minutes.
-              </motion.p>
+The machine is engineered for serious, scalable performance. A 69-pizza capacity accommodates both frozen and refrigerated inventory, giving you true menu flexibility and longer vending windows. Our dual-mode oven combines convection for golden crusts with microwave speed for consistent center heat—delivering a hot, restaurant-quality pizza in about three minutes. Supports both frozen and refrigerated storage with temperature range of 33.8 – 42.8°F for refrigeration and up to 662°F for oven temperature.
+
+
+               </motion.p>
 
               {/* Capacity Card */}
               <motion.div
@@ -442,7 +444,7 @@ export function ProductPage() {
                   <AnimatedCounter value={69} duration={2} /> Pizzas
                 </div>
                 <p className="text-slate-700 text-lg leading-relaxed">
-                  Maximum storage capacity in the refrigeration unit for continuous service. Storage temperature: Minimum 20°F.
+                Maximum storage capacity in the refrigeration unit for continuous service. Refrigerator temperature: 33.8 – 42.8°F. Oven temperature: Up to 662°F
                 </p>
               </motion.div>
             </motion.div>
@@ -866,6 +868,75 @@ export function ProductPage() {
           </motion.div>
         </div>
       </section>
+
+       {/* 3D Rendering Section */}
+       <section className="relative py-24 bg-slate-50">
+        {/* Curved Top Wave Design */}
+        <div className="absolute top-0 left-0 right-0 z-0">
+          <svg className="w-full h-24" viewBox="0 0 1440 120" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+            <path d="M0 0L60 15C120 30 240 60 360 75C480 90 600 90 720 82.5C840 75 960 60 1080 52.5C1200 45 1320 45 1380 45L1440 45V0H1380C1320 0 1200 0 1080 0C960 0 840 0 720 0C600 0 480 0 360 0C240 0 120 0 60 0H0Z" fill="#ffffff" />
+          </svg>
+        </div>
+        {/* Curved Bottom Wave Design */}
+        <div className="absolute bottom-0 left-0 right-0 z-0">
+          <svg className="w-full h-24" viewBox="0 0 1440 120" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+            <path d="M0 120L60 105C120 90 240 60 360 45C480 30 600 30 720 37.5C840 45 960 60 1080 67.5C1200 75 1320 75 1380 75L1440 75V120H1380C1320 120 1200 120 1080 120C960 120 840 120 720 120C600 120 480 120 360 120C240 120 120 120 60 120H0Z" fill="#ffffff" />
+          </svg>
+        </div>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+          <motion.div
+            initial={{ opacity: 0, y: 80, rotateX: -20 }}
+            whileInView={{ opacity: 1, y: 0, rotateX: 0 }}
+            viewport={{ once: true, margin: "-100px" }}
+            transition={{ duration: 0.8, ease: "easeOut" }}
+            style={{ perspective: "1000px" }}
+            className="text-center mb-16"
+          >
+            <motion.h2
+              initial={{ opacity: 0, y: 30, rotateX: -10 }}
+              whileInView={{ opacity: 1, y: 0, rotateX: 0 }}
+              viewport={{ once: true, margin: "-50px" }}
+              transition={{ duration: 0.6, ease: "easeOut" }}
+              style={{ perspective: "1000px" }}
+              className="text-4xl md:text-5xl mb-4 text-slate-900 font-bold"
+            >
+              3D <span className="text-blue-600">Rendering</span>
+            </motion.h2>
+            <motion.p
+              initial={{ opacity: 0, y: 30, rotateX: -10 }}
+              whileInView={{ opacity: 1, y: 0, rotateX: 0 }}
+              viewport={{ once: true, margin: "-50px" }}
+              transition={{ duration: 0.6, ease: "easeOut", delay: 0.1 }}
+              style={{ perspective: "1000px" }}
+              className="text-xl text-slate-600 max-w-2xl mx-auto"
+            >
+              Explore our PMV1.4.12 machine in stunning 3D detail
+            </motion.p>
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, y: 80, rotateX: -20 }}
+            whileInView={{ opacity: 1, y: 0, rotateX: 0 }}
+            viewport={{ once: true, margin: "-100px" }}
+            transition={{ duration: 0.8, ease: "easeOut" }}
+            style={{ perspective: "1000px" }}
+            className="relative max-w-5xl mx-auto"
+          >
+            <div className="relative rounded-2xl overflow-hidden bg-gradient-to-br from-slate-100 to-slate-200 border-2 border-slate-300 p-12 min-h-[500px] flex items-center justify-center">
+              <div className="text-center">
+                <div className="w-24 h-24 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                  <Package className="w-12 h-12 text-blue-600" />
+                </div>
+                <h3 className="text-2xl font-semibold text-slate-900 mb-4">3D Rendering Coming Soon</h3>
+                <p className="text-slate-600 text-lg max-w-md mx-auto">
+                  Our interactive 3D rendering of the PMV1.4.12 machine will be available here soon. Check back to explore every detail of our pizza vending machine in stunning 3D.
+                </p>
+              </div>
+            </div>
+          </motion.div>
+        </div>
+      </section>
+
 
       {/* Model Variations Section */}
       <section className="relative py-24 bg-slate-50">

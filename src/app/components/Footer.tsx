@@ -4,9 +4,11 @@ import { useNavigate } from 'react-router-dom';
 import { Facebook, Twitter, Linkedin, Instagram, Mail, Phone, MapPin } from 'lucide-react';
 // import logo from '@/assets/straight horizantal_Artboard 10 copy 2.svg';
 import logo from '@/assets/straight horizantal_Artboard 8 copy.svg';
+import { useAuth } from '../context/AuthContext';
 
 export function Footer() {
   const navigate = useNavigate();
+  const { isAuthenticated } = useAuth();
   const currentYear = new Date().getFullYear();
 
   return (
@@ -81,14 +83,16 @@ export function Footer() {
                   Latest Updates
                 </button>
               </li>
-              <li>
-                <button
-                  onClick={() => navigate('/manual')}
-                  className="text-slate-600 hover:text-blue-600 transition-colors"
-                >
-                  User Manual
-                </button>
-              </li>
+              {isAuthenticated && (
+                <li>
+                  <button
+                    onClick={() => navigate('/manual')}
+                    className="text-slate-600 hover:text-blue-600 transition-colors"
+                  >
+                    User Manual
+                  </button>
+                </li>
+              )}
             </ul>
           </div>
 

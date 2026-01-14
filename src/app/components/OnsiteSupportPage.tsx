@@ -1,7 +1,7 @@
 import { motion } from 'motion/react';
 import { useNavigate } from 'react-router-dom';
 import { Wrench, Clock, Phone, CheckCircle2, Truck, Shield, Headphones, ArrowRight } from 'lucide-react';
-import bellHowellLogo from '@/assets/bell_howell_logo.webp';
+import bellHowellLogo from '@/assets/BellAndHowell2.svg';
 
 export function OnsiteSupportPage() {
   const navigate = useNavigate();
