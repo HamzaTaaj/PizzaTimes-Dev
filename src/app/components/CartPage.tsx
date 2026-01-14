@@ -66,6 +66,13 @@ export function CartPage() {
   const [isCheckingOut, setIsCheckingOut] = React.useState(false);
   const [checkoutError, setCheckoutError] = React.useState<string | null>(null);
   
+  // Get access token
+  const getAccessToken = () => {
+    return localStorage.getItem('pizza_auth_token');
+  };
+
+  const accessToken = getAccessToken();
+  
   const [createCart] = useMutation(CREATE_CART_WITH_BUYER);
   const [addDeliveryAddress] = useMutation(ADD_DELIVERY_ADDRESS);
 
@@ -75,13 +82,6 @@ export function CartPage() {
     skip: !accessToken || !isAuthenticated,
     errorPolicy: 'all',
   });
-
-  // Get access token
-  const getAccessToken = () => {
-    return localStorage.getItem('pizza_auth_token');
-  };
-
-  const accessToken = getAccessToken();
 
   // Format price
   const formatPrice = (amount: string, currencyCode: string): string => {
