@@ -142,7 +142,7 @@ interface Product {
 export function ShopifyProductsPage() {
   const navigate = useNavigate();
   const { isAuthenticated, isLoading: authLoading } = useAuth();
-  const { addToCart } = useCart();
+  const { addToCart, saveCartSnapshot, cartItems } = useCart();
   const [selectedVariantIds, setSelectedVariantIds] = useState<Record<string, string>>({});
   const [checkoutLoading, setCheckoutLoading] = useState<string | null>(null); // Track which product is checking out
   
@@ -263,6 +263,29 @@ export function ShopifyProductsPage() {
       }
 
       if (checkoutUrl) {
+        // Save cart snapshot before redirecting (for restoration if user returns without completing checkout)
+        // This handles the case where user has items in cart and uses direct checkout
+        // Save snapshot directly from current cartItems to ensure we capture the exact state
+        try {
+          if (cartItems.length > 0) {
+            const snapshotData = cartItems.map(item => ({
+              id: item.id,
+              productId: item.productId,
+              variantId: item.variantId,
+              title: item.title,
+              variantTitle: item.variantTitle,
+              price: item.price,
+              quantity: item.quantity,
+              image: item.image,
+              handle: item.handle,
+              availableForSale: item.availableForSale,
+            }));
+            localStorage.setItem('pizza_cart_snapshot', JSON.stringify(snapshotData));
+            console.log('Cart snapshot saved:', snapshotData.length, 'items');
+          }
+        } catch (error) {
+          console.error('Error saving cart snapshot:', error);
+        }
         // Redirect to Shopify checkout with customer email and name auto-filled
         window.location.href = checkoutUrl;
       } else {
@@ -275,7 +298,7 @@ export function ShopifyProductsPage() {
       alert('Failed to process checkout: ' + (error.message || 'Please try again.'));
       setCheckoutLoading(null);
     }
-  }, [accessToken, isAuthenticated, customerData, createCart, addDeliveryAddress, selectedVariantIds, navigate]);
+  }, [accessToken, isAuthenticated, customerData, createCart, addDeliveryAddress, selectedVariantIds, navigate, cartItems, saveCartSnapshot]);
 
   // Initialize selected variants when products load
   useEffect(() => {

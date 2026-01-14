@@ -61,7 +61,7 @@ const ADD_DELIVERY_ADDRESS = gql`
 
 export function CartPage() {
   const navigate = useNavigate();
-  const { cartItems, removeFromCart, updateQuantity, clearCart, getTotalPrice } = useCart();
+  const { cartItems, removeFromCart, updateQuantity, clearCart, getTotalPrice, saveCartSnapshot } = useCart();
   const { isAuthenticated } = useAuth();
   const [isCheckingOut, setIsCheckingOut] = React.useState(false);
   const [checkoutError, setCheckoutError] = React.useState<string | null>(null);
@@ -183,9 +183,33 @@ export function CartPage() {
       }
 
       if (checkoutUrl) {
-        // Clear cart after successful checkout creation
+        // Save cart snapshot before redirecting (for restoration if user returns without completing checkout)
+        // Save snapshot directly from current cartItems to ensure we capture the exact state
+        try {
+          if (cartItems.length > 0) {
+            const snapshotData = cartItems.map(item => ({
+              id: item.id,
+              productId: item.productId,
+              variantId: item.variantId,
+              title: item.title,
+              variantTitle: item.variantTitle,
+              price: item.price,
+              quantity: item.quantity,
+              image: item.image,
+              handle: item.handle,
+              availableForSale: item.availableForSale,
+            }));
+            localStorage.setItem('pizza_cart_snapshot', JSON.stringify(snapshotData));
+            console.log('Cart snapshot saved:', snapshotData.length, 'items');
+          }
+        } catch (error) {
+          console.error('Error saving cart snapshot:', error);
+        }
+        // Clear cart state and localStorage
+        // Since isCheckingOut is true, the empty cart message won't show
         clearCart();
-        // Redirect to Shopify checkout with customer email and name auto-filled
+        // Redirect immediately to Shopify checkout
+        // The redirect happens before React can re-render with empty cart
         window.location.href = checkoutUrl;
       } else {
         setCheckoutError('Failed to create checkout. Please try again.');
@@ -198,7 +222,8 @@ export function CartPage() {
     }
   }, [cartItems, isAuthenticated, accessToken, createCart, addDeliveryAddress, customerData, clearCart, navigate]);
 
-  if (cartItems.length === 0) {
+  // Don't show empty cart message if we're in the process of checking out
+  if (cartItems.length === 0 && !isCheckingOut) {
     return (
       <div className="min-h-screen pt-20 bg-white">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
@@ -219,6 +244,25 @@ export function CartPage() {
               <ArrowLeft className="w-5 h-5" />
               Continue Shopping
             </motion.button>
+          </motion.div>
+        </div>
+      </div>
+    );
+  }
+
+  // Show loading state during checkout
+  if (isCheckingOut) {
+    return (
+      <div className="min-h-screen pt-20 bg-white">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="text-center"
+          >
+            <Loader2 className="w-16 h-16 text-blue-600 mx-auto mb-6 animate-spin" />
+            <h2 className="text-3xl font-bold text-slate-900 mb-4">Redirecting to Checkout...</h2>
+            <p className="text-slate-600">Please wait while we prepare your checkout.</p>
           </motion.div>
         </div>
       </div>

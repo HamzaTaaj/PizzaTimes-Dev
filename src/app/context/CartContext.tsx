@@ -26,17 +26,20 @@ interface CartContextType {
   clearCart: () => void;
   getTotalPrice: () => number;
   getTotalItems: () => number;
+  saveCartSnapshot: () => void;
+  clearCartSnapshot: () => void;
 }
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
 
 const CART_STORAGE_KEY = 'pizza_cart_items';
+const CART_SNAPSHOT_KEY = 'pizza_cart_snapshot';
 
 export function CartProvider({ children }: { children: ReactNode }) {
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
   const [cartCount, setCartCount] = useState(0);
 
-  // Load cart from localStorage on mount
+  // Load cart from localStorage on mount and restore from snapshot if needed
   useEffect(() => {
     try {
       const stored = localStorage.getItem(CART_STORAGE_KEY);
@@ -44,6 +47,32 @@ export function CartProvider({ children }: { children: ReactNode }) {
         const items = JSON.parse(stored) as CartItem[];
         setCartItems(items);
         setCartCount(items.reduce((sum, item) => sum + item.quantity, 0));
+      } else {
+        // If cart is empty, check for snapshot (user returned from checkout without completing)
+        const snapshot = localStorage.getItem(CART_SNAPSHOT_KEY);
+        if (snapshot) {
+          try {
+            const snapshotItems = JSON.parse(snapshot) as CartItem[];
+            if (snapshotItems && snapshotItems.length > 0) {
+              console.log('Restoring cart from snapshot:', snapshotItems.length, 'items');
+              // Restore cart from snapshot
+              setCartItems(snapshotItems);
+              setCartCount(snapshotItems.reduce((sum, item) => sum + item.quantity, 0));
+              // Save restored cart to localStorage
+              localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(snapshotItems));
+              // Clear snapshot after restoring
+              localStorage.removeItem(CART_SNAPSHOT_KEY);
+              console.log('Cart restored successfully from snapshot');
+            } else {
+              // Empty snapshot, remove it
+              localStorage.removeItem(CART_SNAPSHOT_KEY);
+            }
+          } catch (error) {
+            console.error('Error restoring cart from snapshot:', error);
+            // Clear invalid snapshot
+            localStorage.removeItem(CART_SNAPSHOT_KEY);
+          }
+        }
       }
     } catch (error) {
       console.error('Error loading cart from localStorage:', error);
@@ -114,6 +143,26 @@ export function CartProvider({ children }: { children: ReactNode }) {
     return cartItems.reduce((sum, item) => sum + item.quantity, 0);
   }, [cartItems]);
 
+  // Save current cart state as snapshot before redirecting to checkout
+  const saveCartSnapshot = useCallback(() => {
+    try {
+      if (cartItems.length > 0) {
+        localStorage.setItem(CART_SNAPSHOT_KEY, JSON.stringify(cartItems));
+      }
+    } catch (error) {
+      console.error('Error saving cart snapshot:', error);
+    }
+  }, [cartItems]);
+
+  // Clear cart snapshot (called after successful checkout or when no longer needed)
+  const clearCartSnapshot = useCallback(() => {
+    try {
+      localStorage.removeItem(CART_SNAPSHOT_KEY);
+    } catch (error) {
+      console.error('Error clearing cart snapshot:', error);
+    }
+  }, []);
+
   return (
     <CartContext.Provider
       value={{
@@ -125,6 +174,8 @@ export function CartProvider({ children }: { children: ReactNode }) {
         clearCart,
         getTotalPrice,
         getTotalItems,
+        saveCartSnapshot,
+        clearCartSnapshot,
       }}
     >
       {children}
