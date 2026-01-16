@@ -814,8 +814,8 @@ export function MarketingPage() {
   return (
     <div className="min-h-screen bg-white">
       {/* 1. Header with Phone Number Field */}
-      <section className="relative min-h-screen flex items-center justify-center overflow-hidden pt-20 bg-gradient-to-br from-blue-600 via-blue-700 to-slate-900 rounded-b-[3rem]">
-        {/* Background Design */}
+      <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-[#0f172a] rounded-b-[3rem]">
+        {/* Attractive Background Design */}
         <div className="absolute inset-0 z-0 overflow-hidden">
           <motion.div
             animate={{
@@ -827,7 +827,7 @@ export function MarketingPage() {
               repeat: Infinity,
               ease: "easeInOut"
             }}
-            className="absolute top-1/4 -right-1/4 w-[800px] h-[800px] bg-white/10 rounded-full"
+            className="absolute top-1/4 -right-1/4 w-[800px] h-[800px] bg-[#2563eb] rounded-full"
           />
           <motion.div
             animate={{
@@ -839,7 +839,19 @@ export function MarketingPage() {
               repeat: Infinity,
               ease: "easeInOut"
             }}
-            className="absolute -bottom-1/4 -left-1/4 w-[700px] h-[700px] bg-white/10 rounded-full"
+            className="absolute -bottom-1/4 -left-1/4 w-[700px] h-[700px] bg-[#3b82f6] rounded-full"
+          />
+          <motion.div
+            animate={{
+              scale: [1, 1.15, 1],
+              opacity: [0.06, 0.10, 0.06],
+            }}
+            transition={{
+              duration: 20,
+              repeat: Infinity,
+              ease: "easeInOut"
+            }}
+            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-[#60a5fa] rounded-full"
           />
         </div>
 
@@ -862,9 +874,9 @@ export function MarketingPage() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.2 }}
-                className="inline-flex items-center gap-2 px-4 py-2 bg-white/20 backdrop-blur-sm border border-white/30 rounded-full mb-6"
+                className="inline-flex items-center gap-2 px-4 py-2 bg-[#1e293b] border border-[#2563eb]/30 rounded-full mb-6"
               >
-                <Zap className="w-4 h-4 text-white" />
+                <Zap className="w-4 h-4 text-[#60a5fa]" />
                 <span className="text-white font-medium text-sm">Start Generating Revenue Today</span>
               </motion.div>
 
@@ -875,7 +887,7 @@ export function MarketingPage() {
               </h1>
 
               <p className="text-xl text-blue-50 mb-8 max-w-xl leading-relaxed">
-                Pizza Anytime™ from High Sierra Vending turns an ordinary corner of your business into a 24-hour profit center—without locking you into someone else's rules or recipes. Our lease-to-own plan is the lowest monthly cost among major competitors, as little as $28 per day.
+                Pizza Anytime™ from High Sierra Vending turns an ordinary corner of your business into a 24-hour profit center without locking you into someone else's rules or recipes. Our lease to own plan is the lowest monthly cost among major competitors, as little as $28 per day.
               </p>
             </motion.div>
 
@@ -1054,23 +1066,25 @@ export function MarketingPage() {
             >
               Technical <span className="text-blue-600">Specifications</span>
             </motion.h2>
-            <motion.p
-              initial={{ opacity: 0, y: 30, rotateX: -10 }}
-              whileInView={{ opacity: 1, y: 0, rotateX: 0 }}
-              viewport={{ once: true, margin: "-50px" }}
-              transition={{ duration: 0.6, ease: "easeOut", delay: 0.1 }}
-              style={{ perspective: "1000px" }}
-              className="text-xl text-slate-600"
-            >
-              Every detail is mentioned in the user manual.{' '}
-              <motion.button
-                onClick={() => navigate('/manual')}
-                className="text-blue-600 hover:text-blue-700 underline font-semibold"
-                whileHover={{ scale: 1.05 }}
+            {isAuthenticated && (
+              <motion.p
+                initial={{ opacity: 0, y: 30, rotateX: -10 }}
+                whileInView={{ opacity: 1, y: 0, rotateX: 0 }}
+                viewport={{ once: true, margin: "-50px" }}
+                transition={{ duration: 0.6, ease: "easeOut", delay: 0.1 }}
+                style={{ perspective: "1000px" }}
+                className="text-xl text-slate-600"
               >
-                View User Manual
-              </motion.button>
-            </motion.p>
+                Every detail is mentioned in the user manual.{' '}
+                <motion.button
+                  onClick={() => navigate('/manual')}
+                  className="text-blue-600 hover:text-blue-700 underline font-semibold"
+                  whileHover={{ scale: 1.05 }}
+                >
+                  View User Manual
+                </motion.button>
+              </motion.p>
+            )}
           </motion.div>
 
           <div className="relative max-w-6xl mx-auto">
@@ -1176,6 +1190,25 @@ export function MarketingPage() {
               ))}
             </div>
           </div>
+
+          {/* Get Started CTA Button */}
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6, delay: 0.4 }}
+            className="text-center mt-16"
+          >
+            <motion.button
+              onClick={() => setShowGetStartedPopup(true)}
+              whileHover={{ scale: 1.05, boxShadow: '0 20px 40px rgba(37, 99, 235, 0.3)' }}
+              whileTap={{ scale: 0.95 }}
+              className="px-10 py-5 bg-blue-600 text-white rounded-xl flex items-center justify-center gap-3 font-semibold text-lg hover:bg-blue-700 transition-colors shadow-lg mx-auto"
+            >
+              <ArrowRight className="w-6 h-6" />
+              Get Started
+            </motion.button>
+          </motion.div>
         </div>
       </section>
 
@@ -1197,7 +1230,7 @@ export function MarketingPage() {
                 See Your Business Grow
               </h3>
               <p className="text-xl text-slate-600 mb-8 leading-relaxed">
-                Nationwide on-site support is handled through our partnership with Bell and Howell's service network, so downtime stays minimal wherever you operate in the lower 48 states. From installation guidance to real-time monitoring and parts logistics, our team backs your team—so you can focus on serving hungry customers, not troubleshooting hardware.
+                Nationwide on-site support is handled through our partnership with Bell and Howell's service network, so downtime stays minimal wherever you operate in the lower 48 states. From installation guidance to real time monitoring and parts logistics, our team backs your team so you can focus on serving hungry customers, not troubleshooting hardware.
               </p>
 
               {/* Stats Grid */}
@@ -1224,7 +1257,7 @@ export function MarketingPage() {
                   <div className="text-4xl font-bold text-blue-600 mb-2">
                     <AnimatedCounter value="24/7" duration={1.5} />
                   </div>
-                  <div className="text-slate-700 font-medium">Operation</div>
+                  <div className="text-slate-700 font-medium">Operational</div>
                 </motion.div>
                 <motion.div
                   initial={{ opacity: 0, y: 20 }}
@@ -1273,236 +1306,7 @@ export function MarketingPage() {
         </div>
       </section>
 
-      {/* 4. Ready to Start with CTA Popup and Cash Flow Calculator Button */}
-      <section className="relative py-24 overflow-hidden bg-gradient-to-r from-blue-600 to-blue-700">
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            whileInView={{ opacity: 1, scale: 1 }}
-            viewport={{ once: true }}
-          >
-            <h2 className="text-4xl md:text-5xl mb-6 text-white font-bold">Ready to Start Generating Revenue?</h2>
-            <p className="text-xl text-blue-50 mb-8 max-w-2xl mx-auto">
-              Join successful businesses already using Pizza Anytime to increase their revenue
-            </p>
-            <div className="flex flex-wrap gap-4 justify-center">
-              {!isAuthenticated && (
-                <motion.button
-                  whileHover={{ 
-                    scale: 1.05,
-                    boxShadow: "0 20px 40px rgba(0, 0, 0, 0.3)"
-                  }}
-                  whileTap={{ scale: 0.95 }}
-                  onClick={() => setShowRequestAccessPopup(true)}
-                  className="px-10 py-5 bg-white text-blue-600 rounded-lg text-lg font-semibold hover:bg-blue-50 transition-colors"
-                >
-                  Request Access Now
-                </motion.button>
-              )}
-              <motion.button
-                whileHover={{ 
-                  scale: 1.05
-                }}
-                whileTap={{ scale: 0.95 }}
-                onClick={() => {
-                  const element = document.getElementById('cash-flow-calculator');
-                  element?.scrollIntoView({ behavior: 'smooth' });
-                }}
-                className="px-10 py-5 border-2 border-white/50 rounded-lg hover:bg-white/10 transition-colors text-white font-semibold text-lg"
-              >
-                Calculate Your ROI
-              </motion.button>
-            </div>
-            <p className="mt-6 text-blue-100 text-sm">
-              All buttons lead to our Request Access form. Get started in minutes.
-            </p>
-          </motion.div>
-        </div>
-      </section>
-
-      {/* 6. NAMA Compliance */}
-      <section className="relative py-24 bg-slate-50">
-        {/* Curved Top Wave Design */}
-        <div className="absolute top-0 left-0 right-0 z-0">
-          <svg className="w-full h-24" viewBox="0 0 1440 120" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
-            <path d="M0 0L60 15C120 30 240 60 360 75C480 90 600 90 720 82.5C840 75 960 60 1080 52.5C1200 45 1320 45 1380 45L1440 45V0H1380C1320 0 1200 0 1080 0C960 0 840 0 720 0C600 0 480 0 360 0C240 0 120 0 60 0H0Z" fill="#ffffff" />
-          </svg>
-        </div>
-        {/* Curved Bottom Wave Design */}
-        <div className="absolute bottom-0 left-0 right-0 z-0">
-          <svg className="w-full h-24" viewBox="0 0 1440 120" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
-            <path d="M0 120L60 105C120 90 240 60 360 45C480 30 600 30 720 37.5C840 45 960 60 1080 67.5C1200 75 1320 75 1380 75L1440 75V120H1380C1320 120 1200 120 1080 120C960 120 840 120 720 120C600 120 480 120 360 120C240 120 120 120 60 120H0Z" fill="#2563eb" />
-          </svg>
-        </div>
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="text-center mb-16"
-          >
-            <h2 className="text-4xl md:text-5xl mb-4 text-slate-900 font-bold">
-              NAMA <span className="text-blue-600">Compliance</span>
-            </h2>
-            <p className="text-xl text-slate-600 max-w-2xl mx-auto">
-              Certified compliance with National Automatic Merchandising Association (NAMA) standards
-            </p>
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="grid md:grid-cols-2 lg:grid-cols-3 gap-6"
-          >
-            {[
-              {
-                icon: Shield,
-                title: 'Food Safety Compliant',
-                description: 'Full HACCP and NAMA food safety certifications ensuring highest hygiene standards'
-              },
-              {
-                icon: Thermometer,
-                title: 'Temperature Controlled',
-                description: 'Precise temperature monitoring and control systems maintain food safety requirements'
-              },
-              {
-                icon: Wrench,
-                title: 'Easy-to-Clean Design',
-                description: 'Accessible components and surfaces designed for thorough cleaning and sanitization'
-              },
-              {
-                icon: Package,
-                title: 'Commercial-Grade Build',
-                description: 'NAMA-certified commercial construction meets industry standards for durability'
-              },
-              {
-                icon: Shield,
-                title: 'Secure Access Control',
-                description: 'Advanced security features protect inventory and ensure authorized access only'
-              },
-              {
-                icon: CheckCircle2,
-                title: 'Reliable Operation',
-                description: 'Built to NAMA specifications for consistent, dependable 24/7 performance'
-              }
-            ].map((feature, index) => (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: index * 0.1 }}
-                whileHover={{
-                  y: -4,
-                  boxShadow: '0 20px 40px rgba(0, 0, 0, 0.1)',
-                  borderColor: '#2563eb'
-                }}
-                className="p-6 bg-white border-2 border-slate-200 rounded-xl transition-all group hover:border-blue-600"
-              >
-                <div className="w-14 h-14 bg-blue-50 rounded-xl flex items-center justify-center mb-4 group-hover:bg-blue-600 group-hover:scale-110 transition-all">
-                  <feature.icon className="w-7 h-7 text-blue-600 group-hover:text-white transition-colors" />
-                </div>
-                <h3 className="text-xl mb-3 text-slate-900 font-semibold">{feature.title}</h3>
-                <p className="text-slate-600 leading-relaxed">{feature.description}</p>
-              </motion.div>
-            ))}
-          </motion.div>
-        </div>
-      </section>
-
-      {/* 7. Bell and Howell */}
-      <section className="relative py-24 bg-white">
-        {/* Curved Top Wave Design */}
-        <div className="absolute top-0 left-0 right-0 z-0">
-          <svg className="w-full h-24" viewBox="0 0 1440 120" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
-            <path d="M0 0L60 15C120 30 240 60 360 75C480 90 600 90 720 82.5C840 75 960 60 1080 52.5C1200 45 1320 45 1380 45L1440 45V0H1380C1320 0 1200 0 1080 0C960 0 840 0 720 0C600 0 480 0 360 0C240 0 120 0 60 0H0Z" fill="#f8fafc" />
-          </svg>
-        </div>
-        {/* Curved Bottom Wave Design */}
-        <div className="absolute bottom-0 left-0 right-0 z-0">
-          <svg className="w-full h-24" viewBox="0 0 1440 120" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
-            <path d="M0 120L60 105C120 90 240 60 360 45C480 30 600 30 720 37.5C840 45 960 60 1080 67.5C1200 75 1320 75 1380 75L1440 75V120H1380C1320 120 1200 120 1080 120C960 120 840 120 720 120C600 120 480 120 360 120C240 120 120 120 60 120H0Z" fill="#f1f5f9" />
-          </svg>
-        </div>
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-          <motion.div
-            initial={{ opacity: 0, y: 80, rotateX: -20 }}
-            whileInView={{ opacity: 1, y: 0, rotateX: 0 }}
-            viewport={{ once: true, margin: "-100px" }}
-            transition={{ duration: 0.8, ease: "easeOut" }}
-            style={{ perspective: "1000px" }}
-            className="grid lg:grid-cols-2 gap-12 items-center"
-          >
-            {/* Left Content */}
-            <motion.div
-              initial={{ opacity: 0, x: -30 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: 0.2 }}
-            >
-              <h2 className="text-4xl md:text-5xl mb-6 font-bold text-slate-900">
-                Nationwide Support by <span className="text-blue-600">Bell & Howell</span>
-              </h2>
-              <p className="text-xl text-slate-600 mb-6 leading-relaxed">
-                High Sierra Vending partners with Bell & Howell's nationwide technician network to provide rapid, on-site support for every Pizza Anytime™ machine across the lower 48 states.
-              </p>
-              <ul className="space-y-4 mb-8">
-                {[
-                  'Coast-to-coast service coverage',
-                  'Rapid response times for critical issues',
-                  'Certified technicians trained on our systems',
-                  'Complete parts and labor warranty',
-                  'Email and phone support for machine lifetime',
-                  'Preventive maintenance programs'
-                ].map((item, index) => (
-                  <motion.li
-                    key={index}
-                    initial={{ opacity: 0, x: -20 }}
-                    whileInView={{ opacity: 1, x: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.4, delay: 0.3 + index * 0.1 }}
-                    className="flex items-center gap-3 text-slate-700"
-                  >
-                    <div className="w-6 h-6 bg-blue-600 rounded-full flex items-center justify-center flex-shrink-0">
-                      <CheckCircle2 className="w-4 h-4 text-white" />
-                    </div>
-                    <span className="text-lg">{item}</span>
-                  </motion.li>
-                ))}
-              </ul>
-            </motion.div>
-
-            {/* Right Content - Logo */}
-            <motion.div
-              initial={{ opacity: 0, x: 30 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: 0.4 }}
-              className="relative"
-            >
-              <div className="p-12 bg-white border-2 border-slate-200 rounded-2xl shadow-xl">
-                <div className="text-center">
-                  <div className="mb-6 flex justify-center">
-                    <div className="bg-white rounded-xl p-6 w-full max-w-xs flex items-center justify-center">
-                      <img 
-                        src={bellHowellLogo} 
-                        alt="Bell & Howell Logo" 
-                        className="w-full h-auto max-h-20 object-contain"
-                      />
-                    </div>
-                  </div>
-                  <p className="text-slate-600 text-lg leading-relaxed">
-                    Trusted nationwide service partner providing professional on-site technical support and maintenance for all Pizza Anytime vending machines.
-                  </p>
-                </div>
-              </div>
-            </motion.div>
-          </motion.div>
-        </div>
-      </section>
-
-      {/* 8. Cash Flow Calculator with CTA Pop-up */}
+      {/* 4. Cash Flow Calculator with CTA Pop-up */}
       <section id="cash-flow-calculator" className="relative py-24 bg-white">
         {/* Curved Top Wave Design */}
         <div className="absolute top-0 left-0 right-0 z-0">
@@ -1712,40 +1516,423 @@ export function MarketingPage() {
         </div>
       </section>
 
-      {/* 9. Flexible Financing with North Star Leasing */}
-      <section className="relative py-24 bg-slate-50">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+      {/* 5. Ready to Start with CTA Popup */}
+      <section className="relative py-24 overflow-hidden bg-[#0f172a]">
+        {/* Attractive Background Design */}
+        <div className="absolute inset-0 z-0 overflow-hidden">
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
+            animate={{
+              scale: [1, 1.1, 1],
+              opacity: [0.1, 0.15, 0.1],
+            }}
+            transition={{
+              duration: 15,
+              repeat: Infinity,
+              ease: "easeInOut"
+            }}
+            className="absolute top-1/4 -right-1/4 w-[800px] h-[800px] bg-[#2563eb] rounded-full"
+          />
+          <motion.div
+            animate={{
+              scale: [1.1, 1, 1.1],
+              opacity: [0.08, 0.12, 0.08],
+            }}
+            transition={{
+              duration: 18,
+              repeat: Infinity,
+              ease: "easeInOut"
+            }}
+            className="absolute -bottom-1/4 -left-1/4 w-[700px] h-[700px] bg-[#3b82f6] rounded-full"
+          />
+          <motion.div
+            animate={{
+              scale: [1, 1.15, 1],
+              opacity: [0.06, 0.10, 0.06],
+            }}
+            transition={{
+              duration: 20,
+              repeat: Infinity,
+              ease: "easeInOut"
+            }}
+            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-[#60a5fa] rounded-full"
+          />
+        </div>
+        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            whileInView={{ opacity: 1, scale: 1 }}
             viewport={{ once: true }}
-            className="text-center mb-8"
           >
-            <h2 className="text-4xl md:text-5xl mb-4 font-bold text-slate-900">
-              Flexible Financing with <span className="text-blue-600">North Star Leasing</span>
-            </h2>
-            <p className="text-xl text-slate-600 max-w-3xl mx-auto leading-relaxed">
-              We've partnered with North Star Leasing to make owning a Pizza Anytime vending machine more accessible than ever. Their flexible financing options are designed to fit your business's unique needs—with fast approvals, simple terms, and payment plans that work for your budget. Whether you're launching your first unit or expanding your footprint, North Star Leasing helps you get started quickly without tying up your capital.
+            <h2 className="text-4xl md:text-5xl mb-6 text-white font-bold">Ready to Start Generating Revenue?</h2>
+            <p className="text-xl text-blue-50 mb-8 max-w-2xl mx-auto">
+              Join successful businesses already using Pizza Anytime to increase their revenue
+            </p>
+            <div className="flex flex-wrap gap-4 justify-center">
+              <motion.button
+                whileHover={{ 
+                  scale: 1.05,
+                  boxShadow: "0 20px 40px rgba(0, 0, 0, 0.3)"
+                }}
+                whileTap={{ scale: 0.95 }}
+                onClick={() => setShowGetStartedPopup(true)}
+                className="px-10 py-5 bg-white text-blue-600 rounded-lg text-lg font-semibold hover:bg-blue-50 transition-colors"
+              >
+                Get Started Now
+              </motion.button>
+              <motion.button
+                whileHover={{ 
+                  scale: 1.05
+                }}
+                whileTap={{ scale: 0.95 }}
+                onClick={() => {
+                  const element = document.getElementById('cash-flow-calculator');
+                  element?.scrollIntoView({ behavior: 'smooth' });
+                }}
+                className="px-10 py-5 border-2 border-white/50 rounded-lg hover:bg-white/10 transition-colors text-white font-semibold text-lg"
+              >
+                Calculate your cash flow
+              </motion.button>
+            </div>
+            <p className="mt-6 text-blue-100 text-sm">
+              All buttons lead to our Request Access form. Get started in minutes.
             </p>
           </motion.div>
         </div>
       </section>
 
-      {/* 10. Ready to Turn Unused Floor Space with CTA and Background like Header with Wave Styling */}
-      <section className="relative py-24 overflow-hidden bg-gradient-to-br from-blue-600 via-blue-700 to-slate-900">
-        {/* Wave Styling at Top */}
+      {/* 5. NAMA Compliance */}
+      <section className="relative py-24 bg-slate-50">
+        {/* Curved Top Wave Design */}
         <div className="absolute top-0 left-0 right-0 z-0">
           <svg className="w-full h-24" viewBox="0 0 1440 120" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
-            <path d="M0 0L60 15C120 30 240 60 360 75C480 90 600 90 720 82.5C840 75 960 60 1080 52.5C1200 45 1320 45 1380 45L1440 45V0H1380C1320 0 1200 0 1080 0C960 0 840 0 720 0C600 0 480 0 360 0C240 0 120 0 60 0H0Z" fill="#f1f5f9"/>
+            <path d="M0 0L60 15C120 30 240 60 360 75C480 90 600 90 720 82.5C840 75 960 60 1080 52.5C1200 45 1320 45 1380 45L1440 45V0H1380C1320 0 1200 0 1080 0C960 0 840 0 720 0C600 0 480 0 360 0C240 0 120 0 60 0H0Z" fill="#ffffff" />
           </svg>
         </div>
-        {/* Wave Styling at Bottom */}
+        {/* Curved Bottom Wave Design */}
         <div className="absolute bottom-0 left-0 right-0 z-0">
           <svg className="w-full h-24" viewBox="0 0 1440 120" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
-            <path d="M0 120L60 105C120 90 240 60 360 45C480 30 600 30 720 37.5C840 45 960 60 1080 67.5C1200 75 1320 75 1380 75L1440 75V120H1380C1320 120 1200 120 1080 120C960 120 840 120 720 120C600 120 480 120 360 120C240 120 120 120 60 120H0Z" fill="#ffffff"/>
+            <path d="M0 120L60 105C120 90 240 60 360 45C480 30 600 30 720 37.5C840 45 960 60 1080 67.5C1200 75 1320 75 1380 75L1440 75V120H1380C1320 120 1200 120 1080 120C960 120 840 120 720 120C600 120 480 120 360 120C240 120 120 120 60 120H0Z" fill="#2563eb" />
           </svg>
         </div>
-        <div className="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center z-10">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="text-center mb-16"
+          >
+            <h2 className="text-4xl md:text-5xl mb-4 text-slate-900 font-bold">
+              NAMA <span className="text-blue-600">Compliance</span>
+            </h2>
+            <p className="text-xl text-slate-600 max-w-2xl mx-auto">
+              Certified compliance with National Automatic Merchandising Association (NAMA) standards
+            </p>
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="grid md:grid-cols-2 lg:grid-cols-3 gap-6"
+          >
+            {[
+              {
+                icon: Shield,
+                title: 'Food Safety Compliant',
+                description: 'Full HACCP and NAMA food safety certifications ensuring highest hygiene standards'
+              },
+              {
+                icon: Thermometer,
+                title: 'Temperature Controlled',
+                description: 'Precise temperature monitoring and control systems maintain food safety requirements'
+              },
+              {
+                icon: Wrench,
+                title: 'Easy-to-Clean Design',
+                description: 'Accessible components and surfaces designed for thorough cleaning and sanitization'
+              },
+              {
+                icon: Package,
+                title: 'Commercial-Grade Build',
+                description: 'NAMA-certified commercial construction meets industry standards for durability'
+              },
+              {
+                icon: Shield,
+                title: 'Secure Access Control',
+                description: 'Advanced security features protect inventory and ensure authorized access only'
+              },
+              {
+                icon: CheckCircle2,
+                title: 'Reliable Operation',
+                description: 'Built to NAMA specifications for consistent, dependable 24/7 performance'
+              }
+            ].map((feature, index) => (
+              <motion.div
+                key={index}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: index * 0.1 }}
+                whileHover={{
+                  y: -4,
+                  boxShadow: '0 20px 40px rgba(0, 0, 0, 0.1)',
+                  borderColor: '#2563eb'
+                }}
+                className="p-6 bg-white border-2 border-slate-200 rounded-xl transition-all group hover:border-blue-600"
+              >
+                <div className="w-14 h-14 bg-blue-50 rounded-xl flex items-center justify-center mb-4 group-hover:bg-blue-600 group-hover:scale-110 transition-all">
+                  <feature.icon className="w-7 h-7 text-blue-600 group-hover:text-white transition-colors" />
+                </div>
+                <h3 className="text-xl mb-3 text-slate-900 font-semibold">{feature.title}</h3>
+                <p className="text-slate-600 leading-relaxed">{feature.description}</p>
+              </motion.div>
+            ))}
+          </motion.div>
+        </div>
+      </section>
+
+      {/* 6. Bell and Howell */}
+      <section className="relative py-24 bg-white">
+        {/* Curved Top Wave Design */}
+        <div className="absolute top-0 left-0 right-0 z-0">
+          <svg className="w-full h-24" viewBox="0 0 1440 120" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+            <path d="M0 0L60 15C120 30 240 60 360 75C480 90 600 90 720 82.5C840 75 960 60 1080 52.5C1200 45 1320 45 1380 45L1440 45V0H1380C1320 0 1200 0 1080 0C960 0 840 0 720 0C600 0 480 0 360 0C240 0 120 0 60 0H0Z" fill="#f8fafc" />
+          </svg>
+        </div>
+        {/* Curved Bottom Wave Design */}
+        <div className="absolute bottom-0 left-0 right-0 z-0">
+          <svg className="w-full h-24" viewBox="0 0 1440 120" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+            <path d="M0 120L60 105C120 90 240 60 360 45C480 30 600 30 720 37.5C840 45 960 60 1080 67.5C1200 75 1320 75 1380 75L1440 75V120H1380C1320 120 1200 120 1080 120C960 120 840 120 720 120C600 120 480 120 360 120C240 120 120 120 60 120H0Z" fill="#f1f5f9" />
+          </svg>
+        </div>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+          <motion.div
+            initial={{ opacity: 0, y: 80, rotateX: -20 }}
+            whileInView={{ opacity: 1, y: 0, rotateX: 0 }}
+            viewport={{ once: true, margin: "-100px" }}
+            transition={{ duration: 0.8, ease: "easeOut" }}
+            style={{ perspective: "1000px" }}
+            className="grid lg:grid-cols-2 gap-12 items-center"
+          >
+            {/* Left Content */}
+            <motion.div
+              initial={{ opacity: 0, x: -30 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6, delay: 0.2 }}
+            >
+              <h2 className="text-4xl md:text-5xl mb-6 font-bold text-slate-900">
+                Nationwide Support by <span className="text-blue-600">Bell & Howell</span>
+              </h2>
+              <p className="text-xl text-slate-600 mb-6 leading-relaxed">
+                High Sierra Vending partners with Bell & Howell's nationwide technician network to provide rapid, on-site support for every Pizza Anytime™ machine across the lower 48 states.
+              </p>
+              <ul className="space-y-4 mb-8">
+                {[
+                  'Coast-to-coast service coverage',
+                  'Rapid response times for critical issues',
+                  'Certified technicians trained on our systems',
+                  'Complete parts and labor warranty',
+                  'Email and phone support for machine lifetime',
+                  'Preventive maintenance programs'
+                ].map((item, index) => (
+                  <motion.li
+                    key={index}
+                    initial={{ opacity: 0, x: -20 }}
+                    whileInView={{ opacity: 1, x: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.4, delay: 0.3 + index * 0.1 }}
+                    className="flex items-center gap-3 text-slate-700"
+                  >
+                    <div className="w-6 h-6 bg-blue-600 rounded-full flex items-center justify-center flex-shrink-0">
+                      <CheckCircle2 className="w-4 h-4 text-white" />
+                    </div>
+                    <span className="text-lg">{item}</span>
+                  </motion.li>
+                ))}
+              </ul>
+            </motion.div>
+
+            {/* Right Content - Logo */}
+            <motion.div
+              initial={{ opacity: 0, x: 30 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6, delay: 0.4 }}
+              className="relative"
+            >
+              <div className="p-12 bg-white border-2 border-slate-200 rounded-2xl shadow-xl">
+                <div className="text-center">
+                  <div className="mb-6 flex justify-center">
+                    <div className="bg-white rounded-xl p-6 w-full max-w-xs flex items-center justify-center">
+                      <img 
+                        src={bellHowellLogo} 
+                        alt="Bell & Howell Logo" 
+                        className="w-full h-auto max-h-20 object-contain"
+                      />
+                    </div>
+                  </div>
+                  <p className="text-slate-600 text-lg leading-relaxed">
+                    Trusted nationwide service partner providing professional on-site technical support and maintenance for all Pizza Anytime vending machines.
+                  </p>
+                </div>
+              </div>
+            </motion.div>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* 8. Flexible Financing with North Star Leasing */}
+      <section className="relative py-24 bg-gradient-to-br from-blue-50 via-white to-slate-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid lg:grid-cols-2 gap-12 items-center">
+            {/* Left Content - Text */}
+            <motion.div
+              initial={{ opacity: 0, x: -30 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6 }}
+            >
+              <div className="inline-flex items-center gap-2 px-4 py-2 bg-blue-100 border border-blue-200 rounded-full mb-6">
+                <DollarSign className="w-4 h-4 text-blue-600" />
+                <span className="text-blue-600 font-medium text-sm">Flexible Financing</span>
+              </div>
+              
+              <h2 className="text-4xl md:text-5xl mb-6 font-bold text-slate-900">
+                Flexible Financing with <span className="text-blue-600">North Star Leasing</span>
+              </h2>
+              
+              <p className="text-xl text-slate-600 mb-8 leading-relaxed">
+                We've partnered with North Star Leasing to make owning a Pizza Anytime vending machine more accessible than ever. Their flexible financing options are designed to fit your business's unique needs—with fast approvals, simple terms, and payment plans that work for your budget.
+              </p>
+
+              {/* Highlighted Key Point */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: 0.2 }}
+                className="p-6 bg-gradient-to-r from-blue-600 to-blue-700 rounded-2xl shadow-xl border-2 border-blue-500"
+              >
+                <div className="flex items-start gap-4">
+                  <div className="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center flex-shrink-0">
+                    <TrendingUp className="w-6 h-6 text-white" />
+                  </div>
+                  <div>
+                    <h3 className="text-white font-bold text-lg mb-2">Lowest Monthly Cost</h3>
+                    <p className="text-blue-50 text-lg leading-relaxed">
+                      Our lease-to-own plan is the <span className="font-bold text-white">lowest monthly cost among major competitors</span>, as little as <span className="font-bold text-white text-2xl">$28 per day</span>.
+                    </p>
+                  </div>
+                </div>
+              </motion.div>
+
+              {/* Benefits List */}
+              <div className="mt-8 space-y-4">
+                {[
+                  'Fast approvals',
+                  'Simple terms',
+                  'Payment plans that work for your budget',
+                  'Get started quickly without tying up your capital'
+                ].map((benefit, index) => (
+                  <motion.div
+                    key={index}
+                    initial={{ opacity: 0, x: -20 }}
+                    whileInView={{ opacity: 1, x: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: 0.3 + index * 0.1 }}
+                    className="flex items-center gap-3"
+                  >
+                    <div className="w-6 h-6 bg-blue-600 rounded-full flex items-center justify-center flex-shrink-0">
+                      <CheckCircle2 className="w-4 h-4 text-white" />
+                    </div>
+                    <span className="text-slate-700 text-lg">{benefit}</span>
+                  </motion.div>
+                ))}
+              </div>
+            </motion.div>
+
+            {/* Right Content - Image */}
+            <motion.div
+              initial={{ opacity: 0, x: 30 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6, delay: 0.2 }}
+              className="relative"
+            >
+              {/* Glow Effect */}
+              <div className="absolute inset-0 bg-blue-500/30 rounded-3xl blur-3xl -z-10" />
+              
+              <div className="relative rounded-3xl overflow-hidden shadow-2xl border-2 border-blue-200">
+                <ImageWithFallback
+                  src={vend1Image}
+                  alt="Pizza Vending Machine - Flexible Financing"
+                  className="w-full h-auto transform hover:scale-105 transition-transform duration-500"
+                />
+              </div>
+
+              {/* Floating Stats Card */}
+              <motion.div
+                animate={{ y: [0, -10, 0] }}
+                transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+                className="absolute -bottom-6 -left-6 px-6 py-4 bg-white border-2 border-blue-200 rounded-xl shadow-xl"
+              >
+                <div className="text-3xl font-bold text-blue-600 mb-1">$28</div>
+                <div className="text-sm text-slate-600 font-medium">Per Day</div>
+              </motion.div>
+            </motion.div>
+          </div>
+        </div>
+      </section>
+
+      {/* 9. Ready to Turn Unused Floor Space with CTA and Background like Header with Wave Styling */}
+      <section className="relative py-24 overflow-hidden bg-[#0f172a]">
+        {/* Attractive Background Design */}
+        <div className="absolute inset-0 z-0 overflow-hidden">
+          <motion.div
+            animate={{
+              scale: [1, 1.1, 1],
+              opacity: [0.1, 0.15, 0.1],
+            }}
+            transition={{
+              duration: 15,
+              repeat: Infinity,
+              ease: "easeInOut"
+            }}
+            className="absolute top-1/4 -right-1/4 w-[800px] h-[800px] bg-[#2563eb] rounded-full"
+          />
+          <motion.div
+            animate={{
+              scale: [1.1, 1, 1.1],
+              opacity: [0.08, 0.12, 0.08],
+            }}
+            transition={{
+              duration: 18,
+              repeat: Infinity,
+              ease: "easeInOut"
+            }}
+            className="absolute -bottom-1/4 -left-1/4 w-[700px] h-[700px] bg-[#3b82f6] rounded-full"
+          />
+          <motion.div
+            animate={{
+              scale: [1, 1.15, 1],
+              opacity: [0.06, 0.10, 0.06],
+            }}
+            transition={{
+              duration: 20,
+              repeat: Infinity,
+              ease: "easeInOut"
+            }}
+            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-[#60a5fa] rounded-full"
+          />
+        </div>
+        {/* Curved Bottom Wave Design */}
+        <div className="absolute bottom-0 left-0 right-0 z-0">
+          <svg className="w-full h-24" viewBox="0 0 1440 120" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+            <path d="M0 120L60 105C120 90 240 60 360 45C480 30 600 30 720 37.5C840 45 960 60 1080 67.5C1200 75 1320 75 1380 75L1440 75V120H1380C1320 120 1200 120 1080 120C960 120 840 120 720 120C600 120 480 120 360 120C240 120 120 120 60 120H0Z" fill="#ffffff" />
+          </svg>
+        </div>
+        <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}

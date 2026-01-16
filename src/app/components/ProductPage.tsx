@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { Cpu, Thermometer, Gauge, Wifi, Shield, Wrench, Package, Zap, CheckCircle2, Flame, UtensilsCrossed } from 'lucide-react';
 import { ImageWithFallback } from './figma/ImageWithFallback';
 import { fadeInUp, staggerContainer, viewportConfig, slideInLeft, slideInRight, scaleUp } from '../utils/animations';
+import { useAuth } from '../context/AuthContext';
 import vend1Video from '@/assets/vend.mp4';
 import vend1Image from '@/assets/vend1.png';
 import vend2Image from '@/assets/vend1.png';
@@ -60,6 +61,7 @@ function AnimatedCounter({ value, suffix = '', prefix = '', duration = 2 }: { va
 
 export function ProductPage() {
   const navigate = useNavigate();
+  const { isAuthenticated } = useAuth();
   const specs = [
     { label: 'Dimensions', value: '71" L × 38" W × 89" H', position: 'left-top' },
     { label: 'Weight', value: '1,433 lbs', position: 'left-middle' },
@@ -677,23 +679,25 @@ The machine is engineered for serious, scalable performance. A 69-pizza capacity
             >
               Technical <span className="text-blue-600">Specifications</span>
             </motion.h2>
-            <motion.p
-              initial={{ opacity: 0, y: 30, rotateX: -10 }}
-              whileInView={{ opacity: 1, y: 0, rotateX: 0 }}
-              viewport={{ once: true, margin: "-50px" }}
-              transition={{ duration: 0.6, ease: "easeOut", delay: 0.1 }}
-              style={{ perspective: "1000px" }}
-              className="text-xl text-slate-600"
-            >
-              Every detail is mentioned in the user manual.{' '}
-              <motion.button
-                onClick={() => navigate('/manual')}
-                className="text-blue-600 hover:text-blue-700 underline font-semibold"
-                whileHover={{ scale: 1.05 }}
+            {isAuthenticated && (
+              <motion.p
+                initial={{ opacity: 0, y: 30, rotateX: -10 }}
+                whileInView={{ opacity: 1, y: 0, rotateX: 0 }}
+                viewport={{ once: true, margin: "-50px" }}
+                transition={{ duration: 0.6, ease: "easeOut", delay: 0.1 }}
+                style={{ perspective: "1000px" }}
+                className="text-xl text-slate-600"
               >
-                View User Manual
-              </motion.button>
-            </motion.p>
+                Every detail is mentioned in the user manual.{' '}
+                <motion.button
+                  onClick={() => navigate('/manual')}
+                  className="text-blue-600 hover:text-blue-700 underline font-semibold"
+                  whileHover={{ scale: 1.05 }}
+                >
+                  View User Manual
+                </motion.button>
+              </motion.p>
+            )}
           </motion.div>
 
           <div className="relative max-w-6xl mx-auto">

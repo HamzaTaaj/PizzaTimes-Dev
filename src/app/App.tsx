@@ -116,9 +116,11 @@ function AppContent() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
+  const isMarketingPage = location.pathname === '/marketing';
+
   return (
     <div className="min-h-screen bg-white text-slate-900 overflow-x-hidden overflow-y-visible">
-      <Header />
+      {!isMarketingPage && <Header />}
       
       
       <main className="overflow-visible">
@@ -172,7 +174,7 @@ function AppContent() {
         </PageWrapper>
       </main>
 
-      <Footer />
+      {!isMarketingPage && <Footer />}
 
       {/* Scroll to Top Button */}
       <AnimatePresence>
