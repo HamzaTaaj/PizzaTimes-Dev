@@ -1,12 +1,96 @@
 import { motion } from 'motion/react';
 import { useNavigate } from 'react-router-dom';
-import { Calendar, Tag, ArrowRight, TrendingUp, Award, Users, Globe } from 'lucide-react';
+import { Calendar, Tag, ArrowRight, TrendingUp, Award, Users, Globe, X } from 'lucide-react';
 import { ImageWithFallback } from './figma/ImageWithFallback';
 import { fadeInUp, staggerContainer, viewportConfig } from '../utils/animations';
+import { useEffect, useState } from 'react';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from './ui/dialog';
 
 export function BlogPage() {
   const navigate = useNavigate();
-  const pressReleases = [
+  const [selectedCategory, setSelectedCategory] = useState<string>('All');
+  const [blogArticles, setBlogArticles] = useState<any[]>([]);
+  const [categories, setCategories] = useState<string[]>(['All']);
+  const [loading, setLoading] = useState(true);
+  const [selectedArticle, setSelectedArticle] = useState<any | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  // Fetch all blogs from Shopify
+  useEffect(() => {
+    const fetchBlogs = async () => {
+      try {
+        setLoading(true);
+        const response = await fetch('/api/get-shopify-blogs?limit=100'); // Get all blogs
+        
+        if (response.ok) {
+          const data = await response.json();
+          console.log('📰 Blog data received:', data);
+          
+          if (data.success) {
+            // Set articles
+            if (data.articles && data.articles.length > 0) {
+              console.log(`✅ Setting ${data.articles.length} articles`);
+              setBlogArticles(data.articles);
+            } else {
+              console.warn('⚠️ No articles found in response');
+              setBlogArticles([]);
+            }
+            
+            // Extract categories from blogs array (blog names from Shopify)
+            if (data.blogs && data.blogs.length > 0) {
+              const blogNames = data.blogs.map((blog: any) => blog.title).filter(Boolean).sort();
+              console.log('📋 Blog names for tabs:', blogNames);
+              setCategories(['All', ...blogNames]);
+            } else if (data.articles && data.articles.length > 0) {
+              // Fallback: extract from articles if blogs array not available
+              const uniqueCategories = Array.from(
+                new Set(data.articles.map((article: any) => article.blogTitle || article.category || 'Uncategorized'))
+              ).filter(Boolean).sort() as string[];
+              console.log('📋 Categories from articles:', uniqueCategories);
+              setCategories(['All', ...uniqueCategories]);
+            }
+          }
+        }
+      } catch (error) {
+        console.error('Error fetching blogs:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchBlogs();
+  }, []);
+
+  // Filter articles by selected category (match by blogTitle which is the blog name from Shopify)
+  const filteredArticles = selectedCategory === 'All' 
+    ? blogArticles 
+    : blogArticles.filter((article: any) => {
+        // Match by blogTitle (which is the blog name) or category
+        const articleBlogName = article.blogTitle || article.category;
+        const matches = articleBlogName === selectedCategory;
+        if (!matches && selectedCategory !== 'All') {
+          console.log(`❌ Article "${article.title}" doesn't match "${selectedCategory}". Blog: "${articleBlogName}"`);
+        }
+        return matches;
+      });
+
+  console.log(`🔍 Filtered articles for "${selectedCategory}":`, filteredArticles.length, 'out of', blogArticles.length);
+  if (blogArticles.length > 0) {
+    console.log('📝 Sample article:', {
+      title: blogArticles[0]?.title,
+      blogTitle: blogArticles[0]?.blogTitle,
+      category: blogArticles[0]?.category
+    });
+  }
+
+  // Fallback static data
+  const fallbackReleases = [
     {
       id: 1,
       date: 'December 15, 2025',
@@ -69,7 +153,24 @@ export function BlogPage() {
     }
   ];
 
-  const categories = ['All', 'Expansion', 'Awards', 'Partnership', 'Technology', 'Sustainability', 'Product Launch'];
+  // Use dynamic categories from Shopify, show only "All" while loading
+  const displayCategories = loading ? ['All'] : (categories.length > 1 ? categories : ['All']);
+  
+  // Show filtered articles if available, otherwise show fallback only when not loading and no blog articles from Shopify
+  const displayArticles = (filteredArticles.length > 0) 
+    ? filteredArticles 
+    : (!loading && blogArticles.length === 0 && filteredArticles.length === 0) 
+      ? fallbackReleases 
+      : filteredArticles; // Show filteredArticles even if empty (will show "No articles" message)
+
+  console.log('📊 Display state:', {
+    displayArticlesCount: displayArticles.length,
+    loading,
+    filteredCount: filteredArticles.length,
+    blogArticlesCount: blogArticles.length,
+    selectedCategory,
+    hasFallback: fallbackReleases.length
+  });
 
   return (
     <div className="min-h-screen pt-20 bg-white">
@@ -111,12 +212,13 @@ export function BlogPage() {
             variants={staggerContainer}
             className="flex flex-wrap gap-3 justify-center"
           >
-            {categories.map((category, index) => (
+            {displayCategories.map((category, index) => (
               <motion.button
                 key={category}
                 variants={fadeInUp}
                 whileHover={{ scale: 1.05 }}
-                className={`px-6 py-2 rounded-full transition-all font-medium ${category === 'All'
+                onClick={() => setSelectedCategory(category)}
+                className={`px-6 py-2 rounded-full transition-all font-medium ${selectedCategory === category
                     ? 'bg-blue-600 text-white'
                     : 'bg-white border-2 border-slate-200 text-slate-700 hover:border-blue-600 hover:text-blue-600'
                   }`}
@@ -144,10 +246,27 @@ export function BlogPage() {
             variants={staggerContainer}
             className="space-y-8"
           >
-            {pressReleases.map((release, index) => (
+            {loading ? (
+              <div className="space-y-8">
+                {[1, 2, 3].map((i) => (
+                  <div key={i} className="grid md:grid-cols-3 gap-6 p-6 bg-white border border-slate-200 rounded-2xl animate-pulse">
+                    <div className="h-48 bg-slate-200 rounded-xl" />
+                    <div className="md:col-span-2 space-y-4">
+                      <div className="h-4 bg-slate-200 rounded w-20" />
+                      <div className="h-8 bg-slate-200 rounded w-3/4" />
+                      <div className="h-4 bg-slate-200 rounded" />
+                      <div className="h-4 bg-slate-200 rounded w-5/6" />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              displayArticles.map((release: any, index: number) => (
               <motion.article
-                key={release.id}
-                variants={fadeInUp}
+                key={release.id || index}
+                initial={{ opacity: 0, y: 30 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: index * 0.1 }}
                 className="group"
               >
                 <div className="grid md:grid-cols-3 gap-6 p-6 bg-white border border-slate-200 rounded-2xl hover:border-blue-600 hover:shadow-lg transition-all">
@@ -158,11 +277,13 @@ export function BlogPage() {
                       alt={release.title}
                       className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                     />
-                    <div className="absolute top-4 left-4">
-                      <div className="w-12 h-12 bg-blue-600 rounded-lg flex items-center justify-center shadow-lg">
-                        <release.icon className="w-6 h-6 text-white" />
+                    {release.icon && (
+                      <div className="absolute top-4 left-4">
+                        <div className="w-12 h-12 bg-blue-600 rounded-lg flex items-center justify-center shadow-lg">
+                          <release.icon className="w-6 h-6 text-white" />
+                        </div>
                       </div>
-                    </div>
+                    )}
                   </div>
 
                   {/* Content */}
@@ -176,7 +297,7 @@ export function BlogPage() {
                         <div className="flex items-center gap-2">
                           <Tag className="w-4 h-4 text-blue-600" />
                           <span className="px-3 py-1 bg-blue-50 text-blue-600 rounded-full text-sm font-medium">
-                            {release.category}
+                            {release.category || release.blogTitle || 'Uncategorized'}
                           </span>
                         </div>
                       </div>
@@ -185,18 +306,17 @@ export function BlogPage() {
                         {release.title}
                       </h2>
 
-                      <p className="text-slate-600 mb-4 line-clamp-2 leading-relaxed">
-                        {release.excerpt}
-                      </p>
-
-                      <p className="text-slate-500 line-clamp-3 leading-relaxed">
-                        {release.content}
+                      <p className="text-slate-600 mb-4 line-clamp-4 md:line-clamp-4 leading-relaxed text-base">
+                        {release.excerpt || 'No excerpt available.'}
                       </p>
                     </div>
 
                     <div className="mt-4">
                       <motion.button
-                        onClick={() => navigate('/blog')}
+                        onClick={() => {
+                          setSelectedArticle(release);
+                          setIsModalOpen(true);
+                        }}
                         whileHover={{ x: 5 }}
                         className="flex items-center gap-2 text-blue-600 group-hover:text-blue-700 transition-colors font-medium"
                       >
@@ -207,26 +327,15 @@ export function BlogPage() {
                   </div>
                 </div>
               </motion.article>
-            ))}
+              ))
+            )}
           </motion.div>
 
-          {/* Load More */}
-          <motion.div
-            initial="hidden"
-            whileInView="visible"
-            viewport={viewportConfig}
-            variants={fadeInUp}
-            className="text-center mt-12"
-          >
-            <motion.button
-              onClick={() => onNavigate('blog')}
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              className="px-8 py-4 border-2 border-slate-300 rounded-lg hover:bg-slate-50 hover:border-blue-600 transition-colors text-slate-700 font-medium"
-            >
-              Load More Articles
-            </motion.button>
-          </motion.div>
+          {!loading && displayArticles.length === 0 && (
+            <div className="text-center py-20">
+              <p className="text-slate-600 text-lg">No articles found in this category.</p>
+            </div>
+          )}
         </div>
       </section>
 
@@ -266,6 +375,94 @@ export function BlogPage() {
           </motion.div>
         </div>
       </section>
+
+      {/* Blog Detail Modal */}
+      <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
+        <DialogContent className="!max-w-[1400px] sm:!max-w-[1400px] w-[95vw] max-h-[90vh] overflow-hidden bg-white p-0 flex flex-col">
+          {selectedArticle && (
+            <div className="flex flex-col h-full overflow-hidden">
+              {/* Scrollable Content Area */}
+              <div className="overflow-y-auto flex-1 custom-scrollbar">
+                {/* Article Image - Top */}
+                {selectedArticle.image && (
+                  <div className="w-full h-64 md:h-80 overflow-hidden flex-shrink-0">
+                    <ImageWithFallback
+                      src={selectedArticle.image}
+                      alt={selectedArticle.title}
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                )}
+
+                {/* Content Section */}
+                <div className="p-6 md:p-8">
+                  {/* Date and Category - Below Image */}
+                  <div className="flex flex-wrap items-center gap-4 mb-4">
+                    <div className="flex items-center gap-2 text-slate-600">
+                      <Calendar className="w-4 h-4" />
+                      <span className="text-sm">{selectedArticle.date}</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <Tag className="w-4 h-4 text-blue-600" />
+                      <span className="px-3 py-1 bg-blue-50 text-blue-600 rounded-full text-sm font-medium">
+                        {selectedArticle.category || selectedArticle.blogTitle || 'Uncategorized'}
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* Title */}
+                  <h2 className="text-3xl md:text-4xl mb-6 text-slate-900 font-bold leading-tight">
+                    {selectedArticle.title}
+                  </h2>
+
+                  {/* Full Content - Complete Article */}
+                  <div className="prose prose-lg max-w-none">
+                    {selectedArticle.bodyHtml ? (
+                      <div 
+                        className="text-slate-700 leading-relaxed blog-content"
+                        style={{ 
+                          fontSize: '1.125rem',
+                          lineHeight: '1.75rem'
+                        }}
+                        dangerouslySetInnerHTML={{ 
+                          __html: selectedArticle.bodyHtml
+                        }}
+                      />
+                    ) : selectedArticle.content ? (
+                      <div 
+                        className="text-slate-700 leading-relaxed blog-content"
+                        style={{ 
+                          fontSize: '1.125rem',
+                          lineHeight: '1.75rem'
+                        }}
+                        dangerouslySetInnerHTML={{ 
+                          __html: selectedArticle.content
+                        }}
+                      />
+                    ) : (
+                      <div className="text-slate-700 leading-relaxed whitespace-pre-wrap" style={{ fontSize: '1.125rem', lineHeight: '1.75rem' }}>
+                        {selectedArticle.excerpt}
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </div>
+
+              {/* Close Button - Fixed at Bottom */}
+              <div className="p-6 md:p-8 pt-4 border-t border-slate-200 flex-shrink-0 bg-white">
+                <motion.button
+                  onClick={() => setIsModalOpen(false)}
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  className="w-full px-6 py-3 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition-colors text-base"
+                >
+                  Close Article
+                </motion.button>
+              </div>
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

@@ -186,9 +186,194 @@ Submitted at: ${new Date().toISOString()}
   }
 });
 
+// Get Shopify blogs endpoint
+app.get('/api/get-shopify-blogs', async (req, res) => {
+  try {
+    const limit = parseInt(req.query.limit) || 3;
+    console.log('📰 Blog API endpoint called, limit:', limit);
+    
+    // Check if credentials are available
+    if (!SHOPIFY_STORE_DOMAIN || !SHOPIFY_ADMIN_ACCESS_TOKEN) {
+      console.error('❌ Missing Shopify credentials');
+      return res.status(500).json({ 
+        error: 'Server configuration error: Missing Shopify credentials',
+        success: false
+      });
+    }
+    
+    console.log(`📡 Fetching blogs from: https://${SHOPIFY_STORE_DOMAIN}/admin/api/2024-10/blogs.json`);
+    
+    // First, get all blogs
+    const blogsResponse = await fetch(
+      `https://${SHOPIFY_STORE_DOMAIN}/admin/api/2024-10/blogs.json`,
+      {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-Shopify-Access-Token': SHOPIFY_ADMIN_ACCESS_TOKEN
+        }
+      }
+    );
+
+    if (!blogsResponse.ok) {
+      const errorText = await blogsResponse.text();
+      let errorData = {};
+      try {
+        errorData = JSON.parse(errorText);
+      } catch (e) {
+        errorData = { message: errorText };
+      }
+      console.error('❌ Shopify API error fetching blogs:', {
+        status: blogsResponse.status,
+        statusText: blogsResponse.statusText,
+        error: errorData
+      });
+      return res.status(500).json({ 
+        error: 'Failed to fetch blogs from Shopify',
+        details: errorData,
+        success: false
+      });
+    }
+
+    const blogsData = await blogsResponse.json();
+    console.log(`✅ Found ${blogsData.blogs?.length || 0} blogs in Shopify`);
+    
+    if (!blogsData.blogs || blogsData.blogs.length === 0) {
+      console.warn('⚠️  No blogs found in Shopify');
+      return res.status(200).json({ 
+        success: true,
+        articles: [],
+        message: 'No blogs found'
+      });
+    }
+
+    // Fetch articles from all blogs
+    const allArticles = [];
+    
+    for (const blog of blogsData.blogs) {
+      console.log(`📝 Fetching articles from blog: ${blog.title} (ID: ${blog.id})`);
+      const articlesResponse = await fetch(
+        `https://${SHOPIFY_STORE_DOMAIN}/admin/api/2024-10/blogs/${blog.id}/articles.json?limit=250&published_status=published`,
+        {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-Shopify-Access-Token': SHOPIFY_ADMIN_ACCESS_TOKEN
+          }
+        }
+      );
+
+      if (articlesResponse.ok) {
+        const articlesData = await articlesResponse.json();
+        if (articlesData.articles) {
+          // Filter only published articles (including future-dated ones for scheduled posts)
+          const publishedArticles = articlesData.articles.filter((article) => {
+            // Include articles that have published_at set (even if future dated)
+            return article.published_at != null;
+          });
+          
+          console.log(`  ✅ Found ${publishedArticles.length} published articles in "${blog.title}"`);
+          allArticles.push(...publishedArticles.map((article) => ({
+            ...article,
+            blogHandle: blog.handle,
+            blogTitle: blog.title
+          })));
+        }
+      } else {
+        const errorText = await articlesResponse.text();
+        console.warn(`  ❌ Failed to fetch articles from "${blog.title}":`, errorText);
+      }
+    }
+    
+    console.log(`📊 Total articles collected: ${allArticles.length}`);
+
+    // Sort articles by published date (newest first)
+    allArticles.sort((a, b) => {
+      const dateA = new Date(a.published_at || a.created_at).getTime();
+      const dateB = new Date(b.published_at || b.created_at).getTime();
+      return dateB - dateA;
+    });
+
+    // Take only the requested limit
+    const limitedArticles = allArticles.slice(0, limit);
+    console.log(`📦 Returning ${limitedArticles.length} articles (limit: ${limit})`);
+
+    // Transform articles to match frontend structure
+    const formattedArticles = limitedArticles.map((article) => {
+      // Extract excerpt from summary or body_html
+      let excerpt = article.summary || '';
+      if (!excerpt && article.body_html) {
+        const text = article.body_html.replace(/<[^>]*>/g, '').trim();
+        excerpt = text.substring(0, 150) + (text.length > 150 ? '...' : '');
+      }
+
+      // Get image from article image or first image in body_html
+      let imageUrl = article.image?.src || '';
+      if (!imageUrl && article.body_html) {
+        const imgMatch = article.body_html.match(/<img[^>]+src="([^">]+)"/i);
+        if (imgMatch) {
+          imageUrl = imgMatch[1];
+        }
+      }
+      if (!imageUrl) {
+        imageUrl = 'https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=600&h=400&fit=crop';
+      }
+
+      // Format date
+      const publishedDate = new Date(article.published_at || article.created_at);
+      const formattedDate = publishedDate.toLocaleDateString('en-US', { 
+        year: 'numeric', 
+        month: 'short', 
+        day: 'numeric' 
+      });
+
+      // Get category from blog title (which represents the blog category)
+      const category = article.blogTitle || article.tags?.[0] || 'Uncategorized';
+
+      return {
+        id: article.id,
+        title: article.title,
+        excerpt: excerpt,
+        date: formattedDate,
+        category: category,
+        blogTitle: article.blogTitle, // Keep blogTitle for category extraction
+        image: imageUrl,
+        imageAlt: article.image?.alt || article.title,
+        handle: article.handle,
+        blogHandle: article.blogHandle,
+        url: `/blog/${article.blogHandle}/${article.handle}`,
+        publishedAt: article.published_at || article.created_at,
+        content: article.body_html || excerpt, // Full HTML content for modal
+        bodyHtml: article.body_html // Keep original HTML for complete content
+      };
+    });
+
+    console.log('✅ Successfully returning articles');
+    return res.status(200).json({ 
+      success: true,
+      articles: formattedArticles,
+      blogs: blogsData.blogs.map((blog) => ({
+        id: blog.id,
+        title: blog.title,
+        handle: blog.handle
+      })) // Return blog names for tabs
+    });
+
+  } catch (error) {
+    console.error('❌ Error fetching blogs from Shopify:', error);
+    console.error('Error stack:', error.stack);
+    return res.status(500).json({ 
+      error: 'Internal server error',
+      message: error.message || 'Unknown error',
+      success: false
+    });
+  }
+});
+
 app.listen(PORT, () => {
   console.log(`✅ Local API server running on http://localhost:${PORT}`);
   console.log(`📝 Contact form endpoint: http://localhost:${PORT}/api/contact-submit`);
   console.log(`✉️  Support email endpoint: http://localhost:${PORT}/api/support-email`);
+  console.log(`📰 Blog endpoint: http://localhost:${PORT}/api/get-shopify-blogs`);
   console.log(`🔗 Ready to receive form submissions!`);
 });

@@ -1,9 +1,16 @@
 import { motion, useInView } from 'motion/react';
 import { useNavigate } from 'react-router-dom';
-import { Zap, Clock, Shield, TrendingUp, ArrowRight, Building2, DollarSign, Users, Globe, BarChart3, Award, CheckCircle2, Calendar } from 'lucide-react';
+import { Zap, Clock, Shield, TrendingUp, ArrowRight, Building2, DollarSign, Users, Globe, BarChart3, Award, CheckCircle2, Calendar, Tag, X } from 'lucide-react';
 import { ImageWithFallback } from './figma/ImageWithFallback';
 import vend1Image from '@/assets/vend1.png';
 import { useRef, useEffect, useState } from 'react';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from './ui/dialog';
 
 // Letter-by-letter animation component
 function AnimatedTitle({ text, className = '', highlightText = '', highlightClassName = '' }: { text: string; className?: string; highlightText?: string; highlightClassName?: string }) {
@@ -152,6 +159,8 @@ function AnimatedCounter({ value, suffix = '', prefix = '', duration = 2 }: { va
   );
 }
 
+// Note: Storefront API doesn't support blogs, so we'll use REST API via server endpoint
+
 export function HomePage() {
   const navigate = useNavigate();
   const features = [
@@ -204,14 +213,69 @@ export function HomePage() {
     }
   ];
 
-  const pressReleases = [
+  // State for blog articles
+  const [blogLoading, setBlogLoading] = useState(true);
+  const [blogArticles, setBlogArticles] = useState<any[]>([]);
+  const [selectedArticle, setSelectedArticle] = useState<any | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  // Fetch blogs from REST API (Storefront API doesn't support blogs)
+  useEffect(() => {
+    const fetchBlogs = async () => {
+      try {
+        setBlogLoading(true);
+        console.log('📰 Fetching blogs from /api/get-shopify-blogs');
+        const response = await fetch('/api/get-shopify-blogs?limit=3');
+        
+        console.log('📡 Response status:', response.status, response.statusText);
+        
+        if (response.ok) {
+          const data = await response.json();
+          console.log('✅ Blog data received:', data);
+          
+          if (data.success && data.articles && data.articles.length > 0) {
+            console.log(`✅ Found ${data.articles.length} articles`);
+            setBlogArticles(data.articles);
+          } else {
+            console.warn('⚠️ No articles in response, using fallback');
+            setBlogArticles([]);
+          }
+        } else {
+          const errorText = await response.text();
+          let errorDetails: any = {};
+          try {
+            errorDetails = JSON.parse(errorText);
+          } catch (e) {
+            errorDetails = { message: errorText };
+          }
+          console.error('❌ Failed to fetch blogs:', {
+            status: response.status,
+            statusText: response.statusText,
+            error: errorDetails
+          });
+          setBlogArticles([]);
+        }
+      } catch (error) {
+        console.error('❌ Error fetching blogs:', error);
+        setBlogArticles([]);
+      } finally {
+        setBlogLoading(false);
+      }
+    };
+
+    fetchBlogs();
+  }, []);
+
+  // Use blog articles or fallback
+  const displayArticles = blogArticles.length > 0 ? blogArticles : [
     {
       date: 'Dec 15, 2025',
       title: 'Pizza Anytime Expands to 50 Locations Nationwide',
       excerpt: 'Revolutionary vending technology brings fresh pizza to transit hubs and corporate campuses.',
       category: 'Expansion',
       image: 'https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=600&h=400&fit=crop',
-      imageAlt: 'Pizza/food service image from Unsplash'
+      imageAlt: 'Pizza/food service image from Unsplash',
+      id: 'fallback-1'
     },
     {
       date: 'Nov 28, 2025',
@@ -219,7 +283,8 @@ export function HomePage() {
       excerpt: 'Industry recognition for pioneering smart vending machine technology.',
       category: 'Awards',
       image: 'https://images.unsplash.com/photo-1513104890138-7c749659a591?w=600&h=400&fit=crop',
-      imageAlt: 'Pizza/food image from Unsplash'
+      imageAlt: 'Pizza/food image from Unsplash',
+      id: 'fallback-2'
     },
     {
       date: 'Nov 10, 2025',
@@ -227,7 +292,8 @@ export function HomePage() {
       excerpt: 'Strategic collaboration to revolutionize quick-service restaurant industry.',
       category: 'Partnership',
       image: 'https://images.unsplash.com/photo-1571066811602-716837d681de?w=600&h=400&fit=crop',
-      imageAlt: 'Pizza/food image from Unsplash'
+      imageAlt: 'Pizza/food image from Unsplash',
+      id: 'fallback-3'
     }
   ];
 
@@ -571,61 +637,83 @@ export function HomePage() {
           </div>
 
           {/* Blog Posts Grid */}
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {pressReleases.map((release, index) => (
-              <motion.article
-                key={index}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: "-100px" }}
-                transition={{ duration: 0.5, delay: 0.3 + (index * 0.1) }}
-                whileHover={{
-                  y: -4
-                }}
-                className="bg-white border border-slate-200 rounded-xl overflow-hidden transition-all cursor-pointer group hover:border-blue-600 hover:shadow-lg"
-                onClick={() => navigate('/blog')}
-              >
-                {/* Image Container */}
-                <div className="relative h-48 overflow-hidden">
-                  <img
-                    src={release.image}
-                    alt={release.imageAlt}
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                  />
+          {blogLoading ? (
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {[1, 2, 3].map((index) => (
+                <div
+                  key={index}
+                  className="bg-white border border-slate-200 rounded-xl overflow-hidden animate-pulse"
+                >
+                  <div className="h-48 bg-slate-200" />
+                  <div className="p-6">
+                    <div className="h-4 bg-slate-200 rounded w-20 mb-4" />
+                    <div className="h-6 bg-slate-200 rounded mb-3" />
+                    <div className="h-4 bg-slate-200 rounded mb-2" />
+                    <div className="h-4 bg-slate-200 rounded w-3/4" />
+                  </div>
                 </div>
+              ))}
+            </div>
+          ) : (
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {displayArticles.map((release, index) => (
+                <motion.article
+                  key={release.id || index}
+                  initial={{ opacity: 0, y: 30 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true, margin: "-100px" }}
+                  transition={{ duration: 0.5, delay: 0.3 + (index * 0.1) }}
+                  whileHover={{
+                    y: -4
+                  }}
+                  className="bg-white border border-slate-200 rounded-xl overflow-hidden transition-all cursor-pointer group hover:border-blue-600 hover:shadow-lg"
+                  onClick={() => {
+                    setSelectedArticle(release);
+                    setIsModalOpen(true);
+                  }}
+                >
+                  {/* Image Container */}
+                  <div className="relative h-48 overflow-hidden">
+                    <img
+                      src={release.image}
+                      alt={release.imageAlt}
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                    />
+                  </div>
 
-                {/* Content Container */}
-                <div className="p-6">
-                  {/* Category Badge and Date */}
-                  <div className="flex items-center gap-3 mb-4">
-                    <span className="px-3 py-1 rounded-full bg-blue-600/10 text-blue-600 text-sm font-medium">
-                      {release.category}
-                    </span>
-                    <div className="flex items-center gap-1">
-                      <Calendar className="w-3 h-3 text-slate-500" />
-                      <span className="text-xs text-slate-500">{release.date}</span>
+                  {/* Content Container */}
+                  <div className="p-6">
+                    {/* Category Badge and Date */}
+                    <div className="flex items-center gap-3 mb-4">
+                      <span className="px-3 py-1 rounded-full bg-blue-600/10 text-blue-600 text-sm font-medium">
+                        {release.category}
+                      </span>
+                      <div className="flex items-center gap-1">
+                        <Calendar className="w-3 h-3 text-slate-500" />
+                        <span className="text-xs text-slate-500">{release.date}</span>
+                      </div>
+                    </div>
+
+                    {/* Title */}
+                    <h3 className="font-semibold text-slate-900 mb-3 hover:text-blue-600 transition-colors cursor-pointer line-clamp-2">
+                      {release.title}
+                    </h3>
+
+                    {/* Excerpt */}
+                    <p className="text-sm text-slate-600 mb-4 line-clamp-4 md:line-clamp-4">
+                      {release.excerpt}
+                    </p>
+
+                    {/* Read More Link */}
+                    <div className="inline-flex items-center gap-2 text-blue-600 text-sm font-medium hover:gap-3 transition-all group/link">
+                      Read More
+                      <ArrowRight className="w-3 h-3" />
                     </div>
                   </div>
-
-                  {/* Title */}
-                  <h3 className="font-semibold text-slate-900 mb-3 hover:text-blue-600 transition-colors cursor-pointer line-clamp-2">
-                    {release.title}
-                  </h3>
-
-                  {/* Excerpt */}
-                  <p className="text-sm text-slate-600 mb-4 line-clamp-2">
-                    {release.excerpt}
-                  </p>
-
-                  {/* Read More Link */}
-                  <div className="inline-flex items-center gap-2 text-blue-600 text-sm font-medium hover:gap-3 transition-all group/link">
-                    Read More
-                    <ArrowRight className="w-3 h-3" />
-                  </div>
-                </div>
-              </motion.article>
-            ))}
-          </div>
+                </motion.article>
+              ))}
+            </div>
+          )}
         </div>
       </section>
 
@@ -646,7 +734,7 @@ export function HomePage() {
                 scale: 1.05
               }}
               whileTap={{ scale: 0.95 }}
-              onClick={() => onNavigate('request-access')}
+              onClick={() => navigate('/request-access')}
               className="px-10 py-5 bg-white text-blue-600 rounded-lg text-lg font-semibold hover:bg-blue-50 transition-colors"
             >
               Request Access
@@ -654,6 +742,94 @@ export function HomePage() {
           </motion.div>
         </div>
       </section>
+
+      {/* Blog Detail Modal */}
+      <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
+        <DialogContent className="!max-w-[1400px] sm:!max-w-[1400px] w-[95vw] max-h-[90vh] overflow-hidden bg-white p-0 flex flex-col">
+          {selectedArticle && (
+            <div className="flex flex-col h-full overflow-hidden">
+              {/* Scrollable Content Area */}
+              <div className="overflow-y-auto flex-1 custom-scrollbar">
+                {/* Article Image - Top */}
+                {selectedArticle.image && (
+                  <div className="w-full h-64 md:h-80 overflow-hidden flex-shrink-0">
+                    <ImageWithFallback
+                      src={selectedArticle.image}
+                      alt={selectedArticle.title}
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                )}
+
+                {/* Content Section */}
+                <div className="p-6 md:p-8">
+                  {/* Date and Category - Below Image */}
+                  <div className="flex flex-wrap items-center gap-4 mb-4">
+                    <div className="flex items-center gap-2 text-slate-600">
+                      <Calendar className="w-4 h-4" />
+                      <span className="text-sm">{selectedArticle.date}</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <Tag className="w-4 h-4 text-blue-600" />
+                      <span className="px-3 py-1 bg-blue-50 text-blue-600 rounded-full text-sm font-medium">
+                        {selectedArticle.category || selectedArticle.blogTitle || 'Uncategorized'}
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* Title */}
+                  <h2 className="text-3xl md:text-4xl mb-6 text-slate-900 font-bold leading-tight">
+                    {selectedArticle.title}
+                  </h2>
+
+                  {/* Full Content - Complete Article */}
+                  <div className="prose prose-lg max-w-none">
+                    {selectedArticle.bodyHtml ? (
+                      <div 
+                        className="text-slate-700 leading-relaxed blog-content"
+                        style={{ 
+                          fontSize: '1.125rem',
+                          lineHeight: '1.75rem'
+                        }}
+                        dangerouslySetInnerHTML={{ 
+                          __html: selectedArticle.bodyHtml
+                        }}
+                      />
+                    ) : selectedArticle.content ? (
+                      <div 
+                        className="text-slate-700 leading-relaxed blog-content"
+                        style={{ 
+                          fontSize: '1.125rem',
+                          lineHeight: '1.75rem'
+                        }}
+                        dangerouslySetInnerHTML={{ 
+                          __html: selectedArticle.content
+                        }}
+                      />
+                    ) : (
+                      <div className="text-slate-700 leading-relaxed whitespace-pre-wrap" style={{ fontSize: '1.125rem', lineHeight: '1.75rem' }}>
+                        {selectedArticle.excerpt}
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </div>
+
+              {/* Close Button - Fixed at Bottom */}
+              <div className="p-6 md:p-8 pt-4 border-t border-slate-200 flex-shrink-0 bg-white">
+                <motion.button
+                  onClick={() => setIsModalOpen(false)}
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  className="w-full px-6 py-3 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition-colors text-base"
+                >
+                  Close Article
+                </motion.button>
+              </div>
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

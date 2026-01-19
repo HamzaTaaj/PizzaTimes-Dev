@@ -211,11 +211,22 @@ export function ClientDashboard() {
     try {
       const date = new Date(dateString);
       const now = new Date();
-      const diffTime = Math.abs(now.getTime() - date.getTime());
-      const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
       
-      if (diffDays === 0) return 'Today';
-      if (diffDays === 1) return '1 day ago';
+      // Check if same day
+      const isSameDay = date.getDate() === now.getDate() &&
+                       date.getMonth() === now.getMonth() &&
+                       date.getFullYear() === now.getFullYear();
+      
+      if (isSameDay) {
+        return 'Today';
+      }
+      
+      // Calculate difference in days
+      const diffTime = now.getTime() - date.getTime();
+      const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+      
+      if (diffDays === 0) return "Today's order";
+      if (diffDays === 1) return 'Yesterday';
       if (diffDays < 7) return `${diffDays} days ago`;
       if (diffDays < 30) return `${Math.floor(diffDays / 7)} weeks ago`;
       if (diffDays < 365) return `${Math.floor(diffDays / 30)} months ago`;

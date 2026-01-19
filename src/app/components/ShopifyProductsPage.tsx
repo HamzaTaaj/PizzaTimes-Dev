@@ -480,12 +480,12 @@ export function ShopifyProductsPage() {
 
         <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
-            {/* Left Content */}
+            {/* Right Content - Moved to right side for shop */}
             <motion.div
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.7, ease: "easeOut" }}
-              className="text-white"
+              className="text-white lg:order-2"
             >
               {/* Badge */}
               <motion.div
@@ -498,14 +498,15 @@ export function ShopifyProductsPage() {
                 <span className="text-blue-200 font-medium text-sm">Shop Now & Save</span>
               </motion.div>
 
-              {/* Main Heading */}
-              <h1 className="text-4xl md:text-5xl lg:text-6xl mb-6 font-extrabold text-white leading-tight">
-                Everything You Need for Your
-                <br />
-                <span className="text-blue-400">
-                  Vending Machine
-                </span>
-              </h1>
+              {/* Main Heading - Different structure for shop */}
+              <div className="mb-6">
+                <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold text-white leading-tight mb-2">
+                  Shop Premium
+                </h1>
+                <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold text-blue-400 leading-tight">
+                  Vending Machine Parts
+                </h1>
+              </div>
 
               {/* Description */}
               <p className="text-lg md:text-xl text-slate-300 mb-8 max-w-xl leading-relaxed">
