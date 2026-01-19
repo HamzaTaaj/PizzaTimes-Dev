@@ -107,6 +107,21 @@ function AppContent() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+ // ✅ ZENDESK CHAT
+ useEffect(() => {
+  if (document.getElementById("ze-snippet")) return;
+
+  const script = document.createElement("script");
+  script.id = "ze-snippet";
+  script.src =
+    "https://static.zdassets.com/ekr/snippet.js?key=9a4de2e7-87cb-4f7a-ac01-90bfaa2e0d37";
+  script.async = true;
+
+  document.body.appendChild(script);
+}, []);
+
+
+
   // Scroll to top on route change
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -176,7 +191,7 @@ function AppContent() {
 
       {!isMarketingPage && <Footer />}
 
-      {/* Scroll to Top Button */}
+      {/* Scroll to Top Button - Positioned to avoid Zendesk widget overlap */}
       <AnimatePresence>
         {showScrollTop && (
           <motion.button
@@ -184,14 +199,28 @@ function AppContent() {
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.8 }}
             onClick={scrollToTop}
-            className="fixed bottom-8 right-8 w-12 h-12 bg-blue-600 rounded-full flex items-center justify-center shadow-lg shadow-blue-600/30 hover:shadow-xl hover:shadow-blue-600/50 transition-shadow z-50"
+            className="fixed bottom-24 right-8 w-12 h-12 bg-blue-600 rounded-full flex items-center justify-center shadow-lg shadow-blue-600/30 hover:shadow-xl hover:shadow-blue-600/50 transition-shadow z-50"
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.9 }}
+            aria-label="Scroll to top"
           >
             <ArrowUp className="w-6 h-6 text-white" />
           </motion.button>
         )}
       </AnimatePresence>
+      
+      {/* Zendesk Widget Position Adjustment */}
+      <style>{`
+        /* Adjust Zendesk widget position to avoid overlap */
+        #launcher {
+          bottom: 20px !important;
+          right: 20px !important;
+        }
+        /* Ensure scroll to top button is above Zendesk */
+        .fixed.bottom-24 {
+          z-index: 9999 !important;
+        }
+      `}</style>
     </div>
   );
 }

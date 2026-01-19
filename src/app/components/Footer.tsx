@@ -21,7 +21,7 @@ export function Footer() {
               <img src={logo} alt="Pizza Anytime Logo" className="h-26 object-contain" />
             </div>
             <p className="text-slate-600 mb-6 leading-relaxed mt-[-20px]">
-              Pizza Anytime™ from High Sierra Vending turns an ordinary corner of your business into a 24-hour profit center—without locking you into someone else's rules or recipes.
+              Pizza Anytime™ from High Sierra Vending turns an ordinary corner of your business into a 24-hour profit center without locking you into someone else's rules or recipes.
             </p>
             <div className="flex items-center gap-4">
               <motion.a
