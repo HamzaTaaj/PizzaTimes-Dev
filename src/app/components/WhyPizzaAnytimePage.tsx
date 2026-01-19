@@ -23,7 +23,7 @@ export function WhyPizzaAnytimePage() {
     {
       icon: TrendingUp,
       title: 'Proven Technology',
-      description: 'Advanced robotics and AI ensure consistent results. Trusted by operators worldwide.'
+      description: 'Advanced robotics ensure consistent results. Trusted by operators worldwide.'
     },
     {
       icon: Users,

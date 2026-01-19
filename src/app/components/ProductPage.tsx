@@ -1213,7 +1213,7 @@ The machine is engineered for serious, scalable performance. A 69-pizza capacity
               {
                 icon: Shield,
                 title: 'Secure Access Control',
-                description: 'Advanced security features protect inventory and ensure authorized access only'
+                description: 'Secure Access Control security features protect inventory and ensure authorized access only'
               },
               {
                 icon: CheckCircle2,

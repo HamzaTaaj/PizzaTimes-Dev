@@ -1,6 +1,6 @@
 import { motion, useInView } from 'motion/react';
 import { useNavigate } from 'react-router-dom';
-import { Zap, Clock, Shield, TrendingUp, ArrowRight, Building2, DollarSign, Users, Globe, BarChart3, Award, CheckCircle2, Calendar, Tag, X } from 'lucide-react';
+import { Zap, Clock, Shield, TrendingUp, ArrowRight, Building2, DollarSign, Users, Globe, BarChart3, Award, CheckCircle2, Calendar, Tag, X, Palette, Settings, Wand2, Layers } from 'lucide-react';
 import { ImageWithFallback } from './figma/ImageWithFallback';
 import vend1Image from '@/assets/vend1.png';
 import { useRef, useEffect, useState } from 'react';
@@ -163,6 +163,11 @@ function AnimatedCounter({ value, suffix = '', prefix = '', duration = 2 }: { va
 
 export function HomePage() {
   const navigate = useNavigate();
+  
+  // Location count - hide "50+ Locations" box until we reach 15 locations
+  const LOCATION_COUNT = 0; // Update this when locations increase
+  const SHOW_LOCATIONS_BOX = LOCATION_COUNT >= 15;
+  
   const features = [
     {
       icon: Clock,
@@ -172,7 +177,7 @@ export function HomePage() {
     {
       icon: Zap,
       title: 'Rapid Deployment',
-      description: 'Streamlined installation process with average setup time under 3 minutes per order'
+      description: 'Streamlined installation process with average set up time in under 4 hours'
     },
     {
       icon: Shield,
@@ -201,7 +206,7 @@ export function HomePage() {
     },
     {
       icon: Globe,
-      title: 'Global Presence',
+      title: 'Growing Presence',
       value: '50+',
       description: 'Strategic locations across major metropolitan markets'
     },
@@ -409,14 +414,27 @@ export function HomePage() {
               </div>
 
               {/* Corporate Stats Cards */}
-              <motion.div
-                animate={{ y: [0, -8, 0] }}
-                transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-                className="absolute -top-6 -right-6 px-6 py-4 bg-white border border-slate-200 rounded-xl"
-              >
-                <div className="text-3xl font-bold text-blue-600 mb-1">50+</div>
-                <div className="text-sm text-slate-600 font-medium">Locations</div>
-              </motion.div>
+              {SHOW_LOCATIONS_BOX ? (
+                /* Show 50+ Locations box when we reach 15+ locations */
+                <motion.div
+                  animate={{ y: [0, -8, 0] }}
+                  transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+                  className="absolute -top-6 -right-6 px-6 py-4 bg-white border border-slate-200 rounded-xl"
+                >
+                  <div className="text-3xl font-bold text-blue-600 mb-1">{LOCATION_COUNT}+</div>
+                  <div className="text-sm text-slate-600 font-medium">Locations</div>
+                </motion.div>
+              ) : (
+                /* Show "Growing our footprint" box until we reach 15 locations */
+                <motion.div
+                  animate={{ y: [0, -8, 0] }}
+                  transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+                  className="absolute -top-6 -right-6 px-6 py-4 bg-white border border-slate-200 rounded-xl"
+                >
+                  <div className="text-lg font-bold text-blue-600 mb-1">Growing our</div>
+                  <div className="text-lg font-bold text-blue-600">footprint</div>
+                </motion.div>
+              )}
 
               <motion.div
                 animate={{ y: [0, 8, 0] }}
@@ -475,6 +493,117 @@ export function HomePage() {
                 <p className="text-slate-600 leading-relaxed">{feature.description}</p>
               </motion.div>
             ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Fully Customizable Section */}
+      <section className="relative py-24 bg-gradient-to-br from-blue-50 via-white to-slate-50 overflow-hidden">
+        {/* Curved Top Wave Design */}
+        <div className="absolute top-0 left-0 right-0 z-0">
+          <svg className="w-full h-24" viewBox="0 0 1440 120" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+            <path d="M0 0L60 15C120 30 240 60 360 75C480 90 600 90 720 82.5C840 75 960 60 1080 52.5C1200 45 1320 45 1380 45L1440 45V0H1380C1320 0 1200 0 1080 0C960 0 840 0 720 0C600 0 480 0 360 0C240 0 120 0 60 0H0Z" fill="#ffffff" />
+          </svg>
+        </div>
+        {/* Curved Bottom Wave Design */}
+        <div className="absolute bottom-0 left-0 right-0 z-0">
+          <svg className="w-full h-24" viewBox="0 0 1440 120" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+            <path d="M0 120L60 105C120 90 240 60 360 45C480 30 600 30 720 37.5C840 45 960 60 1080 67.5C1200 75 1320 75 1380 75L1440 75V120H1380C1320 120 1200 120 1080 120C960 120 840 120 720 120C600 120 480 120 360 120C240 120 120 120 60 120H0Z" fill="#f8fafc" />
+          </svg>
+        </div>
+
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 z-10">
+          <div className="grid lg:grid-cols-2 gap-12 items-center">
+            {/* Left Content */}
+            <motion.div
+              initial={{ opacity: 0, x: -30 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6 }}
+            >
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: 0.2 }}
+                className="inline-flex items-center gap-2 px-4 py-2 bg-blue-100 border border-blue-200 rounded-full mb-6"
+              >
+                <Wand2 className="w-4 h-4 text-blue-600" />
+                <span className="text-blue-600 font-medium text-sm">Customization</span>
+              </motion.div>
+
+              <h2 className="text-4xl md:text-5xl lg:text-6xl mb-4 font-bold text-slate-900 leading-tight">
+                Fully Customizable.
+                <br />
+                <span className="text-blue-600">Vending Machines Built Around Your Brand</span>
+              </h2>
+
+              <p className="text-xl text-slate-600 mb-6 font-medium">
+                Your vending machines should represent your business, not your supplier.
+              </p>
+
+              <p className="text-lg text-slate-600 mb-8 leading-relaxed">
+                Brand each vending machine to reflect your business or individual branch identity. From visual branding to operational configuration, every detail is designed to scale seamlessly as your network grows.
+              </p>
+
+              <motion.button
+                onClick={() => navigate('/request-access')}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                className="px-8 py-4 bg-blue-600 text-white rounded-lg flex items-center gap-2 group font-medium text-lg hover:bg-blue-700 transition-colors shadow-lg hover:shadow-xl"
+              >
+                Get In Touch
+                <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+              </motion.button>
+            </motion.div>
+
+            {/* Right Content - Customization Features */}
+            <motion.div
+              initial={{ opacity: 0, x: 30 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6, delay: 0.2 }}
+              className="grid grid-cols-2 gap-6"
+            >
+              {[
+                {
+                  icon: Palette,
+                  title: 'Visual Branding',
+                  description: 'Custom colors, logos, and graphics that match your brand identity'
+                },
+                {
+                  icon: Settings,
+                  title: 'Operational Config',
+                  description: 'Tailor machine settings, menus, and pricing to your business needs'
+                },
+                {
+                  icon: Layers,
+                  title: 'Scalable Design',
+                  description: 'Consistent branding across all locations as you expand'
+                },
+                {
+                  icon: Wand2,
+                  title: 'Full Control',
+                  description: 'Every detail customizable from appearance to functionality'
+                }
+              ].map((feature, index) => (
+                <motion.div
+                  key={index}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: 0.3 + index * 0.1 }}
+                  whileHover={{ y: -4, scale: 1.02 }}
+                  className="p-6 bg-white border-2 border-slate-200 rounded-xl hover:border-blue-600 transition-all shadow-sm hover:shadow-lg"
+                >
+                  <div className="w-12 h-12 bg-blue-50 rounded-lg flex items-center justify-center mb-4">
+                    <feature.icon className="w-6 h-6 text-blue-600" />
+                  </div>
+                  <h3 className="text-lg font-semibold text-slate-900 mb-2">{feature.title}</h3>
+                  <p className="text-sm text-slate-600 leading-relaxed">{feature.description}</p>
+                </motion.div>
+              ))}
+            </motion.div>
           </div>
         </div>
       </section>
@@ -563,7 +692,7 @@ export function HomePage() {
           <div className="grid md:grid-cols-3 gap-12 items-start">
             {[
               { step: '01', title: 'Order Selection', desc: 'Intuitive interface enables quick selection and customization of menu items' },
-              { step: '02', title: 'Automated Preparation', desc: 'AI-driven systems ensure precision and consistency in every order' },
+              { step: '02', title: 'Automated Preparation', desc: 'Precision cooking and storage for consistency in every order' },
               { step: '03', title: 'Service Delivery', desc: 'Rapid fulfillment with average service time under 3 minutes' }
             ].map((item, index) => (
               <motion.div
