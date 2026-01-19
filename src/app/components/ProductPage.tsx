@@ -74,8 +74,8 @@ export function ProductPage() {
   const features = [
     {
       icon: Cpu,
-      title: 'AI-Powered Cooking',
-      description: 'Machine learning algorithms optimize cooking time and temperature for perfect results'
+      title: 'Dual Technology Cooking',
+      description: 'Dual Technology Cooking for reduced cooktimes and more control'
     },
     {
       icon: Thermometer,
@@ -112,8 +112,8 @@ export function ProductPage() {
     },
     {
       icon: Zap,
-      title: 'Energy Efficient',
-      description: 'Energy Star certified with eco-mode for low-traffic periods'
+      title: 'Compact Design',
+      description: 'Compact Design, comprising approximately 18 Sqft of floor space'
     }
   ];
 
@@ -626,7 +626,7 @@ The machine is engineered for serious, scalable performance. A 69-pizza capacity
           <div className="grid md:grid-cols-3 gap-6">
             {[
               { title: 'Microwave', description: 'Fast heating technology' },
-              { title: 'Infrared', description: 'Precise temperature control' },
+              { title: 'Temperature Control', description: 'Continuous stand by temperature control for reduced wait' },
               { title: 'Convection', description: 'Even cooking distribution' }
             ].map((tech, index) => (
               <motion.div
