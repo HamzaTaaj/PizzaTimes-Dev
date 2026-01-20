@@ -1,6 +1,7 @@
 import { motion } from 'motion/react';
 import { useNavigate } from 'react-router-dom';
 import { Clock, Shield, Zap, TrendingUp, Users, CheckCircle2, ArrowRight } from 'lucide-react';
+import vend1Image from '@/assets/Touchscreen.jpeg';
 
 export function WhyPizzaAnytimePage() {
   const navigate = useNavigate();
@@ -134,7 +135,7 @@ export function WhyPizzaAnytimePage() {
         <div
           className="absolute inset-0 bg-cover bg-center bg-no-repeat"
           style={{
-            backgroundImage: 'url(https://pizza-vending-machine.vercel.app/assets/vend1-C6ea_9JZ.png)',
+            backgroundImage: `url(${vend1Image})`,
             backgroundSize: '70%',
             backgroundPosition: 'center',
             backgroundAttachment: 'fixed'

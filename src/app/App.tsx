@@ -97,6 +97,7 @@ function PageWrapper({ children }: { children: React.ReactNode }) {
 function AppContent() {
   const [showScrollTop, setShowScrollTop] = useState(false);
   const location = useLocation();
+  const { isAuthenticated, isLoading } = useAuth();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -107,18 +108,21 @@ function AppContent() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
- // ✅ ZENDESK CHAT
- useEffect(() => {
-  if (document.getElementById("ze-snippet")) return;
-
-  const script = document.createElement("script");
-  script.id = "ze-snippet";
-  script.src =
-    "https://static.zdassets.com/ekr/snippet.js?key=9a4de2e7-87cb-4f7a-ac01-90bfaa2e0d37";
-  script.async = true;
-
-  document.body.appendChild(script);
-}, []);
+  // Zendesk chat: sirf login users ko nazar aaye
+  useEffect(() => {
+    if (!isAuthenticated || isLoading) {
+      document.getElementById('launcher')?.style.setProperty('display', 'none');
+      return;
+    }
+    if (!document.getElementById('ze-snippet')) {
+      const script = document.createElement('script');
+      script.id = 'ze-snippet';
+      script.src = 'https://static.zdassets.com/ekr/snippet.js?key=9a4de2e7-87cb-4f7a-ac01-90bfaa2e0d37';
+      script.async = true;
+      document.body.appendChild(script);
+    }
+    document.getElementById('launcher')?.style.removeProperty('display');
+  }, [isAuthenticated, isLoading]);
 
 
 

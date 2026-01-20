@@ -7,7 +7,7 @@ import { ShoppingCart, Loader2, AlertCircle, Mail, Phone, MessageCircle, HelpCir
 import { useAuth } from '../context/AuthContext';
 import { useCart } from '../context/CartContext';
 import { ImageWithFallback } from './figma/ImageWithFallback';
-import vend1Image from '@/assets/vend1.png';
+import vend1Image from '@/assets/vend2Image.png';
 
 // GraphQL query to fetch products from Shopify
 const GET_PRODUCTS = gql`

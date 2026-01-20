@@ -173,7 +173,7 @@ export function RequestAccessPage() {
                   {[
                     {
                       title: 'Priority Deployment',
-                      description: 'Expedited access to our enterprise-grade vending technology solutions'
+                      description: 'Expedited access to our enterprise grade vending technology solutions'
                     },
                     {
                       title: 'Enterprise Pricing',
@@ -541,7 +541,7 @@ export function RequestAccessPage() {
             <Lock className="w-12 h-12 text-blue-600 mx-auto mb-4" />
             <h3 className="text-2xl mb-4 text-slate-900 font-semibold">Enterprise-Grade Security</h3>
             <p className="text-slate-600 max-w-2xl mx-auto leading-relaxed">
-              We employ industry-standard encryption and security protocols to protect your information. Your data will never be shared with third parties without your explicit consent.
+              We employ industry standard encryption and security protocols to protect your information. Your data will never be shared with third parties without your explicit consent.
             </p>
           </motion.div>
         </div>

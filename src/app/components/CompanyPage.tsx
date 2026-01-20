@@ -8,7 +8,7 @@ export function CompanyPage() {
     {
       icon: Target,
       title: 'Innovation First',
-      description: 'We continuously push the boundaries of automated food service technology to deliver cutting-edge solutions.'
+      description: 'We continuously push the boundaries of automated food service technology to deliver cutting edge solutions.'
     },
     {
       icon: Users,

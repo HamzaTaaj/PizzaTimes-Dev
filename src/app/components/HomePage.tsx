@@ -2,7 +2,7 @@ import { motion, useInView } from 'motion/react';
 import { useNavigate } from 'react-router-dom';
 import { Zap, Clock, Shield, TrendingUp, ArrowRight, Building2, DollarSign, Users, Globe, BarChart3, Award, CheckCircle2, Calendar, Tag, X, Palette, Settings, Wand2, Layers } from 'lucide-react';
 import { ImageWithFallback } from './figma/ImageWithFallback';
-import vend1Image from '@/assets/vend1.png';
+import vend0Image from '@/assets/machine.png';
 import { useRef, useEffect, useState } from 'react';
 import {
   Dialog,
@@ -182,12 +182,12 @@ export function HomePage() {
     {
       icon: Shield,
       title: 'Advanced Security',
-      description: 'Bank-level encryption and compliance with industry standards for data protection'
+      description: 'Bank level encryption and compliance with industry standards for data protection'
     },
     {
       icon: TrendingUp,
       title: 'Advanced Analytics',
-      description: 'Real-time business intelligence and predictive analytics for optimal performance'
+      description: 'Real time business intelligence and predictive analytics for optimal performance'
     }
   ];
 
@@ -378,7 +378,7 @@ export function HomePage() {
               </h1>
 
               <p className="text-xl text-[#cbd5e1] mb-8 max-w-xl leading-relaxed">
-                Pizza Anytime™ from High Sierra Vending turns an ordinary corner of your business into a 24-hour profit center—without locking you into someone else's rules or recipes. Our lease-to-own plan is the lowest monthly cost among major competitors, as little as $28 per day, so you start earning margin from day one while building equity in the machine itself.
+                Pizza Anytime™ from High Sierra Vending turns an ordinary corner of your business into a 24-hour profit center without locking you into someone else's rules or recipes. Our lease to own plan is the lowest monthly cost among major competitors, as little as $28 per day, so you start earning margin from day one while building equity in the machine itself.
               </p>
 
               <div className="flex flex-wrap gap-4 mb-8">
@@ -406,9 +406,9 @@ export function HomePage() {
               <div className="relative rounded-2xl overflow-hidden ">
                 <div className="relative z-10 scale-110">
                   <ImageWithFallback
-                    src={vend1Image}
+                    src={vend0Image}
                     alt="Enterprise Pizza Vending Machine"
-                    className="w-[90%] h-auto rounded-lg"
+                    className="w-[100%] h-auto rounded-lg"
                   />
                 </div>
               </div>
@@ -856,7 +856,7 @@ export function HomePage() {
           >
             <h2 className="text-4xl md:text-5xl mb-6 text-white font-bold">Ready to Transform Your Operations?</h2>
             <p className="text-xl text-blue-50 mb-8 max-w-2xl mx-auto">
-              Discover how enterprise-grade automated food service solutions can drive efficiency and growth
+              Discover how enterprise grade automated food service solutions can drive efficiency and growth
             </p>
             <motion.button
               whileHover={{

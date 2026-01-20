@@ -15,7 +15,7 @@ export function OnsiteSupportPage() {
     {
       icon: Clock,
       title: '24/7 Monitoring',
-      description: 'Round-the-clock remote monitoring ensures optimal performance and proactive issue resolution.',
+      description: 'Round the clock remote monitoring ensures optimal performance and proactive issue resolution.',
       features: ['Real-time alerts', 'Performance tracking', 'Predictive maintenance', 'Remote diagnostics']
     },
     {
@@ -158,7 +158,7 @@ export function OnsiteSupportPage() {
               </p>
               <ul className="space-y-4 mb-8">
                 {[
-                  'Coast-to-coast service coverage',
+                  'Coast to coast service coverage',
                   'Rapid response times for critical issues',
                   'Certified technicians trained on our systems',
                   'Complete parts and labor warranty',

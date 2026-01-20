@@ -6,9 +6,9 @@ import { ImageWithFallback } from './figma/ImageWithFallback';
 import { fadeInUp, staggerContainer, viewportConfig, slideInLeft, slideInRight, scaleUp } from '../utils/animations';
 import { useAuth } from '../context/AuthContext';
 import vend1Video from '@/assets/vend.mp4';
-import vend1Image from '@/assets/vend1.png';
-import vend2Image from '@/assets/vend1.png';
-import vend3Image from '@/assets/vend1.png';
+import vend1Image from '@/assets/Touchscreen.jpeg';
+import vend2Image from '@/assets/vend2Image.png';
+import vend3Image from '@/assets/vend2Image.png';
 import vend4Image from '@/assets/vend1.png';
 
 // Animated Counter Component
@@ -100,7 +100,7 @@ export function ProductPage() {
     {
       icon: Wrench,
       title: 'Easy Maintenance',
-      description: 'Modular design with quick-access service panels'
+      description: 'Modular design with quick access service panels'
     }
   ];
 
@@ -177,7 +177,7 @@ export function ProductPage() {
               </motion.h1>
 
               <motion.p variants={fadeInUp} className="text-xl text-slate-600 mb-8 leading-relaxed">
-                Unlike other vending programs that force you to buy their pizzas by the pallet, Pizza Anytime lets you stay in control. Whether you're a startup, small operator, or large enterprise, we're here to support your success. Bake your own signature pies, partner with a beloved local shop, or source nationally distributed brands—whatever keeps customers coming back. Every dollar of sales goes straight to you; we never withhold a share or skim your takings.
+                Unlike other vending programs that force you to buy their pizzas by the pallet, Pizza Anytime lets you stay in control. Whether you're a startup, small operator, or large enterprise, we're here to support your success. Bake your own signature pies, partner with a beloved local shop, or source nationally distributed brands whatever keeps customers coming back. Every dollar of sales goes straight to you; we never withhold a share or skim your takings.
               </motion.p>
 
               {/* Key Stats */}
@@ -249,7 +249,7 @@ export function ProductPage() {
                 style={{ perspective: "1000px" }}
                 className="text-xl text-slate-600 mb-8 leading-relaxed"
               >
-                Compact & Easy-to-Install. Similar in size to traditional vending machines, making it perfect for any location.
+                Compact & Easy to Install. Similar in size to traditional vending machines, making it perfect for any location.
               </motion.p>
 
               {/* Dimension Cards */}
@@ -359,7 +359,7 @@ export function ProductPage() {
                 style={{ perspective: "1000px" }}
                 className="text-xl text-slate-600 mb-8 leading-relaxed"
               >
-                A vivid 55-inch touchscreen entices passers-by, drives upsells, and showcases your custom-branded graphics; we wrap every unit to match your branding, not ours.
+                A vivid 55-inch touchscreen entices passers by, drives upsells, and showcases your custom branded graphics we wrap every unit to match your branding, not ours.
               </motion.p>
 
               {/* Features List */}
@@ -428,7 +428,7 @@ export function ProductPage() {
                 style={{ perspective: "1000px" }}
                 className="text-xl text-slate-600 mb-8 leading-relaxed"
               >
-The machine is engineered for serious, scalable performance. A 69-pizza capacity accommodates both frozen and refrigerated inventory, giving you true menu flexibility and longer vending windows. Our dual-mode oven combines convection for golden crusts with microwave speed for consistent center heat—delivering a hot, restaurant-quality pizza in about three minutes. Supports both frozen and refrigerated storage with temperature range of 33.8 – 42.8°F for refrigeration and up to 662°F for oven temperature.
+The machine is engineered for serious, scalable performance. A 69-pizza capacity accommodates both frozen and refrigerated inventory, giving you true menu flexibility and longer vending windows. Our dual-mode oven combines convection for golden crusts with microwave speed for consistent center heat delivering a hot, restaurant-quality pizza in about three minutes. Supports both frozen and refrigerated storage with temperature range of 33.8 – 42.8°F for refrigeration and up to 662°F for oven temperature.
 
 
                </motion.p>
@@ -568,7 +568,7 @@ The machine is engineered for serious, scalable performance. A 69-pizza capacity
               style={{ perspective: "1000px" }}
               className="text-xl text-slate-600 max-w-2xl mx-auto"
             >
-              Our dual-mode oven combines convection for golden crusts with microwave speed for consistent center heat—delivering a hot, restaurant-quality pizza in about three minutes.
+              Our dual-mode oven combines convection for golden crusts with microwave speed for consistent center heat delivering a hot, restaurant quality pizza in about three minutes.
             </motion.p>
           </motion.div>
 
@@ -1000,7 +1000,7 @@ The machine is engineered for serious, scalable performance. A 69-pizza capacity
             >
               <div className="relative rounded-xl overflow-hidden mb-6 border-2 border-blue-100">
                 <ImageWithFallback
-                  src={vend1Image}
+                  src={vend2Image}
                   alt="PMV1.4.12I - Indoor Model"
                   className="w-full h-64 object-cover"
                 />
@@ -1208,7 +1208,7 @@ The machine is engineered for serious, scalable performance. A 69-pizza capacity
               {
                 icon: Package,
                 title: 'Commercial-Grade Build',
-                description: 'NAMA-certified commercial construction meets industry standards for durability'
+                description: 'NAMA certified commercial construction meets industry standards for durability'
               },
               {
                 icon: Shield,
