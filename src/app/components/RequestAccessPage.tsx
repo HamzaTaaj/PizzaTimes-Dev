@@ -212,8 +212,8 @@ export function RequestAccessPage() {
                 </p>
                 <div className="flex items-center gap-2 text-blue-600 font-medium">
                   <Mail className="w-4 h-4" />
-                  <a href="mailto:access@pizzaanytime.com" className="hover:underline">
-                    access@pizzaanytime.com
+                  <a href="mailto:contact@highsierravending.com" className="hover:underline">
+                    contact@highsierravending.com
                   </a>
                 </div>
               </div>

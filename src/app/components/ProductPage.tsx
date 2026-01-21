@@ -7,9 +7,9 @@ import { fadeInUp, staggerContainer, viewportConfig, slideInLeft, slideInRight, 
 import { useAuth } from '../context/AuthContext';
 import vend1Video from '@/assets/vend.mp4';
 import vend1Image from '@/assets/Touchscreen.jpeg';
-import vend2Image from '@/assets/vend2Image.png';
-import vend3Image from '@/assets/vend2Image.png';
-import vend4Image from '@/assets/vend1.png';
+import vend2Image from '@/assets/machine.png';
+import vend3Image from '@/assets/machine.png';
+import vend4Image from '@/assets/vend2Image.png';
 
 // Animated Counter Component
 function AnimatedCounter({ value, suffix = '', prefix = '', duration = 2 }: { value: number | string; suffix?: string; prefix?: string; duration?: number }) {

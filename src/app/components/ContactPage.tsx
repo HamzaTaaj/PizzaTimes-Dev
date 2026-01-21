@@ -200,8 +200,8 @@ export function ContactPage() {
                     <div>
                       <h3 className="text-lg mb-2 text-slate-900 font-semibold">Email</h3>
                       <p className="text-slate-600 mb-2">General Inquiries</p>
-                      <a href="mailto:info@pizza-vending-machine.com" className="text-blue-600 hover:underline font-medium">
-                        info@pizza-vending-machine.com
+                      <a href="mailto:contact@highsierravending.com" className="text-blue-600 hover:underline font-medium">
+                        contact@highsierravending.com
                       </a>
                     </div>
                   </div>

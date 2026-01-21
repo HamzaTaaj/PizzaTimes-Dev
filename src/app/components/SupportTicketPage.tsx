@@ -465,7 +465,7 @@ export function SupportTicketPage() {
                 For urgent issues, please call our support line at{' '}
                 <a href="tel:+18886991731" className="font-semibold text-blue-600 hover:text-blue-700 underline">+1 (888) 699-1731</a>
                 {' '}or email us at{' '}
-                <a href="mailto:support@pizzaanytime.com" className="font-semibold text-blue-600 hover:text-blue-700 underline">support@pizzaanytime.com</a>
+                <a href="mailto:contact@highsierravending.com" className="font-semibold text-blue-600 hover:text-blue-700 underline">contact@highsierravending.com</a>
               </p>
             </div>
           </div>

@@ -570,24 +570,7 @@ export function Header() {
                   Cash Flow Calculator
                 </motion.button>
                 
-                {/* 5. Marketing */}
-                <motion.button
-                  onClick={() => {
-                    navigate("/marketing");
-                    setMobileMenuOpen(false);
-                  }}
-                  whileHover={{ 
-                    x: 8,
-                    backgroundColor: "#f1f5f9",
-                    color: "#2563eb"
-                  }}
-                  whileTap={{ scale: 0.98 }}
-                  className="block w-full text-left px-4 py-2 text-slate-700 rounded-lg transition-all font-medium"
-                >
-                  Marketing
-                </motion.button>
-                
-                {/* 6. Request Access - Only show if not logged in */}
+                {/* 5. Request Access - Only show if not logged in (Marketing hidden on mobile) */}
                 {!isAuthenticated && (
                   <motion.button
                     onClick={() => {
@@ -606,7 +589,7 @@ export function Header() {
                   </motion.button>
                 )}
                 
-                {/* 7. Contact Us */}
+                {/* 6. Contact Us */}
                 <motion.button
                   onClick={() => {
                     navigate("/contact");
@@ -623,7 +606,7 @@ export function Header() {
                   Contact Us
                 </motion.button>
                 
-                {/* 8. Resources Dropdown */}
+                {/* 7. Resources Dropdown */}
                 <div>
                   <motion.button
                     onClick={() => setMobileResourcesOpen(!mobileResourcesOpen)}

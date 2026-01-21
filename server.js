@@ -109,7 +109,7 @@ app.post('/api/support-email', async (req, res) => {
     const smtpPort = process.env.SMTP_PORT ? parseInt(process.env.SMTP_PORT, 10) : 587;
     const smtpUser = process.env.SMTP_USER;
     const smtpPass = process.env.SMTP_PASS;
-    const supportEmail = 'contact@highsierravendingcoffee.com';
+    const supportEmail = 'contact@highsierravending.com';
 
     if (!smtpHost || !smtpUser || !smtpPass) {
       console.error('Missing SMTP configuration');

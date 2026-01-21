@@ -220,7 +220,7 @@ export function PrivacyTermsPage() {
               >
                 <h3 className="text-xl text-slate-900 font-semibold mb-3">Contact Information</h3>
                 <p className="text-slate-600">
-                  For any questions or queries regarding these terms, please contact us at info@highsierravending.com
+                  For any questions or queries regarding these terms, please contact us at contact@highsierravending.com
                 </p>
               </motion.div>
             </div>
@@ -249,7 +249,7 @@ export function PrivacyTermsPage() {
               >
                 <h3 className="text-xl text-slate-900 font-semibold mb-3">Refund Policy</h3>
                 <p className="text-slate-600">
-                  For information about refunds, please contact us directly at info@highsierravending.com or (888) 699-1731. Our team will assist you with any refund inquiries based on your specific situation and our company policies.
+                  For information about refunds, please contact us directly at contact@highsierravending.com or (888) 699-1731. Our team will assist you with any refund inquiries based on your specific situation and our company policies.
                 </p>
               </motion.div>
             </div>
@@ -291,7 +291,7 @@ export function PrivacyTermsPage() {
               transition={{ duration: 0.5, delay: 0.1 }}
               className="text-slate-600 mb-4 text-center"
             >
-              Contact us at <a href="mailto:info@highsierravending.com" className="text-blue-600 hover:underline">info@highsierravending.com</a> or call <a href="tel:+18886991731" className="text-blue-600 hover:underline">(888) 699-1731</a>
+              Contact us at <a href="mailto:contact@highsierravending.com" className="text-blue-600 hover:underline">contact@highsierravending.com</a> or call <a href="tel:+18886991731" className="text-blue-600 hover:underline">(888) 699-1731</a>
             </motion.p>
           </motion.div>
 
@@ -305,7 +305,7 @@ export function PrivacyTermsPage() {
             <p>© 2025 High Sierra Vending, LLC</p>
             <p className="mt-2">The Pizza Vending Machine people.</p>
             <p className="mt-2">
-              <a href="mailto:Info@HighSierraVending.com" className="text-blue-600 hover:underline">Info@HighSierraVending.com</a>
+              <a href="mailto:contact@highsierravending.com" className="text-blue-600 hover:underline">contact@highsierravending.com</a>
             </p>
           </motion.div>
         </div>

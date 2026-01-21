@@ -141,8 +141,8 @@ export function Footer() {
             <ul className="space-y-4">
               <li className="flex items-start gap-3">
                 <Mail className="w-5 h-5 text-blue-600 mt-0.5 flex-shrink-0" />
-                <a href="mailto:info@pizza-vending-machine.com" className="text-slate-600 hover:text-blue-600 transition-colors">
-                  info@pizza-vending-machine.com
+                <a href="mailto:contact@highsierravending.com" className="text-slate-600 hover:text-blue-600 transition-colors">
+                  contact@highsierravending.com
                 </a>
               </li>
               <li className="flex items-start gap-3">

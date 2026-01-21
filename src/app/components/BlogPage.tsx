@@ -11,9 +11,13 @@ import {
   DialogHeader,
   DialogTitle,
 } from './ui/dialog';
+import { useAuth } from '../context/AuthContext';
+import { GetStartedPopup } from './MarketingPage';
 
 export function BlogPage() {
   const navigate = useNavigate();
+  const { isAuthenticated } = useAuth();
+  const [showGetStartedPopup, setShowGetStartedPopup] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState<string>('All');
   const [blogArticles, setBlogArticles] = useState<any[]>([]);
   const [categories, setCategories] = useState<string[]>(['All']);
@@ -339,42 +343,58 @@ export function BlogPage() {
         </div>
       </section>
 
-      {/* Newsletter CTA */}
-      <section className="relative py-24 overflow-hidden bg-blue-600">
-        {/* Curved Top Wave Design */}
-        <div className="absolute top-0 left-0 right-0 z-0">
+      {/* Get Started CTA - same as Marketing page (dark bg, orbs, wave, Get Started Now) */}
+      <section className="relative py-24 overflow-hidden bg-[#0f172a]">
+        {/* Animated blue orbs */}
+        <div className="absolute inset-0 z-0 overflow-hidden">
+          <motion.div
+            animate={{ scale: [1, 1.1, 1], opacity: [0.1, 0.15, 0.1] }}
+            transition={{ duration: 15, repeat: Infinity, ease: "easeInOut" }}
+            className="absolute top-1/4 -right-1/4 w-[800px] h-[800px] bg-[#2563eb] rounded-full"
+          />
+          <motion.div
+            animate={{ scale: [1.1, 1, 1.1], opacity: [0.08, 0.12, 0.08] }}
+            transition={{ duration: 18, repeat: Infinity, ease: "easeInOut" }}
+            className="absolute -bottom-1/4 -left-1/4 w-[700px] h-[700px] bg-[#3b82f6] rounded-full"
+          />
+          <motion.div
+            animate={{ scale: [1, 1.15, 1], opacity: [0.06, 0.10, 0.06] }}
+            transition={{ duration: 20, repeat: Infinity, ease: "easeInOut" }}
+            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-[#60a5fa] rounded-full"
+          />
+        </div>
+        {/* Curved bottom wave */}
+        <div className="absolute bottom-0 left-0 right-0 z-0">
           <svg className="w-full h-24" viewBox="0 0 1440 120" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
-            <path d="M0 0L60 15C120 30 240 60 360 75C480 90 600 90 720 82.5C840 75 960 60 1080 52.5C1200 45 1320 45 1380 45L1440 45V0H1380C1320 0 1200 0 1080 0C960 0 840 0 720 0C600 0 480 0 360 0C240 0 120 0 60 0H0Z" fill="#ffffff" />
+            <path d="M0 120L60 105C120 90 240 60 360 45C480 30 600 30 720 37.5C840 45 960 60 1080 67.5C1200 75 1320 75 1380 75L1440 75V120H1380C1320 120 1200 120 1080 120C960 120 840 120 720 120C600 120 480 120 360 120C240 120 120 120 60 120H0Z" fill="#ffffff" />
           </svg>
         </div>
-        <div className="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center z-10">
+        <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <motion.div
-            initial="hidden"
-            whileInView="visible"
-            viewport={viewportConfig}
-            variants={fadeInUp}
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
           >
-            <h2 className="text-4xl md:text-5xl mb-6 text-white font-bold">Stay Informed</h2>
+            <h2 className="text-4xl md:text-5xl mb-6 text-white font-bold">Ready to Turn Unused Floor Space into Reliable Revenue?</h2>
             <p className="text-xl text-blue-50 mb-8">
-              Subscribe to receive the latest updates and corporate news
+              More advanced technology. A more flexible business model. The lowest cost of entry in the category. That's why smart operators choose Pizza Anytime. Ready to turn unused floor space into reliable revenue? Let's get baking.
             </p>
-            <div className="flex flex-col sm:flex-row gap-4 max-w-md mx-auto">
-              <input
-                type="email"
-                placeholder="Enter your email"
-                className="flex-1 px-6 py-4 bg-white border border-slate-200 rounded-lg focus:outline-none focus:border-blue-600 transition-colors text-slate-900 placeholder:text-slate-400"
-              />
+            {!isAuthenticated && (
               <motion.button
-                whileHover={{ scale: 1.05 }}
+                whileHover={{ scale: 1.05, boxShadow: "0 20px 40px rgba(37, 99, 235, 0.4)" }}
                 whileTap={{ scale: 0.95 }}
-                className="px-8 py-4 bg-white text-blue-600 rounded-lg whitespace-nowrap shadow-lg font-semibold hover:bg-blue-50 transition-colors"
+                onClick={() => setShowGetStartedPopup(true)}
+                className="px-12 py-5 bg-white text-blue-600 rounded-lg text-lg font-semibold hover:bg-blue-50 transition-colors inline-flex items-center gap-2"
               >
-                Subscribe
+                Get Started Now
+                <ArrowRight className="w-5 h-5" />
               </motion.button>
-            </div>
+            )}
           </motion.div>
         </div>
       </section>
+
+      <GetStartedPopup isOpen={showGetStartedPopup} onClose={() => setShowGetStartedPopup(false)} />
 
       {/* Blog Detail Modal */}
       <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
