@@ -10,7 +10,7 @@ import {
 import { ImageWithFallback } from './figma/ImageWithFallback';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogClose } from './ui/dialog';
 import { useAuth } from '../context/AuthContext';
-import vend1Image from '@/assets/Machine.png';
+import vend1Image from '@/assets/machine.png';
 import bellHowellLogo from '@/assets/BellAndHowell2.svg';
 
 async function submitMarketingLead(
