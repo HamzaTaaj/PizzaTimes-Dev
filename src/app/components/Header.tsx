@@ -20,10 +20,9 @@ export function Header() {
   // Helper function to check if current path matches
   const isActive = (path: string) => location.pathname === path;
 
-  // Helper function to check if cart should be shown (shop page or product pages)
+  // Helper function to check if cart should be shown (shop page only, not product info page)
   const shouldShowCart = () => {
     return location.pathname === "/shop" || 
-           location.pathname === "/product" || 
            location.pathname.startsWith("/shop/");
   };
 
@@ -668,7 +667,7 @@ export function Header() {
                   </AnimatePresence>
                 </div>
                 
-                    {/* Cart Icon - Mobile - Show on shop page and product pages */}
+                    {/* Cart Icon - Mobile - Show on shop page only */}
                     {isAuthenticated && shouldShowCart() && (
                       <motion.button
                         onClick={() => {

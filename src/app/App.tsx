@@ -108,9 +108,11 @@ function AppContent() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // Zendesk chat: sirf login users ko nazar aaye
+  // Zendesk chat: sirf login users ko nazar aaye, marketing page par hide
   useEffect(() => {
-    if (!isAuthenticated || isLoading) {
+    const isMarketingPage = location.pathname === '/marketing';
+    
+    if (!isAuthenticated || isLoading || isMarketingPage) {
       document.getElementById('launcher')?.style.setProperty('display', 'none');
       return;
     }
@@ -122,7 +124,7 @@ function AppContent() {
       document.body.appendChild(script);
     }
     document.getElementById('launcher')?.style.removeProperty('display');
-  }, [isAuthenticated, isLoading]);
+  }, [isAuthenticated, isLoading, location.pathname]);
 
 
 

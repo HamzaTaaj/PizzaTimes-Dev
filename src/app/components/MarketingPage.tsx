@@ -784,9 +784,9 @@ export function MarketingPage() {
 
   return (
     <div className="min-h-screen bg-white">
-      {/* 1. Hero Banner - Matches site: dark bg, animated orbs, wave (like Ready to Start / section 9) */}
-      <section className="relative min-h-[90vh] flex items-center overflow-hidden bg-[#0f172a] rounded-b-[2.5rem]">
-        {/* Animated blue orbs - same as Ready to Start & section 9 */}
+      {/* 1. Hero Banner - Homepage-inspired, centered, no image */}
+      <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-[#0f172a] rounded-b-[3rem]">
+        {/* Animated blue orbs - same as Homepage */}
         <div className="absolute inset-0 z-0 overflow-hidden">
           <motion.div
             animate={{ scale: [1, 1.1, 1], opacity: [0.1, 0.15, 0.1] }}
@@ -805,137 +805,60 @@ export function MarketingPage() {
           />
         </div>
 
-        {/* Curved bottom wave - same as section 5 & 9 */}
+        {/* Curved bottom wave */}
         <div className="absolute bottom-0 left-0 right-0 z-0 pointer-events-none">
           <svg className="w-full h-24" viewBox="0 0 1440 120" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
             <path d="M0 120L60 105C120 90 240 60 360 45C480 30 600 30 720 37.5C840 45 960 60 1080 67.5C1200 75 1320 75 1380 75L1440 75V120H1380C1320 120 1200 120 1080 120C960 120 840 120 720 120C600 120 480 120 360 120C240 120 120 120 60 120H0Z" fill="#ffffff" />
           </svg>
         </div>
 
-        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 lg:py-24">
-          <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center">
-            {/* Left: Copy + form */}
+        <div className="relative z-10 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, ease: "easeOut" }}
+            className="w-full text-center space-y-8"
+          >
+            {/* Badge */}
             <motion.div
-              initial={{ opacity: 0, y: 24 }}
+              initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, ease: "easeOut" }}
-              className="order-2 lg:order-1 text-center lg:text-left"
+              transition={{ delay: 0.2 }}
+              className="inline-flex items-center gap-2 px-5 py-2.5 bg-[#1e293b] border border-[#2563eb]/30 rounded-full"
             >
-              <motion.span
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 0.15 }}
-                className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-[#1e293b] border border-[#2563eb]/30 rounded-full text-white font-medium text-xs mb-4"
-              >
-                <Zap className="w-3.5 h-3.5 text-[#60a5fa]" />
-                As little as $28/day · Lease to own
-              </motion.span>
-
-              <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white leading-[1.15] mb-3">
-                Fresh pizza, 24/7.
-                <br />
-                <span className="text-blue-200">Zero staff.</span>
-              </h1>
-
-              <p className="text-base lg:text-lg text-blue-50/90 max-w-xl mx-auto lg:mx-0 mb-5 leading-snug">
-                Pizza Anytime™ turns any corner into a 24-hour profit center. Your rules, your recipes lowest cost in the category.
-              </p>
-
-              {/* Compact hero form - left side */}
-              <form onSubmit={heroHandleSubmit} className="bg-white/5 border border-white/20 rounded-xl p-4 max-w-md mx-auto lg:mx-0">
-                <div className="grid grid-cols-2 gap-3 mb-3">
-                  <input
-                    type="text"
-                    name="firstName"
-                    value={heroFormData.firstName}
-                    onChange={heroHandleChange}
-                    required
-                    placeholder="First name"
-                    className="col-span-1 px-3 py-2.5 bg-white/10 border border-white/20 rounded-lg text-sm text-white placeholder-white/50 focus:outline-none focus:border-white/50"
-                  />
-                  <input
-                    type="text"
-                    name="lastName"
-                    value={heroFormData.lastName}
-                    onChange={heroHandleChange}
-                    required
-                    placeholder="Last name"
-                    className="col-span-1 px-3 py-2.5 bg-white/10 border border-white/20 rounded-lg text-sm text-white placeholder-white/50 focus:outline-none focus:border-white/50"
-                  />
-                  <input
-                    type="email"
-                    name="email"
-                    value={heroFormData.email}
-                    onChange={heroHandleChange}
-                    required
-                    placeholder="Email"
-                    className="col-span-2 px-3 py-2.5 bg-white/10 border border-white/20 rounded-lg text-sm text-white placeholder-white/50 focus:outline-none focus:border-white/50"
-                  />
-                  <input
-                    type="tel"
-                    name="phone"
-                    value={heroFormData.phone}
-                    onChange={heroHandleChange}
-                    required
-                    placeholder="Phone"
-                    className="col-span-2 px-3 py-2.5 bg-white/10 border border-white/20 rounded-lg text-sm text-white placeholder-white/50 focus:outline-none focus:border-white/50"
-                  />
-                </div>
-                {heroSubmitStatus.type === 'success' && (
-                  <p className="text-emerald-300 text-xs mb-2 flex items-center gap-1">
-                    <CheckCircle className="w-3.5 h-3.5" /> {heroSubmitStatus.message}
-                  </p>
-                )}
-                {heroSubmitStatus.type === 'error' && (
-                  <p className="text-red-300 text-xs mb-2 flex items-center gap-1">
-                    <AlertCircle className="w-3.5 h-3.5" /> {heroSubmitStatus.message}
-                  </p>
-                )}
-                <motion.button
-                  type="submit"
-                  disabled={heroIsSubmitting}
-                  whileHover={heroIsSubmitting ? {} : { scale: 1.02 }}
-                  whileTap={heroIsSubmitting ? {} : { scale: 0.98 }}
-                  className="w-full py-3 bg-white text-blue-600 font-semibold text-sm rounded-lg flex items-center justify-center gap-2 disabled:opacity-70"
-                >
-                  {heroIsSubmitting ? (
-                    <>
-                      <Loader2 className="w-4 h-4 animate-spin" />
-                      Submitting...
-                    </>
-                  ) : (
-                    <>
-                      Get Started
-                      <ArrowRight className="w-4 h-4" />
-                    </>
-                  )}
-                </motion.button>
-              </form>
+              <Zap className="w-4 h-4 text-[#60a5fa]" />
+              <span className="text-[#60a5fa] font-medium text-sm">As little as $28/day · Lease to own</span>
             </motion.div>
 
-            {/* Right: Product image only */}
+            {/* Headline */}
+            <h1 className="text-5xl sm:text-6xl lg:text-7xl font-bold text-white leading-tight">
+              Fresh pizza, 24/7.
+              <br />
+              <span className="text-[#60a5fa]">Zero staff.</span>
+            </h1>
+
+            {/* Description */}
+            <p className="text-xl lg:text-2xl text-[#cbd5e1] max-w-3xl mx-auto leading-relaxed">
+              Pizza Anytime™ from High Sierra Vending turns an ordinary corner of your business into a 24-hour profit center without locking you into someone else's rules or recipes. Our lease to own plan is the lowest monthly cost among major competitors, as little as $28 per day.
+            </p>
+
+            {/* CTA Button - opens popup */}
             <motion.div
-              initial={{ opacity: 0, scale: 0.96 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.6, delay: 0.1, ease: "easeOut" }}
-              className="order-1 lg:order-2 relative flex justify-center lg:justify-end"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.3 }}
             >
-              <div className="relative w-full max-w-lg">
-                <div className="absolute -inset-4 bg-blue-500/20 rounded-3xl blur-2xl" />
-                <motion.div
-                  animate={{ y: [0, -8, 0] }}
-                  transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
-                  className="relative rounded-2xl overflow-hidden border-2 border-white/20 bg-white/5 shadow-2xl backdrop-blur-sm"
-                >
-                  <ImageWithFallback
-                    src={vend1Image}
-                    alt="Pizza Anytime™ vending machine - fresh pizza 24/7"
-                    className="w-full h-auto max-w-2xl"
-                  />
-                </motion.div>
-              </div>
+              <motion.button
+                onClick={() => setShowGetStartedPopup(true)}
+                whileHover={{ scale: 1.05, boxShadow: "0 20px 40px rgba(37, 99, 235, 0.4)" }}
+                whileTap={{ scale: 0.98 }}
+                className="px-10 py-5 bg-white text-blue-600 rounded-lg text-lg font-semibold hover:bg-blue-50 transition-colors inline-flex items-center gap-2 shadow-xl"
+              >
+                Get Started
+                <ArrowRight className="w-5 h-5" />
+              </motion.button>
             </motion.div>
-          </div>
+          </motion.div>
         </div>
       </section>
 
